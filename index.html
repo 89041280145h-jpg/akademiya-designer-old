@@ -248,11 +248,28 @@ body.hide-notes .rev-note{display:none;}
 /* People */
 .people-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:16px;}
 @media (max-width:820px){.people-grid{grid-template-columns:repeat(2,1fr);}}
-.person-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;}
+.person-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;position:relative;}
 .person-card .pmeta{padding:12px 14px 16px;}
 .person-card .pname{font-size:13.5px;font-weight:700;margin:0 0 2px;}
 .person-card .prole{font-size:11.5px;color:var(--ink-faint);margin:0 0 8px;}
-.person-card .pnote{font-size:12px;color:var(--ink-soft);line-height:1.5;}
+.person-card .pnote{font-size:12px;color:var(--ink-soft);line-height:1.5;margin-bottom:10px;}
+.person-card .res-slot-row{padding-top:8px;}
+
+/* ===== Carousel (employees, etc.) ===== */
+.carousel-wrap{position:relative;margin-top:16px;padding:0 44px;}
+.carousel-track{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px;scroll-behavior:smooth;}
+.carousel-track::-webkit-scrollbar{height:8px;}
+.carousel-track::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;}
+.carousel-track::-webkit-scrollbar-track{background:transparent;}
+.carousel-track > .person-card{flex:0 0 220px;scroll-snap-align:start;}
+.carousel-add-wrap{flex:0 0 160px;scroll-snap-align:start;display:flex;}
+.carousel-add-wrap .resource-add-card{flex:1;height:100%;min-height:280px;}
+.carousel-btn{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:5;color:var(--ink-soft);}
+.carousel-btn:hover{border-color:var(--accent);color:var(--accent-ink);}
+.carousel-btn.prev{left:0;}
+.carousel-btn.next{right:0;}
+.carousel-btn.prev svg{transform:rotate(180deg);}
+@media (max-width:640px){.carousel-wrap{padding:0 0 0 0;} .carousel-btn{display:none;}}
 
 /* ===== Generic small editable text fields ===== */
 .editable-field{display:block;border-radius:6px;padding:2px 5px;margin:0 -5px;cursor:text;transition:background .15s,box-shadow .15s;outline:none;}
@@ -298,6 +315,7 @@ body.hide-notes .rev-note{display:none;}
 .resource-card p{margin:0;font-size:12.5px;color:var(--ink-soft);line-height:1.5;}
 .res-card-del{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:8px;border:none;background:var(--bg);color:var(--ink-faint);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:.15s;}
 .resource-card:hover .res-card-del{opacity:1;}
+.person-card:hover .res-card-del{opacity:1;}
 .res-card-del:hover{background:#FBEDEA;color:#C9433A;}
 .res-slot-row{display:flex;flex-direction:column;gap:6px;padding-top:8px;border-top:1px dashed var(--line);}
 .res-slot-row:first-of-type{margin-top:2px;}
@@ -621,15 +639,40 @@ function rCallout(b){
   return `<div class="b-callout"><div class="ic">${icon(b.icon||'alert',22)}</div><div class="tx">${esc(b.text)}</div></div>`;
 }
 
-function rCards(b){
-  const cols = b.cols || 3;
-  const items = b.items.map(it=>`
-    <div class="card">
-      <div class="ic-wrap">${icon(it.icon||'star',20)}</div>
-      <h4>${esc(it.title)}</h4>
-      <p>${esc(it.text)}</p>
-    </div>`).join('');
-  return `<div class="grid grid-${cols}">${items}</div>`;
+function cardGroupHTML(items, blockId, opts){
+  opts = opts || {};
+  const groupId = 'grp_'+(blockId||opts.fallbackId||Math.random().toString(36).slice(2));
+  const meta = getGroupMeta(groupId);
+  const originalItems = items.filter(it=>!meta.deleted.includes(it.id));
+  const customItems = meta.added.map(cid=>({id:cid, title:'', text:'', icon:opts.defaultIcon}));
+  const allItems = originalItems.concat(customItems);
+  const cardsHTML = allItems.map(it=>dynamicCardHTML(it, groupId, opts)).join('');
+  const style = opts.cols && opts.cols!==3 ? ` style="grid-template-columns:repeat(${opts.cols},1fr)"` : '';
+  return `<div class="resource-grid" data-group-id="${groupId}"${style}>${cardsHTML}
+    <button type="button" class="resource-add-card" data-add-card-group="${groupId}"><span class="plus">+</span>Добавить карточку</button>
+  </div>`;
+}
+function dynamicCardHTML(it, groupId, opts){
+  opts = opts || {};
+  const iconName = it.icon || opts.defaultIcon || 'star';
+  return `<div class="resource-card" data-res-id="${it.id}" data-group-id="${groupId}">
+    <button type="button" class="res-card-del" data-del-card title="Удалить карточку">${icon('trash',13)}</button>
+    <div class="ric">${icon(iconName,18)}</div>
+    ${editableFieldHTML('rtitle_'+it.id, it.title||'', 'Название карточки', 'h5')}
+    ${editableFieldHTML('rtext_'+it.id, it.text||'', 'Короткое описание', 'p')}
+    <div class="res-slot-row">
+      <span class="res-slot-label">${icon('filetext',12)} Документ</span>
+      <div class="res-actions" data-res-actions data-res-id="doc:${it.id}"></div>
+    </div>
+    <div class="res-slot-row">
+      <span class="res-slot-label">${icon('video',12)} Видео</span>
+      <div class="res-actions" data-res-actions data-res-id="video:${it.id}"></div>
+    </div>
+  </div>`;
+}
+
+function rCards(b, blockId){
+  return cardGroupHTML(b.items, blockId, {cols: b.cols||3, defaultIcon:'star', fallbackId:b.id});
 }
 
 function rSteps(b){
@@ -685,18 +728,39 @@ function rSegment(b){
   </div>`;
 }
 
-function rPeople(b){
+function rPeople(b, blockId){
+  const groupId = 'grp_'+(blockId||b.id||Math.random().toString(36).slice(2));
+  const meta = getGroupMeta(groupId);
   const PORTRAIT_PROMPT = "Портрет сотрудника по пояс или крупным планом: нейтральный светлый фон (стена шоурума или офиса), опрятная деловая-casual одежда, естественная доброжелательная улыбка, взгляд в камеру. Мягкий равномерный дневной свет, как для корпоративного портрета. Реалистичное фото, без текста и логотипов в кадре.";
-  const items = b.items.map((p)=>`
-    <div class="person-card">
+  const originalItems = b.items.filter(p=>!meta.deleted.includes(p.id));
+  const customItems = meta.added.map(cid=>({id:cid, name:'', role:'', note:''}));
+  const allItems = originalItems.concat(customItems);
+  const cardsHTML = allItems.map((p)=>`
+    <div class="person-card" data-res-id="${p.id}" data-group-id="${groupId}">
+      <button type="button" class="res-card-del" data-del-card title="Удалить карточку">${icon('trash',13)}</button>
       ${photoSlotHTML(p.id, p.dept||PORTRAIT_PROMPT, 170)}
       <div class="pmeta">
         ${editableFieldHTML(p.id+'_name', p.name||'', 'ФИО', 'div').replace('class="editable-field"','class="editable-field pname"')}
         ${editableFieldHTML(p.id+'_role', p.role||'', 'Должность · Подразделение', 'div').replace('class="editable-field"','class="editable-field prole"')}
         ${editableFieldHTML(p.id+'_note', p.note||'', 'Какие вопросы решает', 'div').replace('class="editable-field"','class="editable-field pnote"')}
+        <div class="res-slot-row">
+          <span class="res-slot-label">${icon('filetext',12)} Документ</span>
+          <div class="res-actions" data-res-actions data-res-id="doc:${p.id}"></div>
+        </div>
+        <div class="res-slot-row">
+          <span class="res-slot-label">${icon('video',12)} Видео</span>
+          <div class="res-actions" data-res-actions data-res-id="video:${p.id}"></div>
+        </div>
       </div>
     </div>`).join('');
-  return `<div class="people-grid">${items}</div>`;
+  return `<div class="carousel-wrap">
+    <button type="button" class="carousel-btn prev" data-carousel-dir="-1" title="Назад">${icon('arrow',16)}</button>
+    <div class="carousel-track">
+      ${cardsHTML}
+      <div class="carousel-add-wrap"><button type="button" class="resource-add-card" data-add-card-group="${groupId}"><span class="plus">+</span>Добавить сотрудника</button></div>
+    </div>
+    <button type="button" class="carousel-btn next" data-carousel-dir="1" title="Вперёд">${icon('arrow',16)}</button>
+  </div>`;
 }
 
 function rPhoto(b){ return photoSlotHTML(b.id, b.caption, 240); }
@@ -706,15 +770,7 @@ function rPhotogrid(b){
 }
 
 function rResources(b, blockId){
-  const groupId = 'resgrp_'+(blockId||b.id||Math.random().toString(36).slice(2));
-  const meta = getGroupMeta(groupId);
-  const originalItems = b.items.filter(it=>!meta.deleted.includes(it.id));
-  const customItems = meta.added.map(cid=>({id:cid, title:'', text:''}));
-  const allItems = originalItems.concat(customItems);
-  const cardsHTML = allItems.map(it=>resourceCardHTML(it.id, it.title, it.text, groupId)).join('');
-  return `<div class="resource-grid" data-group-id="${groupId}">${cardsHTML}
-    <button type="button" class="resource-add-card" data-add-card-group="${groupId}"><span class="plus">+</span>Добавить карточку</button>
-  </div>`;
+  return cardGroupHTML(b.items, blockId, {cols:3, defaultIcon: b.kind==='video'?'play':'filetext', fallbackId:b.id});
 }
 
 function rContact(b){
@@ -748,7 +804,7 @@ const BLOCK_RENDERERS = {
   note: rNote
 };
 
-const EDITABLE_TYPES = ['lead','p','quote','list','callout','cards','steps','twocol','glossary','contact','segment'];
+const EDITABLE_TYPES = ['lead','p','quote','list','callout','steps','twocol','glossary','contact','segment'];
 
 function getEdits(){ try{ return JSON.parse(localStorage.getItem('academyEdits')||'{}'); }catch(e){ return {}; } }
 function getBlockEdit(id){ const m = getEdits(); return Object.prototype.hasOwnProperty.call(m,id) ? m[id] : null; }
@@ -770,6 +826,20 @@ function mountEditableFields(container){
     el._wired = true;
     el.addEventListener('blur', ()=>{
       setFieldEdit(el.getAttribute('data-field-id'), el.innerText.trim());
+    });
+  });
+}
+
+function mountCarousels(container){
+  container.querySelectorAll('.carousel-wrap').forEach(wrap=>{
+    const track = wrap.querySelector('.carousel-track');
+    wrap.querySelectorAll('[data-carousel-dir]').forEach(btn=>{
+      if(btn._wired) return;
+      btn._wired = true;
+      btn.addEventListener('click', ()=>{
+        const dir = parseInt(btn.getAttribute('data-carousel-dir'),10);
+        track.scrollBy({left: dir*260, behavior:'smooth'});
+      });
     });
   });
 }
@@ -915,7 +985,7 @@ function renderPhotoPreview(slot, file){
 }
 
 async function mountResourceSlots(container){
-  const cards = container.querySelectorAll('.resource-card');
+  const cards = container.querySelectorAll('.resource-card, .person-card');
   for(const card of cards){
     const actionEls = card.querySelectorAll('[data-res-actions]');
     for(const actionsEl of actionEls){
@@ -927,10 +997,11 @@ async function mountResourceSlots(container){
       delBtn.addEventListener('click', ()=>{
         const cardId = card.getAttribute('data-res-id');
         const groupId = card.getAttribute('data-group-id');
-        if(confirm('Удалить эту карточку? Прикреплённые к ней файлы тоже будут удалены.')){
+        if(confirm('Удалить эту карточку? Прикреплённые к ней файлы и фото тоже будут удалены.')){
           deleteCardFromGroup(groupId, cardId);
           idbDelete('res:doc:'+cardId);
           idbDelete('res:video:'+cardId);
+          idbDelete('photo:'+cardId);
           removeLink('doc:'+cardId);
           removeLink('video:'+cardId);
           router();
@@ -939,6 +1010,7 @@ async function mountResourceSlots(container){
     }
   }
   mountEditableFields(container);
+  mountCarousels(container);
   container.querySelectorAll('[data-add-card-group]').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       const groupId = btn.getAttribute('data-add-card-group');
