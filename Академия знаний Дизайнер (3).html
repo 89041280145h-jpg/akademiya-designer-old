@@ -1,0 +1,2564 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>МОДЕРНМ — Академия знаний «Дизайнер»</title>
+<style>
+:root{
+  --bg:#FAFAF8;
+  --surface:#FFFFFF;
+  --ink:#211E1B;
+  --ink-soft:#645D54;
+  --ink-faint:#9A9188;
+  --line:#EBE5DC;
+  --accent:#B5602A;
+  --accent-ink:#8A491F;
+  --accent-soft:#F5E5D6;
+  --accent-soft2:#FBF1E7;
+  --gold:#9C7A2E;
+  --sidebar-bg:#1A1815;
+  --sidebar-bg2:#232019;
+  --sidebar-ink:#EFE9E1;
+  --sidebar-soft:#948C81;
+  --sidebar-line:#332F28;
+  --radius:16px;
+  --radius-sm:10px;
+  --shadow:0 1px 2px rgba(30,25,15,.04), 0 8px 24px -12px rgba(30,25,15,.10);
+  --shadow-lg:0 20px 60px -20px rgba(20,15,5,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  line-height:1.5;
+}
+::selection{background:var(--accent-soft);color:var(--accent-ink);}
+a{color:inherit;}
+button{font-family:inherit;}
+
+.app{display:flex;min-height:100vh;}
+
+.sidebar{
+  width:288px;flex:0 0 288px;
+  background:linear-gradient(180deg,var(--sidebar-bg),var(--sidebar-bg2) 60%);
+  color:var(--sidebar-ink);
+  position:fixed;top:0;left:0;bottom:0;
+  overflow-y:auto;
+  z-index:40;
+  transition:transform .25s ease;
+}
+.sidebar::-webkit-scrollbar{width:8px;}
+.sidebar::-webkit-scrollbar-thumb{background:var(--sidebar-line);border-radius:8px;}
+
+.sidebar-head{padding:28px 24px 20px;border-bottom:1px solid var(--sidebar-line);}
+.sidebar-brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.06em;font-size:15px;color:#fff;}
+.sidebar-brand .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);flex:0 0 9px;}
+.sidebar-title{margin-top:14px;font-size:19px;font-weight:700;line-height:1.3;color:#fff;}
+.sidebar-title em{color:var(--accent);font-style:normal;}
+.sidebar-sub{margin-top:6px;font-size:12.5px;color:var(--sidebar-soft);line-height:1.5;}
+
+.progress-wrap{padding:16px 24px 4px;}
+.progress-label{display:flex;justify-content:space-between;font-size:11px;color:var(--sidebar-soft);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em;}
+.progress-track{height:6px;border-radius:6px;background:var(--sidebar-line);overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:6px;transition:width .3s ease;}
+
+.nav{padding:12px 14px 28px;}
+.nav-group-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--sidebar-soft);padding:16px 10px 6px;font-weight:700;}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 10px;border-radius:10px;cursor:pointer;color:var(--sidebar-ink);font-size:14px;font-weight:500;margin-bottom:2px;transition:background .15s ease,color .15s ease;position:relative;border:1px solid transparent;}
+.nav-item:hover{background:rgba(255,255,255,.05);}
+.nav-item.active{background:rgba(181,96,42,.16);border-color:rgba(181,96,42,.35);color:#fff;}
+.nav-badge{flex:0 0 26px;height:26px;border-radius:8px;background:var(--sidebar-line);color:var(--sidebar-soft);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;}
+.nav-item.active .nav-badge{background:var(--accent);color:#fff;}
+.nav-item.done .nav-badge{background:#3C6B4F;color:#fff;font-size:0;}
+.nav-item.done .nav-badge::after{content:"✓";font-size:13px;}
+.nav-text{flex:1;min-width:0;}
+.nav-text .t1{display:block;font-size:13.5px;font-weight:650;color:inherit;}
+.nav-text .t2{display:block;font-size:11px;color:var(--sidebar-soft);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+.sidebar-foot{padding:16px 24px 26px;border-top:1px solid var(--sidebar-line);font-size:11.5px;color:var(--sidebar-soft);}
+.sidebar-foot button{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--sidebar-line);color:var(--sidebar-soft);padding:9px 10px;border-radius:9px;font-size:12px;cursor:pointer;margin-top:10px;transition:.15s;}
+.sidebar-foot button:hover{background:rgba(255,255,255,.09);color:#fff;}
+
+.menu-toggle{display:none;position:fixed;top:14px;left:14px;z-index:50;width:42px;height:42px;border-radius:11px;background:var(--sidebar-bg);color:#fff;border:1px solid var(--sidebar-line);align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow);}
+.sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(10,8,5,.5);z-index:39;}
+
+.main{margin-left:288px;flex:1;min-width:0;}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(250,250,248,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:16px 44px;}
+.crumbs{font-size:12px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.06em;font-weight:700;}
+.crumbs span{color:var(--accent);}
+
+.content{max-width:860px;margin:0 auto;padding:36px 44px 120px;}
+
+.hero-cover{background:linear-gradient(155deg,var(--sidebar-bg),#2a241c 60%,var(--accent-ink));border-radius:22px;color:#fff;padding:56px 48px;margin-bottom:40px;box-shadow:var(--shadow-lg);position:relative;overflow:hidden;}
+.hero-cover::after{content:"";position:absolute;right:-80px;top:-80px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(181,96,42,.35),transparent 70%);}
+.hero-eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#E4B98C;font-weight:700;}
+.hero-title{font-size:40px;font-weight:800;margin:14px 0 10px;line-height:1.15;}
+.hero-title em{color:var(--accent);font-style:normal;}
+.hero-desc{font-size:15.5px;color:#D8D2C7;max-width:520px;line-height:1.6;}
+.hero-meta{margin-top:26px;font-size:12.5px;color:#B7AF9F;}
+
+.page-kicker{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;}
+.page-title{font-size:27px;font-weight:800;margin:0 0 6px;letter-spacing:-.01em;}
+.page-day{font-size:13px;color:var(--ink-faint);margin-bottom:22px;}
+
+.section-head{margin-bottom:8px;}
+.section-eyebrow{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);}
+.section-title{font-size:32px;font-weight:800;margin:8px 0 4px;letter-spacing:-.015em;}
+.section-sub{font-size:15.5px;color:var(--ink-soft);margin-bottom:8px;}
+
+.jumpnav{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 40px;padding:16px;background:var(--surface);border:1px solid var(--line);border-radius:14px;}
+.jumpnav-label{width:100%;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-faint);margin-bottom:4px;}
+.jumpnav a{font-size:12.5px;font-weight:600;color:var(--ink-soft);background:var(--bg);border:1px solid var(--line);padding:7px 12px;border-radius:20px;text-decoration:none;transition:.15s;}
+.jumpnav a:hover{background:var(--accent-soft);border-color:var(--accent-soft);color:var(--accent-ink);}
+
+.page-block{margin-bottom:44px;scroll-margin-top:90px;}
+.page-block:last-child{margin-bottom:8px;}
+
+/* ===== Block: text ===== */
+.b-lead{font-size:17px;line-height:1.65;color:var(--ink);font-weight:500;}
+.b-p{font-size:15px;line-height:1.75;color:var(--ink-soft);margin-top:12px;}
+.b-quote{font-size:20px;line-height:1.55;font-weight:600;color:var(--ink);padding:26px 30px;background:var(--accent-soft2);border-radius:16px;position:relative;}
+.b-quote::before{content:"“";position:absolute;top:6px;left:18px;font-size:52px;color:var(--accent);opacity:.35;font-weight:800;font-family:Georgia,serif;}
+.b-quote-inner{position:relative;padding-left:18px;}
+
+.b-list{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:12px;}
+.b-list li{display:flex;gap:12px;font-size:15px;line-height:1.6;color:var(--ink-soft);}
+.b-list li .bullet{flex:0 0 6px;height:6px;border-radius:50%;background:var(--accent);margin-top:9px;}
+.b-list li b, .b-list li .lbl{color:var(--ink);font-weight:700;}
+
+.b-callout{display:flex;gap:14px;padding:18px 20px;border-radius:14px;background:#FBF4E3;border:1px solid #F0DFB0;}
+.b-callout .ic{flex:0 0 auto;color:#96731C;}
+.b-callout .tx{font-size:14.5px;color:#5C4A15;line-height:1.6;}
+
+/* ===== Revision notes (заметки для доработки) ===== */
+body.hide-notes .rev-note{display:none;}
+.rev-note{border-radius:14px;padding:16px 18px 18px;border:1.5px dashed #C9433A;background:#FBEDEA;position:relative;}
+.rev-note[data-level="P1"]{border-color:#C97A1F;background:#FBF1E3;}
+.rev-note[data-level="P2"]{border-color:#A8901F;background:#FBF6E0;}
+.rev-note-head{display:flex;align-items:center;gap:9px;margin-bottom:10px;}
+.rev-note-badge{font-size:10px;font-weight:800;letter-spacing:.04em;color:#fff;background:#C9433A;border-radius:6px;padding:3px 7px;flex:0 0 auto;}
+.rev-note[data-level="P1"] .rev-note-badge{background:#C97A1F;}
+.rev-note[data-level="P2"] .rev-note-badge{background:#A8901F;}
+.rev-note-label{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#7A2A22;}
+.rev-note[data-level="P1"] .rev-note-label{color:#7A4A12;}
+.rev-note[data-level="P2"] .rev-note-label{color:#6B5912;}
+.rev-note ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;}
+.rev-note li{display:flex;gap:10px;font-size:13.5px;line-height:1.55;color:#4A2620;cursor:pointer;}
+.rev-note[data-level="P1"] li{color:#4A3410;}
+.rev-note[data-level="P2"] li{color:#443B0F;}
+.rev-note li .rn-box{flex:0 0 17px;height:17px;margin-top:2px;border-radius:5px;border:2px solid rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;}
+.rev-note li.done{opacity:.5;}
+.rev-note li.done span:last-child{text-decoration:line-through;}
+.rev-note li.done .rn-box{background:currentColor;border-color:currentColor;}
+.notes-toggle-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px;font-size:12px;color:var(--sidebar-soft);}
+.notes-toggle-row button{background:rgba(255,255,255,.05);border:1px solid var(--sidebar-line);color:var(--sidebar-ink);padding:6px 10px;border-radius:8px;font-size:11.5px;cursor:pointer;}
+.notes-toggle-row button:hover{background:rgba(255,255,255,.1);}
+
+/* ===== Editable content ===== */
+.editable-block{position:relative;border-radius:10px;padding:6px 10px;margin-left:-10px;margin-right:-10px;cursor:text;transition:background .15s,box-shadow .15s;}
+.editable-block:hover{background:rgba(181,96,42,.05);box-shadow:0 0 0 1px rgba(181,96,42,.15);}
+.editable-block:focus{outline:none;background:#FFFDF9;box-shadow:0 0 0 2px var(--accent);}
+.editable-block.is-edited{box-shadow:0 0 0 1.5px #3C6B4F;}
+.editable-block.is-edited:hover{box-shadow:0 0 0 1.5px #3C6B4F;}
+.edited-tag{position:absolute;top:-11px;right:2px;font-size:9.5px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;background:#3C6B4F;color:#fff;padding:2px 7px;border-radius:6px;display:flex;align-items:center;gap:5px;z-index:2;}
+.edited-tag button{background:none;border:none;color:#fff;opacity:.8;cursor:pointer;padding:0;font-size:10px;line-height:1;}
+.edited-tag button:hover{opacity:1;}
+
+/* ===== Page tools (add note / attach file) ===== */
+.page-tools{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 18px;}
+.page-tool-btn{font-size:12.5px;font-weight:700;color:var(--ink-soft);background:var(--surface);border:1px dashed var(--line);padding:9px 14px;border-radius:10px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.15s;}
+.page-tool-btn:hover{border-color:var(--accent);color:var(--accent-ink);background:var(--accent-soft2);}
+.page-tool-btn input{display:none;}
+
+.usernote-form{background:var(--surface);border:1.5px solid var(--accent);border-radius:12px;padding:14px;margin-bottom:14px;flex-basis:100%;width:100%;}
+.usernote-form textarea{width:100%;min-height:80px;border:1px solid var(--line);border-radius:8px;padding:10px;font-family:inherit;font-size:13.5px;resize:vertical;}
+.usernote-form-actions{display:flex;gap:8px;margin-top:10px;}
+.usernote-form-actions button{font-size:12.5px;font-weight:700;padding:7px 14px;border-radius:8px;border:1px solid var(--line);background:var(--bg);cursor:pointer;}
+.usernote-form-actions button[data-save]{background:var(--accent);border-color:var(--accent);color:#fff;}
+
+.user-note{display:flex;gap:12px;align-items:flex-start;background:#EAF1EC;border:1.5px dashed #6B9C7C;border-radius:14px;padding:14px 16px;margin-bottom:12px;}
+.user-note .un-ic{flex:0 0 auto;color:#2F6B44;margin-top:1px;}
+.user-note .un-text{flex:1;font-size:13.5px;color:#284A32;line-height:1.55;white-space:pre-wrap;}
+.user-note .un-del{flex:0 0 auto;background:none;border:none;color:#2F6B44;opacity:.6;cursor:pointer;}
+.user-note .un-del:hover{opacity:1;}
+
+.page-attach-chip{display:inline-flex;align-items:center;gap:8px;background:var(--accent-soft2);border:1px solid var(--accent-soft);border-radius:10px;padding:8px 12px;font-size:12.5px;font-weight:600;color:var(--accent-ink);margin-bottom:14px;}
+.page-attach-chip a{color:inherit;text-decoration:none;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.page-attach-chip button{background:none;border:none;color:var(--accent-ink);opacity:.7;cursor:pointer;}
+.page-attach-chip button:hover{opacity:1;}
+
+/* ===== Card grids ===== */
+.grid{display:grid;gap:14px;margin-top:16px;}
+.grid-2{grid-template-columns:repeat(2,1fr);}
+.grid-3{grid-template-columns:repeat(3,1fr);}
+@media (max-width:720px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow);}
+.card .ic-wrap{width:38px;height:38px;border-radius:10px;background:var(--accent-soft);color:var(--accent-ink);display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
+.card h4{margin:0 0 6px;font-size:15px;font-weight:700;}
+.card p{margin:0;font-size:13.5px;color:var(--ink-soft);line-height:1.6;}
+
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px;}
+@media (max-width:820px){.steps-grid{grid-template-columns:repeat(2,1fr);}}
+.step-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;position:relative;}
+.step-card .num{font-size:12px;font-weight:800;color:#fff;background:var(--accent);width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+.step-card h4{margin:0 0 5px;font-size:14px;font-weight:700;}
+.step-card p{margin:0;font-size:13px;color:var(--ink-soft);line-height:1.55;}
+
+/* Two column comparison */
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;}
+@media (max-width:720px){.twocol{grid-template-columns:1fr;}}
+.twocol-col{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;}
+.twocol-col h4{margin:0 0 12px;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--accent-ink);}
+.twocol-col ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px;}
+.twocol-col li{font-size:14px;color:var(--ink-soft);line-height:1.5;padding-left:16px;position:relative;}
+.twocol-col li::before{content:"—";position:absolute;left:0;color:var(--ink-faint);}
+
+/* Checklist */
+.checklist{margin-top:16px;display:flex;flex-direction:column;gap:8px;}
+.cl-item{display:flex;align-items:flex-start;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px 16px;cursor:pointer;transition:.15s;}
+.cl-item:hover{border-color:var(--accent);}
+.cl-item.checked{background:var(--accent-soft2);border-color:var(--accent-soft);}
+.cl-box{flex:0 0 20px;height:20px;border-radius:6px;border:2px solid var(--line);margin-top:1px;display:flex;align-items:center;justify-content:center;transition:.15s;}
+.cl-item.checked .cl-box{background:var(--accent);border-color:var(--accent);color:#fff;}
+.cl-text{font-size:14px;color:var(--ink);line-height:1.55;}
+.cl-item.checked .cl-text{color:var(--ink-soft);text-decoration:line-through;text-decoration-color:var(--ink-faint);}
+
+/* Glossary */
+.gloss-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:16px;}
+@media (max-width:720px){.gloss-grid{grid-template-columns:1fr;}}
+.gloss-col h4{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--accent-ink);margin:0 0 12px;}
+.gloss-row{display:flex;gap:14px;padding:10px 0;border-bottom:1px solid var(--line);}
+.gloss-row:last-child{border-bottom:none;}
+.gloss-term{flex:0 0 88px;font-weight:800;font-size:13px;color:var(--ink);}
+.gloss-def{font-size:13.5px;color:var(--ink-soft);line-height:1.5;}
+
+/* Segment (ABCD) */
+.segment{display:flex;gap:22px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:26px;margin-top:16px;}
+@media (max-width:640px){.segment{flex-direction:column;}}
+.segment-letter{flex:0 0 74px;height:74px;border-radius:16px;background:linear-gradient(155deg,var(--accent),var(--gold));color:#fff;font-size:32px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+.segment-body h4{margin:0 0 8px;font-size:17px;font-weight:800;}
+.segment-body p{margin:0 0 14px;font-size:14px;color:var(--ink-soft);line-height:1.6;}
+.segment-body .sub{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--accent-ink);margin-bottom:10px;}
+
+/* People */
+.people-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:16px;}
+@media (max-width:820px){.people-grid{grid-template-columns:repeat(2,1fr);}}
+.person-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;}
+.person-card .pmeta{padding:12px 14px 16px;}
+.person-card .pname{font-size:13.5px;font-weight:700;margin:0 0 2px;}
+.person-card .prole{font-size:11.5px;color:var(--ink-faint);margin:0 0 8px;}
+.person-card .pnote{font-size:12px;color:var(--ink-soft);line-height:1.5;}
+
+/* ===== Generic small editable text fields ===== */
+.editable-field{display:block;border-radius:6px;padding:2px 5px;margin:0 -5px;cursor:text;transition:background .15s,box-shadow .15s;outline:none;}
+.editable-field:hover{background:rgba(181,96,42,.06);}
+.editable-field:focus{background:#FFFDF9;box-shadow:0 0 0 1.5px var(--accent);}
+.editable-field:empty:before{content:attr(data-placeholder);color:var(--ink-faint);font-style:italic;}
+
+/* Contact / final */
+.contact-card{background:linear-gradient(155deg,var(--sidebar-bg),#2a241c);color:#fff;border-radius:20px;padding:40px;text-align:center;margin-top:16px;}
+.contact-card .handle{display:inline-block;margin-top:16px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:8px 18px;border-radius:20px;font-weight:700;font-size:14px;}
+.contact-card .tagline{margin-top:22px;font-size:13px;color:#C9C1B3;font-style:italic;}
+
+/* ===== Media / Photo slot ===== */
+.photo-slot{position:relative;border-radius:16px;overflow:hidden;background:var(--accent-soft2);border:1.5px dashed #E3C7A6;min-height:220px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s;}
+.photo-slot:hover{border-color:var(--accent);}
+.photo-slot.has-media{border-style:solid;background:#000;}
+.photo-slot input{display:none;}
+.photo-slot-empty{text-align:center;padding:30px;color:var(--accent-ink);}
+.photo-slot-empty .ic{width:40px;height:40px;margin:0 auto 10px;color:var(--accent);}
+.photo-slot-empty .cap-main{font-size:13.5px;font-weight:700;}
+.photo-slot-empty .cap-sub{font-size:12.5px;color:#8A6440;margin:8px auto 14px;line-height:1.55;max-width:340px;text-align:left;}
+.copy-prompt-btn{position:relative;z-index:2;font-size:11.5px;font-weight:700;color:var(--accent-ink);background:#fff;border:1px solid #E3C7A6;padding:7px 12px;border-radius:20px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.15s;}
+.copy-prompt-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
+.photo-slot img,.photo-slot video{width:100%;height:100%;object-fit:cover;display:block;min-height:220px;max-height:420px;}
+.photo-slot .media-remove{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:9px;background:rgba(20,15,10,.55);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);opacity:0;transition:.15s;}
+.photo-slot:hover .media-remove{opacity:1;}
+.photo-slot .media-caption{position:absolute;left:0;right:0;bottom:0;padding:10px 14px;font-size:12px;color:#fff;background:linear-gradient(0deg,rgba(0,0,0,.65),transparent);}
+.photo-slot.drag-over{outline:2px solid var(--accent);outline-offset:2px;}
+
+.photo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:16px;}
+@media (max-width:640px){.photo-grid{grid-template-columns:1fr;}}
+.photo-grid .photo-slot{min-height:180px;}
+.photo-grid .photo-slot img,.photo-grid .photo-slot video{min-height:180px;}
+
+/* ===== Resource slot (documents / video lessons) ===== */
+.resource-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px;}
+@media (max-width:820px){.resource-grid{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:560px){.resource-grid{grid-template-columns:1fr;}}
+.resource-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:10px;position:relative;}
+.resource-card .ric{width:34px;height:34px;border-radius:9px;background:var(--accent-soft);color:var(--accent-ink);display:flex;align-items:center;justify-content:center;}
+.resource-card.is-video .ric{background:#E4EEF7;color:#2E5D82;}
+.resource-card h5{margin:0;font-size:13.5px;font-weight:700;}
+.resource-card p{margin:0;font-size:12.5px;color:var(--ink-soft);line-height:1.5;}
+.res-card-del{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:8px;border:none;background:var(--bg);color:var(--ink-faint);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:.15s;}
+.resource-card:hover .res-card-del{opacity:1;}
+.res-card-del:hover{background:#FBEDEA;color:#C9433A;}
+.res-slot-row{display:flex;flex-direction:column;gap:6px;padding-top:8px;border-top:1px dashed var(--line);}
+.res-slot-row:first-of-type{margin-top:2px;}
+.res-slot-label{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-faint);display:flex;align-items:center;gap:5px;}
+.resource-add-card{grid-column:1 / -1;border:1.5px dashed var(--line);background:none;color:var(--ink-faint);border-radius:14px;padding:14px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:.15s;}
+.resource-add-card:hover{border-color:var(--accent);color:var(--accent-ink);background:var(--accent-soft2);}
+.resource-add-card .plus{font-size:18px;line-height:1;}
+.res-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px;}
+.res-btn{font-size:11.5px;font-weight:700;padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink-soft);cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:.15s;}
+.res-btn:hover{border-color:var(--accent);color:var(--accent-ink);}
+.res-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
+.res-btn.primary:hover{background:var(--accent-ink);}
+.res-btn input{display:none;}
+.res-filled{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--accent-soft2);border:1px solid var(--accent-soft);border-radius:9px;padding:8px 10px;font-size:12px;color:var(--accent-ink);font-weight:600;}
+.res-filled a{color:inherit;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.res-filled button{border:none;background:none;color:var(--accent-ink);cursor:pointer;opacity:.7;flex:0 0 auto;}
+.res-filled button:hover{opacity:1;}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--sidebar-bg);color:#fff;padding:12px 20px;border-radius:12px;font-size:13.5px;font-weight:600;box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;transition:.25s ease;z-index:100;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+@media (max-width:980px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .sidebar-backdrop.open{display:block;}
+  .main{margin-left:0;}
+  .menu-toggle{display:flex;}
+  .content{padding:30px 22px 100px;}
+  .topbar{padding:16px 20px 16px 64px;}
+  .hero-cover{padding:40px 26px;}
+  .hero-title{font-size:30px;}
+  .steps-grid{grid-template-columns:1fr 1fr;}
+  .people-grid{grid-template-columns:1fr 1fr;}
+  .resource-grid{grid-template-columns:1fr 1fr;}
+}
+.storage-banner{position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:center;gap:16px;background:#7A2A22;color:#fff;padding:12px 50px 12px 20px;font-size:13px;font-weight:600;text-align:center;line-height:1.5;}
+.storage-banner button{position:absolute;right:16px;top:50%;transform:translateY(-50%);background:none;border:none;color:#fff;font-size:22px;line-height:1;cursor:pointer;opacity:.8;}
+.storage-banner button:hover{opacity:1;}
+@media (max-width:980px){.storage-banner{padding-left:56px;}}
+@media print{ .sidebar,.menu-toggle,.topbar{display:none!important;} .main{margin-left:0!important;} }
+</style>
+</head>
+<body>
+<div id="storageBanner" class="storage-banner" style="display:none;">
+  <span id="storageBannerText"></span>
+  <button id="storageBannerClose" type="button">&times;</button>
+</div>
+<div class="menu-toggle" id="menuToggle">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</div>
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">
+      <div class="sidebar-brand"><span class="dot"></span>МОДЕРНМ</div>
+      <div class="sidebar-title">Академия знаний «<em>Дизайнер</em>»</div>
+      <div class="sidebar-sub">Обучение и рабочие регламенты для менеджеров по продажам-дизайнерам</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-label"><span>Прогресс</span><span id="progressPct">0%</span></div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+    <nav class="nav" id="navList"></nav>
+    <div class="sidebar-foot">
+      Текст на страницах можно редактировать прямо на месте (кликните и печатайте). Внизу каждой страницы — кнопки «Добавить свою заметку» и «Прикрепить файл». Отметьте галочкой заметки, которые хотите поручить мне — я исправлю всё по вашему списку.
+      <div class="notes-toggle-row">
+        <span id="notesCounter">0 из 0 отмечено</span>
+        <button id="notesToggleBtn">Скрыть</button>
+      </div>
+      <button id="exportNotesBtn" style="width:100%;margin-top:8px;background:var(--accent);border-color:var(--accent);color:#fff;">Скопировать всё для правок</button>
+      Все загруженные фото и видео хранятся локально в этом браузере на этом компьютере. Если файл не загружается — откройте страницу в Google Chrome: некоторые браузеры блокируют хранилище для файлов, открытых напрямую с диска.
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <button id="backupExportBtn" style="flex:1;">Скачать бэкап</button>
+        <label class="page-tool-btn" style="flex:1;justify-content:center;margin:0;padding:9px 10px;font-size:12px;">Восстановить<input type="file" id="backupImportInput" accept="application/json" hidden></label>
+      </div>
+      <button id="resetBtn">Очистить все загруженные файлы</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar"><div class="crumbs" id="crumbs">МОДЕРНМ <span>/</span> Академия знаний «Дизайнер»</div></div>
+    <div class="content" id="content"></div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ ICONS ============ */
+const ICONS = {
+  home:'<circle cx="12" cy="12" r="10"/><path d="M8 12l4-4 4 4M12 8v8"/>',
+  shield:'<path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/>',
+  trending:'<path d="M4 17l5-5 4 4 7-8M15 8h5v5"/>',
+  graduation:'<path d="M3 9l9-4 9 4-9 4-9-4z"/><path d="M7 11v5c0 1.5 2.5 3 5 3s5-1.5 5-3v-5"/>',
+  handshake:'<path d="M3 12l4-4 3 3 3-3 4 4"/><path d="M6 11l4 5M18 11l-4 5"/>',
+  sparkles:'<path d="M12 3v5M12 16v5M4 12h5M15 12h5M6 6l3 3M15 15l3 3M18 6l-3 3M9 15l-3 3"/>',
+  zap:'<path d="M13 3L5 14h6l-1 7 8-11h-6l1-7z"/>',
+  heart:'<path d="M12 20s-7-4.4-9.5-9C1 8 2 4.5 5.5 4 8 3.6 10 5 12 7c2-2 4-3.4 6.5-3 3.5.5 4.5 4 3 7-2.5 4.6-9.5 9-9.5 9z"/>',
+  leaf:'<path d="M5 19c8 0 14-6 14-14 0 0-9-1-13 4-3 3.5-2 8-1 10z"/>',
+  gem:'<path d="M4 8l4-5h8l4 5-10 12z"/><path d="M4 8h16M9.5 3l-1.5 5 4 12 4-12-1.5-5"/>',
+  alert:'<path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17v.01"/>',
+  calendar:'<rect x="3.5" y="5" width="17" height="16" rx="2"/><path d="M8 3v4M16 3v4M3.5 10h17"/>',
+  message:'<path d="M4 5h16v11H8l-4 4z"/>',
+  clipboardCheck:'<rect x="6" y="4" width="12" height="16" rx="2"/><path d="M9 4V3h6v1M9 12l2 2 4-4"/>',
+  filetext:'<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M9.5 12h5M9.5 15.5h5"/>',
+  wallet:'<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M16 14h2"/>',
+  printer:'<rect x="6" y="8" width="12" height="7" rx="1"/><path d="M6 11H4v6a1 1 0 001 1h14a1 1 0 001-1v-6h-2M8 3h8v5H8zM8 15h8v6H8z"/>',
+  clipboard:'<rect x="6" y="4" width="12" height="16" rx="2"/><path d="M9 4V3h6v1"/>',
+  monitor:'<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>',
+  pencilruler:'<path d="M4 20l4-1 10-10-3-3L5 16z"/><path d="M14 6l3 3"/>',
+  layers:'<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5M3 17l9 5 9-5"/>',
+  play:'<circle cx="12" cy="12" r="9"/><path d="M10 8l6 4-6 4z"/>',
+  video:'<rect x="3" y="6" width="12" height="12" rx="2"/><path d="M15 10l6-3v10l-6-3z"/>',
+  camera:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/>',
+  gift:'<rect x="4" y="9" width="16" height="11" rx="1"/><path d="M4 9h16M12 9v11M8 9c-2 0-3-1.3-3-3s1-3 3-1c1.3 1.3 2 2.7 2 4M16 9c2 0 3-1.3 3-3s-1-3-3-1c-1.3 1.3-2 2.7-2 4"/>',
+  star:'<path d="M12 3l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L12 16.9 6.4 20l1.4-6.2-4.8-4.3 6.4-.6z"/>',
+  smile:'<circle cx="12" cy="12" r="9"/><path d="M8 14c1 1.5 2.5 2.3 4 2.3s3-.8 4-2.3M9 9.5h.01M15 9.5h.01"/>',
+  eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>',
+  repeat:'<path d="M17 2l4 4-4 4M3 11V9a4 4 0 014-4h14M7 22l-4-4 4-4M21 13v2a4 4 0 01-4 4H3"/>',
+  thumbsup:'<path d="M7 10v11H4V10zM7 10l3-7a2 2 0 012 2v5h5.5a2 2 0 012 2.3l-1.5 7A2 2 0 0116 21H7"/>',
+  briefcase:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2M3 12h18"/>',
+  route:'<circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8 6h8a4 4 0 014 4v0a4 4 0 01-4 4H8a4 4 0 00-4 4v0"/>',
+  listchecks:'<path d="M4 6h2M4 12h2M4 18h2M9 6h11M9 12h11M9 18h11"/>',
+  database:'<ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6M4 11.5v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/>',
+  lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>',
+  creditcard:'<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10.5h18M7 15h4"/>',
+  truck:'<rect x="2" y="7" width="12" height="10" rx="1"/><path d="M14 11h4l3 3v3h-7z"/><circle cx="7" cy="18" r="1.7"/><circle cx="17.5" cy="18" r="1.7"/>',
+  tag:'<path d="M12 3h6a2 2 0 012 2v6l-9 9-8-8z"/><path d="M17 8h.01"/>',
+  target:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/>',
+  signature:'<path d="M3 17c3-1 5-3 6-6 1 3 3 5 6 5 2 0 3-1.5 2-3M18 9l3-3M3 20h18"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4.5 4.5-7 8-7s7 2.5 8 7"/>',
+  send:'<path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/>',
+  phone:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2C9.5 21 3 14.5 3 6a2 2 0 012-2z"/>',
+  book:'<path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M19 17H6a2 2 0 00-2 2"/>',
+  mappin:'<path d="M12 21s7-6.4 7-12a7 7 0 10-14 0c0 5.6 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/>',
+  upload:'<path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 002 2h12a2 2 0 002-2v-3"/>',
+  link:'<path d="M9 15l6-6"/><path d="M14 4l1.5-1.5a4 4 0 015.6 5.6L19 10M10 14l-1.5 1.5a4 4 0 01-5.6-5.6L5 8"/>',
+  trash:'<path d="M4 7h16M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2M6 7l1 13a2 2 0 002 2h6a2 2 0 002-2l1-13"/>',
+  arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+  check:'<path d="M20 6L9 17l-5-5"/>',
+  x:'<path d="M18 6L6 18M6 6l12 12"/>'
+};
+function icon(name,size=18){
+  const p = ICONS[name]||ICONS.star;
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+}
+
+/* ============ STORAGE (IndexedDB for files, with localStorage fallback if IndexedDB is blocked) ============ */
+const DB_NAME='academyMediaDB', STORE='files';
+let INDEXEDDB_OK = null;
+
+function openDB(){
+  return new Promise((resolve,reject)=>{
+    if(!window.indexedDB){ reject(new Error('no-indexeddb')); return; }
+    let rq;
+    try{ rq = indexedDB.open(DB_NAME,1); }catch(e){ reject(e); return; }
+    rq.onupgradeneeded = ()=> rq.result.createObjectStore(STORE);
+    rq.onsuccess = ()=> resolve(rq.result);
+    rq.onerror = ()=> reject(rq.error || new Error('indexeddb-error'));
+    rq.onblocked = ()=> reject(new Error('indexeddb-blocked'));
+  });
+}
+async function idbCapable(){
+  if(INDEXEDDB_OK !== null) return INDEXEDDB_OK;
+  try{ await openDB(); INDEXEDDB_OK = true; }
+  catch(e){ INDEXEDDB_OK = false; }
+  return INDEXEDDB_OK;
+}
+
+function lsFallbackKey(key){ return 'academyFileFallback:'+key; }
+
+function fileToDataURL(file){
+  return new Promise((resolve,reject)=>{
+    const r = new FileReader();
+    r.onload = ()=>resolve(r.result);
+    r.onerror = ()=>reject(r.error || new Error('read-failed'));
+    r.readAsDataURL(file);
+  });
+}
+function compressImageToDataURL(file, maxW, quality){
+  maxW = maxW || 1600; quality = quality || 0.82;
+  return new Promise((resolve,reject)=>{
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = ()=>{
+      let w = img.naturalWidth, h = img.naturalHeight;
+      if(w > maxW){ h = Math.round(h*(maxW/w)); w = maxW; }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img,0,0,w,h);
+      URL.revokeObjectURL(url);
+      try{ resolve(canvas.toDataURL('image/jpeg', quality)); }
+      catch(e){ reject(e); }
+    };
+    img.onerror = (e)=>{ URL.revokeObjectURL(url); reject(new Error('image-decode-failed')); };
+    img.src = url;
+  });
+}
+function dataURLtoBlob(dataURL, name){
+  const parts = dataURL.split(',');
+  const mimeMatch = parts[0].match(/data:(.*?);base64/);
+  const mime = mimeMatch ? mimeMatch[1] : 'application/octet-stream';
+  const bin = atob(parts[1]);
+  const arr = new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) arr[i] = bin.charCodeAt(i);
+  const blob = new Blob([arr], {type:mime});
+  try{ Object.defineProperty(blob,'name',{value:name||'файл', writable:true}); }catch(e){ blob.name = name||'файл'; }
+  return blob;
+}
+
+async function idbSet(key,val){
+  if(await idbCapable()){
+    try{
+      const db = await openDB();
+      await new Promise((res,rej)=>{
+        const tx = db.transaction(STORE,'readwrite');
+        tx.objectStore(STORE).put(val,key);
+        tx.oncomplete=()=>res(); tx.onerror=()=>rej(tx.error);
+      });
+      try{ localStorage.removeItem(lsFallbackKey(key)); }catch(e){}
+      return;
+    }catch(e){ /* fall through to localStorage fallback */ }
+  }
+  // Fallback: browser blocks IndexedDB (common on file:// in Firefox/Safari) — use localStorage instead
+  let dataURL;
+  try{
+    if(val.type && val.type.startsWith('image/')){
+      dataURL = await compressImageToDataURL(val);
+    } else {
+      dataURL = await fileToDataURL(val);
+    }
+    localStorage.setItem(lsFallbackKey(key), JSON.stringify({name: val.name||'файл', data: dataURL}));
+  }catch(e){
+    throw new Error('STORAGE_UNAVAILABLE');
+  }
+}
+async function idbGet(key){
+  if(await idbCapable()){
+    try{
+      const db = await openDB();
+      const val = await new Promise((res,rej)=>{
+        const tx = db.transaction(STORE,'readonly');
+        const rq = tx.objectStore(STORE).get(key);
+        rq.onsuccess=()=>res(rq.result); rq.onerror=()=>rej(rq.error);
+      });
+      if(val) return val;
+    }catch(e){ /* fall through */ }
+  }
+  const raw = localStorage.getItem(lsFallbackKey(key));
+  if(raw){
+    try{
+      const parsed = JSON.parse(raw);
+      return dataURLtoBlob(parsed.data, parsed.name);
+    }catch(e){ return undefined; }
+  }
+  return undefined;
+}
+async function idbDelete(key){
+  try{ localStorage.removeItem(lsFallbackKey(key)); }catch(e){}
+  if(await idbCapable()){
+    try{
+      const db = await openDB();
+      await new Promise((res,rej)=>{
+        const tx = db.transaction(STORE,'readwrite');
+        tx.objectStore(STORE).delete(key);
+        tx.oncomplete=()=>res(); tx.onerror=()=>rej(tx.error);
+      });
+    }catch(e){}
+  }
+}
+async function idbClear(){
+  try{
+    Object.keys(localStorage).filter(k=>k.startsWith('academyFileFallback:')).forEach(k=>localStorage.removeItem(k));
+  }catch(e){}
+  if(await idbCapable()){
+    try{
+      const db = await openDB();
+      await new Promise((res,rej)=>{
+        const tx = db.transaction(STORE,'readwrite');
+        tx.objectStore(STORE).clear();
+        tx.oncomplete=()=>res(); tx.onerror=()=>rej(tx.error);
+      });
+    }catch(e){}
+  }
+}
+function getLinks(){ try{ return JSON.parse(localStorage.getItem('academyLinks')||'{}'); }catch(e){ return {}; } }
+function setLink(id,url){ const l=getLinks(); l[id]=url; localStorage.setItem('academyLinks', JSON.stringify(l)); }
+function removeLink(id){ const l=getLinks(); delete l[id]; localStorage.setItem('academyLinks', JSON.stringify(l)); }
+
+function getDone(){ try{ return JSON.parse(localStorage.getItem('academyDone')||'{}'); }catch(e){ return {}; } }
+function setDone(id,val){ const d=getDone(); if(val) d[id]=true; else delete d[id]; localStorage.setItem('academyDone', JSON.stringify(d)); }
+
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer=setTimeout(()=>t.classList.remove('show'),2400);
+}
+</script>
+
+<script>
+/* ============ BLOCK RENDERERS ============ */
+function esc(s){ return (s===undefined||s===null) ? '' : String(s); }
+
+function rLead(b){ return `<div class="b-lead">${esc(b.text)}</div>`; }
+function rP(b){ return `<div class="b-p">${esc(b.text)}</div>`; }
+function rQuote(b){ return `<div class="b-quote"><div class="b-quote-inner">${esc(b.text)}</div></div>`; }
+
+function rList(b){
+  const items = b.items.map(it=>{
+    if(typeof it === 'string') return `<li><span class="bullet"></span><span>${it}</span></li>`;
+    return `<li><span class="bullet"></span><span><span class="lbl">${esc(it.label)}.</span> ${esc(it.text)}</span></li>`;
+  }).join('');
+  return `<div class="b-list-wrap">${b.title?`<h4 style="margin:0 0 4px;font-size:15px;font-weight:700;">${b.title}</h4>`:''}<ul class="b-list">${items}</ul></div>`;
+}
+
+function rCallout(b){
+  return `<div class="b-callout"><div class="ic">${icon(b.icon||'alert',22)}</div><div class="tx">${esc(b.text)}</div></div>`;
+}
+
+function rCards(b){
+  const cols = b.cols || 3;
+  const items = b.items.map(it=>`
+    <div class="card">
+      <div class="ic-wrap">${icon(it.icon||'star',20)}</div>
+      <h4>${esc(it.title)}</h4>
+      <p>${esc(it.text)}</p>
+    </div>`).join('');
+  return `<div class="grid grid-${cols}">${items}</div>`;
+}
+
+function rSteps(b){
+  const items = b.items.map(it=>`
+    <div class="step-card">
+      <div class="num">${esc(it.n)}</div>
+      <h4>${esc(it.title)}</h4>
+      ${it.text?`<p>${esc(it.text)}</p>`:''}
+    </div>`).join('');
+  return `<div class="steps-grid">${items}</div>`;
+}
+
+function rTwocol(b){
+  const mkCol = (col)=>`
+    <div class="twocol-col">
+      <h4>${esc(col.title)}</h4>
+      <ul>${col.items.map(i=>`<li>${esc(i)}</li>`).join('')}</ul>
+    </div>`;
+  return `<div class="twocol">${mkCol(b.colA)}${mkCol(b.colB)}</div>`;
+}
+
+function rChecklist(b){
+  const done = getDone();
+  const items = b.items.map((it,idx)=>{
+    const id = b.id+'_'+idx;
+    const isDone = !!done[id];
+    return `<div class="cl-item ${isDone?'checked':''}" data-clid="${id}">
+      <div class="cl-box">${isDone?icon('check',12):''}</div>
+      <div class="cl-text">${esc(it)}</div>
+    </div>`;
+  }).join('');
+  return `<div class="checklist">${items}</div>${b.note?`<div class="b-p" style="margin-top:12px;font-size:13px;">${esc(b.note)}</div>`:''}`;
+}
+
+function rGlossary(b){
+  const cols = b.columns.map(col=>`
+    <div class="gloss-col">
+      <h4>${esc(col.title)}</h4>
+      ${col.items.map(i=>`<div class="gloss-row"><div class="gloss-term">${esc(i.term)}</div><div class="gloss-def">${esc(i.def)}</div></div>`).join('')}
+    </div>`).join('');
+  return `<div class="gloss-grid">${cols}</div>`;
+}
+
+function rSegment(b){
+  return `<div class="segment">
+    <div class="segment-letter">${esc(b.letter)}</div>
+    <div class="segment-body">
+      <h4>${esc(b.title)}</h4>
+      <p>${esc(b.text)}</p>
+      <div class="sub">Что делать</div>
+      <ul class="b-list">${b.items.map(i=>`<li><span class="bullet"></span><span>${esc(i)}</span></li>`).join('')}</ul>
+    </div>
+  </div>`;
+}
+
+function rPeople(b){
+  const PORTRAIT_PROMPT = "Портрет сотрудника по пояс или крупным планом: нейтральный светлый фон (стена шоурума или офиса), опрятная деловая-casual одежда, естественная доброжелательная улыбка, взгляд в камеру. Мягкий равномерный дневной свет, как для корпоративного портрета. Реалистичное фото, без текста и логотипов в кадре.";
+  const items = b.items.map((p)=>`
+    <div class="person-card">
+      ${photoSlotHTML(p.id, p.dept||PORTRAIT_PROMPT, 170)}
+      <div class="pmeta">
+        ${editableFieldHTML(p.id+'_name', p.name||'', 'ФИО', 'div').replace('class="editable-field"','class="editable-field pname"')}
+        ${editableFieldHTML(p.id+'_role', p.role||'', 'Должность · Подразделение', 'div').replace('class="editable-field"','class="editable-field prole"')}
+        ${editableFieldHTML(p.id+'_note', p.note||'', 'Какие вопросы решает', 'div').replace('class="editable-field"','class="editable-field pnote"')}
+      </div>
+    </div>`).join('');
+  return `<div class="people-grid">${items}</div>`;
+}
+
+function rPhoto(b){ return photoSlotHTML(b.id, b.caption, 240); }
+function rPhotogrid(b){
+  const items = b.items.map(it=>photoSlotHTML(it.id, it.caption, 180)).join('');
+  return `<div class="photo-grid">${items}</div>`;
+}
+
+function rResources(b, blockId){
+  const groupId = 'resgrp_'+(blockId||b.id||Math.random().toString(36).slice(2));
+  const meta = getGroupMeta(groupId);
+  const originalItems = b.items.filter(it=>!meta.deleted.includes(it.id));
+  const customItems = meta.added.map(cid=>({id:cid, title:'', text:''}));
+  const allItems = originalItems.concat(customItems);
+  const cardsHTML = allItems.map(it=>resourceCardHTML(it.id, it.title, it.text, groupId)).join('');
+  return `<div class="resource-grid" data-group-id="${groupId}">${cardsHTML}
+    <button type="button" class="resource-add-card" data-add-card-group="${groupId}"><span class="plus">+</span>Добавить карточку</button>
+  </div>`;
+}
+
+function rContact(b){
+  return `<div class="contact-card">
+    <div style="width:52px;height:52px;border-radius:14px;margin:0 auto 14px;background:rgba(255,255,255,.1);color:#fff;display:flex;align-items:center;justify-content:center;">${icon('message',22)}</div>
+    <div style="font-size:19px;font-weight:700;">${esc(b.text)}</div>
+    <div class="handle">${esc(b.handle)}</div>
+    <div class="tagline">${esc(b.tagline)}</div>
+  </div>`;
+}
+
+function rNote(b){
+  const done = getDone();
+  const items = b.items.map((it,idx)=>{
+    const id = 'note_'+b.id+'_'+idx;
+    const isDone = !!done[id];
+    return `<li data-noteid="${id}" class="${isDone?'done':''}"><span class="rn-box">${isDone?icon('check',10):''}</span><span>${esc(it)}</span></li>`;
+  }).join('');
+  const labels = {P0:'Сделать в первую очередь', P1:'Стоит поправить', P2:'Можно доработать позже'};
+  return `<div class="rev-note" data-level="${b.level}">
+    <div class="rev-note-head"><span class="rev-note-badge">${esc(b.level)}</span><span class="rev-note-label">${labels[b.level]||'Заметка'}</span></div>
+    <ul>${items}</ul>
+  </div>`;
+}
+
+const BLOCK_RENDERERS = {
+  lead: rLead, p: rP, quote: rQuote, list: rList, callout: rCallout,
+  cards: rCards, steps: rSteps, twocol: rTwocol, checklist: rChecklist,
+  glossary: rGlossary, segment: rSegment, people: rPeople,
+  photo: rPhoto, photogrid: rPhotogrid, resources: rResources, contact: rContact,
+  note: rNote
+};
+
+const EDITABLE_TYPES = ['lead','p','quote','list','callout','cards','steps','twocol','glossary','contact','segment'];
+
+function getEdits(){ try{ return JSON.parse(localStorage.getItem('academyEdits')||'{}'); }catch(e){ return {}; } }
+function getBlockEdit(id){ const m = getEdits(); return Object.prototype.hasOwnProperty.call(m,id) ? m[id] : null; }
+function setBlockEdit(id, html){ const m = getEdits(); m[id]=html; localStorage.setItem('academyEdits', JSON.stringify(m)); }
+function clearBlockEdit(id){ const m = getEdits(); delete m[id]; localStorage.setItem('academyEdits', JSON.stringify(m)); }
+
+/* ---- Small editable text fields (ФИО, должность, названия карточек и т.п.) ---- */
+function getFieldEdits(){ try{ return JSON.parse(localStorage.getItem('academyFieldEdits')||'{}'); }catch(e){ return {}; } }
+function getFieldEdit(id, fallback){ const m=getFieldEdits(); return Object.prototype.hasOwnProperty.call(m,id) ? m[id] : fallback; }
+function setFieldEdit(id, val){ const m=getFieldEdits(); m[id]=val; localStorage.setItem('academyFieldEdits', JSON.stringify(m)); }
+function editableFieldHTML(id, fallbackText, placeholder, tag){
+  tag = tag || 'span';
+  const text = getFieldEdit(id, fallbackText||'');
+  return `<${tag} class="editable-field" contenteditable="true" spellcheck="false" data-field-id="${id}" data-placeholder="${esc(placeholder||'')}">${esc(text)}</${tag}>`;
+}
+function mountEditableFields(container){
+  container.querySelectorAll('.editable-field').forEach(el=>{
+    if(el._wired) return;
+    el._wired = true;
+    el.addEventListener('blur', ()=>{
+      setFieldEdit(el.getAttribute('data-field-id'), el.innerText.trim());
+    });
+  });
+}
+
+/* ---- Dynamic card groups: add / delete cards inside a "resources" block ---- */
+function getCardGroups(){ try{ return JSON.parse(localStorage.getItem('academyCardGroups')||'{}'); }catch(e){ return {}; } }
+function getGroupMeta(groupId){ const m = getCardGroups(); return m[groupId] || {added:[], deleted:[]}; }
+function saveGroupMeta(groupId, meta){ const m = getCardGroups(); m[groupId]=meta; localStorage.setItem('academyCardGroups', JSON.stringify(m)); }
+function addCardToGroup(groupId){
+  const meta = getGroupMeta(groupId);
+  const newId = 'custom_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  meta.added.push(newId);
+  saveGroupMeta(groupId, meta);
+  return newId;
+}
+function deleteCardFromGroup(groupId, cardId){
+  const meta = getGroupMeta(groupId);
+  if(meta.added.includes(cardId)){
+    meta.added = meta.added.filter(x=>x!==cardId);
+  } else if(!meta.deleted.includes(cardId)){
+    meta.deleted.push(cardId);
+  }
+  saveGroupMeta(groupId, meta);
+}
+
+function renderBlock(b, blockId){
+  const fn = BLOCK_RENDERERS[b.type];
+  if(!fn){ return ''; }
+  if(blockId && EDITABLE_TYPES.includes(b.type)){
+    const saved = getBlockEdit(blockId);
+    const inner = saved!==null ? saved : fn(b, blockId);
+    const isEdited = saved!==null;
+    return `<div class="page-block">
+      <div class="editable-block ${isEdited?'is-edited':''}" contenteditable="true" spellcheck="false" data-block-id="${blockId}">${isEdited?`<span class="edited-tag" contenteditable="false">${icon('check',10)} правка<button type="button" data-revert-block>вернуть оригинал</button></span>`:''}${inner}</div>
+    </div>`;
+  }
+  return `<div class="page-block">${fn(b, blockId)}</div>`;
+}
+
+/* ============ MEDIA SLOT HTML ============ */
+function photoSlotHTML(id, caption, minH){
+  return `<div class="photo-slot" data-media-id="${id}" data-media-kind="photo" style="min-height:${minH}px">
+    <input type="file" accept="image/*,video/*">
+    <div class="photo-slot-empty">
+      ${icon('camera',34)}
+      <div class="cap-main">Загрузить фото</div>
+      <div class="cap-sub" data-prompt-text>${esc(caption)||'нажмите или перетащите файл'}</div>
+      <button type="button" class="copy-prompt-btn" data-copy-btn>${icon('clipboard',12)} Скопировать описание</button>
+    </div>
+  </div>`;
+}
+
+function resourceCardHTML(id, title, text, groupId){
+  return `<div class="resource-card" data-res-id="${id}" data-group-id="${groupId||''}">
+    <button type="button" class="res-card-del" data-del-card title="Удалить карточку">${icon('trash',13)}</button>
+    <div class="ric">${icon('filetext',18)}</div>
+    ${editableFieldHTML('rtitle_'+id, title||'', 'Название карточки', 'h5')}
+    ${editableFieldHTML('rtext_'+id, text||'', 'Короткое описание', 'p')}
+    <div class="res-slot-row">
+      <span class="res-slot-label">${icon('filetext',12)} Документ</span>
+      <div class="res-actions" data-res-actions data-res-id="doc:${id}"></div>
+    </div>
+    <div class="res-slot-row">
+      <span class="res-slot-label">${icon('video',12)} Видео</span>
+      <div class="res-actions" data-res-actions data-res-id="video:${id}"></div>
+    </div>
+  </div>`;
+}
+
+/* ============ MOUNT MEDIA SLOTS ============ */
+async function mountPhotoSlots(container){
+  const slots = container.querySelectorAll('.photo-slot');
+  for(const slot of slots){
+    const id = slot.getAttribute('data-media-id');
+    const input = slot.querySelector('input');
+    try{
+      const file = await idbGet('photo:'+id);
+      if(file) renderPhotoPreview(slot, file);
+    }catch(e){}
+
+    slot.addEventListener('click', (e)=>{ if(!slot.classList.contains('has-media')) input.click(); });
+    const copyBtn = slot.querySelector('[data-copy-btn]');
+    if(copyBtn){
+      copyBtn.addEventListener('click', async (e)=>{
+        e.stopPropagation();
+        const txt = slot.querySelector('[data-prompt-text]').innerText;
+        try{
+          await navigator.clipboard.writeText(txt);
+          toast('Описание скопировано');
+        }catch(err){
+          const ta = document.createElement('textarea');
+          ta.value = txt; document.body.appendChild(ta); ta.select();
+          document.execCommand('copy'); document.body.removeChild(ta);
+          toast('Описание скопировано');
+        }
+      });
+    }
+    input.addEventListener('change', async ()=>{
+      if(input.files && input.files[0]){
+        const f = input.files[0];
+        try{
+          await idbSet('photo:'+id, f);
+          renderPhotoPreview(slot, f);
+          toast('Файл сохранён');
+        }catch(err){
+          toast('Не удалось сохранить файл — см. подсказку под кнопкой очистки в сайдбаре');
+          console.error('photo upload failed', err);
+        }
+      }
+    });
+    ['dragover','dragenter'].forEach(ev=>slot.addEventListener(ev,(e)=>{e.preventDefault();slot.classList.add('drag-over');}));
+    ['dragleave','drop'].forEach(ev=>slot.addEventListener(ev,(e)=>{e.preventDefault();slot.classList.remove('drag-over');}));
+    slot.addEventListener('drop', async (e)=>{
+      e.preventDefault();
+      const f = e.dataTransfer.files && e.dataTransfer.files[0];
+      if(f){
+        try{
+          await idbSet('photo:'+id, f);
+          renderPhotoPreview(slot, f);
+          toast('Файл сохранён');
+        }catch(err){
+          toast('Не удалось сохранить файл — см. подсказку под кнопкой очистки в сайдбаре');
+          console.error('photo drop upload failed', err);
+        }
+      }
+    });
+  }
+}
+function renderPhotoPreview(slot, file){
+  slot.classList.add('has-media');
+  const url = URL.createObjectURL(file);
+  const isVideo = file.type.startsWith('video');
+  slot.innerHTML = `
+    ${isVideo? `<video src="${url}" controls></video>` : `<img src="${url}">`}
+    <button class="media-remove" type="button">${icon('trash',15)}</button>
+  `;
+  slot.querySelector('.media-remove').addEventListener('click', async (e)=>{
+    e.stopPropagation();
+    const id = slot.getAttribute('data-media-id');
+    await idbDelete('photo:'+id);
+    location.reload();
+  });
+}
+
+async function mountResourceSlots(container){
+  const cards = container.querySelectorAll('.resource-card');
+  for(const card of cards){
+    const actionEls = card.querySelectorAll('[data-res-actions]');
+    for(const actionsEl of actionEls){
+      const fullId = actionsEl.getAttribute('data-res-id');
+      await renderResourceActions(fullId, actionsEl);
+    }
+    const delBtn = card.querySelector('[data-del-card]');
+    if(delBtn){
+      delBtn.addEventListener('click', ()=>{
+        const cardId = card.getAttribute('data-res-id');
+        const groupId = card.getAttribute('data-group-id');
+        if(confirm('Удалить эту карточку? Прикреплённые к ней файлы тоже будут удалены.')){
+          deleteCardFromGroup(groupId, cardId);
+          idbDelete('res:doc:'+cardId);
+          idbDelete('res:video:'+cardId);
+          removeLink('doc:'+cardId);
+          removeLink('video:'+cardId);
+          router();
+        }
+      });
+    }
+  }
+  mountEditableFields(container);
+  container.querySelectorAll('[data-add-card-group]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const groupId = btn.getAttribute('data-add-card-group');
+      addCardToGroup(groupId);
+      router();
+    });
+  });
+}
+async function renderResourceActions(id, el){
+  const links = getLinks();
+  const link = links[id];
+  let file = null;
+  try{ file = await idbGet('res:'+id); }catch(e){}
+
+  if(link){
+    el.innerHTML = `<div class="res-filled"><a href="${esc(link)}" target="_blank" rel="noopener">${icon('link',13)} ${esc(link)}</a><button data-act="rmlink">${icon('x',14)}</button></div>`;
+    el.querySelector('[data-act="rmlink"]').addEventListener('click', ()=>{ removeLink(id); renderResourceActions(id, el); });
+    return;
+  }
+  if(file){
+    const url = URL.createObjectURL(file);
+    el.innerHTML = `<div class="res-filled"><a href="${url}" target="_blank" rel="noopener">${icon('check',13)} ${esc(file.name)}</a><button data-act="rmfile">${icon('x',14)}</button></div>`;
+    el.querySelector('[data-act="rmfile"]').addEventListener('click', async ()=>{ await idbDelete('res:'+id); renderResourceActions(id, el); });
+    return;
+  }
+  el.innerHTML = `
+    <button class="res-btn primary" data-act="link">${icon('link',13)} Ссылка</button>
+    <label class="res-btn" data-act="upload">${icon('upload',13)} Файл<input type="file"></label>
+  `;
+  el.querySelector('[data-act="link"]').addEventListener('click', ()=>{
+    const url = prompt('Вставьте ссылку:');
+    if(url){ setLink(id, url.trim()); renderResourceActions(id, el); }
+  });
+  el.querySelector('input').addEventListener('change', async (e)=>{
+    if(e.target.files && e.target.files[0]){
+      try{
+        await idbSet('res:'+id, e.target.files[0]);
+        renderResourceActions(id, el);
+        toast('Файл сохранён');
+      }catch(err){
+        toast('Не удалось сохранить файл — он может быть слишком большим для этого браузера');
+        console.error('resource upload failed', err);
+      }
+    }
+  });
+}
+
+function mountChecklist(container){
+  container.querySelectorAll('.cl-item').forEach(item=>{
+    item.addEventListener('click', ()=>{
+      const id = item.getAttribute('data-clid');
+      const nowDone = !item.classList.contains('checked');
+      setDone(id, nowDone);
+      item.classList.toggle('checked', nowDone);
+      item.querySelector('.cl-box').innerHTML = nowDone? icon('check',12) : '';
+    });
+  });
+}
+
+function mountNotes(container){
+  container.querySelectorAll('.rev-note li').forEach(li=>{
+    li.addEventListener('click', ()=>{
+      const id = li.getAttribute('data-noteid');
+      const nowDone = !li.classList.contains('done');
+      setDone(id, nowDone);
+      li.classList.toggle('done', nowDone);
+      li.querySelector('.rn-box').innerHTML = nowDone? icon('check',10) : '';
+      if(typeof updateNotesCounter === 'function') updateNotesCounter();
+    });
+  });
+}
+
+/* ============ EDITABLE TEXT BLOCKS ============ */
+function mountEditableBlocks(container){
+  container.querySelectorAll('.editable-block').forEach(el=>{
+    el.addEventListener('blur', ()=>{
+      const id = el.getAttribute('data-block-id');
+      const tag = el.querySelector('.edited-tag');
+      const cleanHTML = el.innerHTML.replace(/<span class="edited-tag"[\s\S]*?<\/span>/,'');
+      setBlockEdit(id, cleanHTML);
+      if(!tag){
+        const span = document.createElement('span');
+        span.className='edited-tag'; span.setAttribute('contenteditable','false');
+        span.innerHTML = icon('check',10)+' правка<button type="button" data-revert-block>вернуть оригинал</button>';
+        el.prepend(span);
+        el.classList.add('is-edited');
+        wireRevertButton(span.querySelector('[data-revert-block]'), el, id);
+      }
+    });
+    const revertBtn = el.querySelector('[data-revert-block]');
+    if(revertBtn) wireRevertButton(revertBtn, el, el.getAttribute('data-block-id'));
+  });
+}
+function wireRevertButton(btn, el, id){
+  if(!btn) return;
+  btn.addEventListener('click', (e)=>{
+    e.stopPropagation(); e.preventDefault();
+    clearBlockEdit(id);
+    router();
+    toast('Правка отменена — вернулся оригинальный текст');
+  });
+}
+
+/* ============ PAGE ATTACHMENTS (reference files) ============ */
+async function mountPageAttach(pageId, container){
+  const wrap = container.querySelector(`[data-attach-page="${pageId}"]`);
+  if(!wrap) return;
+  let file = null;
+  try{ file = await idbGet('pagefile_'+pageId); }catch(e){}
+  if(file){
+    const url = URL.createObjectURL(file);
+    wrap.innerHTML = `<div class="page-attach-chip">${icon('filetext',14)}<a href="${url}" target="_blank" rel="noopener">${esc(file.name)}</a><button type="button" data-rm-attach>${icon('x',13)}</button></div>`;
+    wrap.querySelector('[data-rm-attach]').addEventListener('click', async ()=>{
+      await idbDelete('pagefile_'+pageId);
+      mountPageAttach(pageId, container);
+    });
+  } else {
+    wrap.innerHTML = '';
+  }
+}
+function wireAttachInputs(container){
+  container.querySelectorAll('[data-attach-input]').forEach(input=>{
+    input.addEventListener('change', async ()=>{
+      const pageId = input.getAttribute('data-attach-input');
+      if(input.files && input.files[0]){
+        try{
+          await idbSet('pagefile_'+pageId, input.files[0]);
+          mountPageAttach(pageId, container);
+          toast('Файл прикреплён к странице');
+        }catch(err){
+          toast('Не удалось сохранить файл — он может быть слишком большим для этого браузера');
+          console.error('page attach failed', err);
+        }
+      }
+    });
+  });
+}
+
+/* ============ USER NOTES (свои заметки) ============ */
+function getUserNotesMap(){ try{ return JSON.parse(localStorage.getItem('academyUserNotes')||'{}'); }catch(e){ return {}; } }
+function getUserNotes(pageId){ return getUserNotesMap()[pageId] || []; }
+function addUserNote(pageId, text){
+  const m = getUserNotesMap();
+  if(!m[pageId]) m[pageId] = [];
+  m[pageId].push({ id:'u'+Date.now().toString(36)+Math.random().toString(36).slice(2,6), text });
+  localStorage.setItem('academyUserNotes', JSON.stringify(m));
+}
+function removeUserNote(pageId, noteId){
+  const m = getUserNotesMap();
+  if(m[pageId]) m[pageId] = m[pageId].filter(n=>n.id!==noteId);
+  localStorage.setItem('academyUserNotes', JSON.stringify(m));
+}
+function mountUserNotes(pageId, container){
+  const wrap = container.querySelector(`[data-usernotes-page="${pageId}"]`);
+  if(!wrap) return;
+  const notes = getUserNotes(pageId);
+  wrap.innerHTML = notes.map(n=>`
+    <div class="user-note" data-note-id="${n.id}">
+      <div class="un-ic">${icon('message',16)}</div>
+      <div class="un-text">${esc(n.text)}</div>
+      <button type="button" class="un-del">${icon('trash',13)}</button>
+    </div>`).join('');
+  wrap.querySelectorAll('.user-note .un-del').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const noteEl = btn.closest('.user-note');
+      removeUserNote(pageId, noteEl.getAttribute('data-note-id'));
+      mountUserNotes(pageId, container);
+      if(typeof updateNotesCounter==='function') updateNotesCounter();
+    });
+  });
+}
+function mountAddNoteButton(pageId, container){
+  const btn = container.querySelector(`[data-addnote-page="${pageId}"]`);
+  if(!btn) return;
+  btn.addEventListener('click', ()=>{
+    if(btn.dataset.open) return;
+    btn.dataset.open = '1';
+    btn.style.display = 'none';
+    const form = document.createElement('div');
+    form.className = 'usernote-form';
+    form.innerHTML = `<textarea placeholder="Чего не хватает на этой странице? Опишите, что нужно поправить или дописать."></textarea>
+      <div class="usernote-form-actions">
+        <button type="button" data-save>Сохранить</button>
+        <button type="button" data-cancel>Отмена</button>
+      </div>`;
+    btn.parentElement.insertBefore(form, btn);
+    form.querySelector('textarea').focus();
+    form.querySelector('[data-save]').addEventListener('click', ()=>{
+      const val = form.querySelector('textarea').value.trim();
+      if(val){
+        addUserNote(pageId, val);
+        mountUserNotes(pageId, container);
+        if(typeof updateNotesCounter==='function') updateNotesCounter();
+      }
+      form.remove(); btn.style.display=''; delete btn.dataset.open;
+    });
+    form.querySelector('[data-cancel]').addEventListener('click', ()=>{
+      form.remove(); btn.style.display=''; delete btn.dataset.open;
+    });
+  });
+}
+</script>
+<script>
+const COVER = {
+  eyebrow: "Полный материал · версия для согласования",
+  title: "Академия знаний «<em>Дизайнер</em>»",
+  desc: "Обучение и рабочие регламенты для менеджеров по продажам-дизайнерам. Загрузите фотографии салона и команды прямо на этой странице — обложка курса.",
+  meta: "МОДЕРНМ · 10 дней обучения · 97 разделов"
+};
+
+const DATA = { sections: [] };
+
+DATA.sections.push({
+  id:"intro", badge:"00", icon:"home", title:"Введение", subtitle:"С чего начать",
+  pages:[
+    { id:"intro-1", menuTitle:"Что это за академия", kicker:"Добро пожаловать", title:"Что это за академия и зачем она нужна", blocks:[
+      {type:"lead", text:"Твой персональный онлайн-курс для быстрого старта. Мы собрали всё, что нужно знать и уметь менеджеру-дизайнеру: от философии бренда до оформления договора и передачи проекта в производство."},
+      {type:"list", title:"Зачем мы создали Академию", items:[
+        "Чтобы ты не тратил недели на поиск разрозненной информации.",
+        "Чтобы ты с первого дня чувствовал уверенность в общении с клиентами.",
+        "Чтобы у тебя была чёткая дорожная карта: учись шаг за шагом, закрепляй знания на практике.",
+        "Чтобы ты быстро начал зарабатывать и получать удовольствие от работы."
+      ]},
+      {type:"quote", text:"Академия — это не просто учебник. Это твой наставник, который доступен 24/7."},
+      {type:"photo", id:"p-intro-team", caption:"Групповое фото команды салона МОДЕРНМ: 5–8 человек в деловой casual-одежде стоят или сидят вместе в светлом современном офисе продаж или на фоне выставочных кухонь, естественные улыбки, не постановочные позы. Дневной свет, тёплые тона, атмосфера дружной команды. Реалистичное фото, без текста и логотипов."}
+    ]},
+    { id:"intro-2", menuTitle:"Твоя должность", kicker:"Наши ценности", title:"Твоя должность: почему это круто", blocks:[
+      {type:"note", id:"intro-2", level:"P2", items:[
+        "Это список выгод профессии, а не «ценностей компании» — заголовок сбивает с толку. Ещё два разных списка под названием «ценности» — в Дне 1 («Наши ценности», принципы бренда) и («Ценности-ориентиры»). Сведите все три в один согласованный список и разведите «ценности компании» и «выгоды профессии» по разным заголовкам."
+      ]},
+      {type:"lead", text:"Ты не просто «продавец мебели». Ты — менеджер-дизайнер, и это одна из лучших профессий."},
+      {type:"cards", cols:3, items:[
+        {icon:"home", title:"Ты создаёшь дом мечты", text:"Клиенты приходят с размытыми желаниями, а уходят с проектом, который сделает их жизнь удобнее и красивее. Это про настоящее влияние."},
+        {icon:"shield", title:"Ты эксперт и партнёр", text:"К тебе прислушиваются, с тобой советуются. Клиенты видят в тебе профессионала, который решает их задачи, а не навязывает товар."},
+        {icon:"trending", title:"Ты управляешь своим доходом", text:"Здесь нет «потолка». Твой заработок напрямую зависит от того, сколько проектов ты реализовал и как качественно провёл сделку."},
+        {icon:"graduation", title:"Ты постоянно растёшь", text:"Каждый сложный проект прокачивает тебя: переговоры, дизайн, расчёт бюджета и управление ожиданиями клиента."},
+        {icon:"handshake", title:"Ты часть команды", text:"Мы партнёры, которые вместе делают общее дело. Если что-то идёт не так — тебя не бросают одного, а помогают найти решение."}
+      ]}
+    ]},
+    { id:"intro-3", menuTitle:"Как проходит обучение", kicker:"Маршрут стажёра", title:"Как будет проходить обучение", blocks:[
+      {type:"lead", text:"Обучение разбито на 10 дней — каждый день новая тема. Так информация усваивается постепенно и без перегрузки."},
+      {type:"list", items:[
+        {label:"Длительность", text:"стажировка длится 10 рабочих дней; учебный день — с 10:00 до 18:00."},
+        {label:"Планёрки", text:"каждое утро в 11:30 мы собираемся в Telegram-чате, чтобы обсудить планы на день и настроиться на продуктивную работу."},
+        {label:"Самостоятельное обучение", text:"в течение дня ты изучаешь материалы Академии и сразу применяешь их на практике — в реальных ситуациях с клиентами."},
+        {label:"Подведение итогов", text:"в конце учебного дня встречаемся с наставником в Telegram-чате: делишься результатами, задаёшь вопросы, получаешь обратную связь."},
+        {label:"Мы всегда на связи", text:"если что-то непонятно или нужна поддержка — не оставайся один, мы рядом."},
+        {label:"Финал", text:"в конце обучения тебя ждёт итоговая аттестация и сертификат, подтверждающий твою квалификацию."}
+      ]},
+      {type:"photo", id:"p-intro-training", caption:"Наставник и новый сотрудник сидят рядом за столом с ноутбуком, наставник показывает что-то на экране и объясняет, стажёр внимательно слушает. Светлое рабочее пространство офиса продаж на фоне, дневной свет, дружелюбная вовлечённая атмосфера. Реалистичное фото, без читаемого текста на экране."}
+    ]},
+    { id:"intro-4", menuTitle:"Что тебя ждёт", kicker:"Маршрут стажёра", title:"Что тебя ждёт в Академии", blocks:[
+      {type:"lead", text:"Мы разбили программу по дням, чтобы информация усваивалась постепенно и без перегрузки. Вот что входит в обучение:"},
+      {type:"list", items:[
+        "Практичные текстовые материалы и инструкции — чётко, по делу, с примерами.",
+        "Видеоуроки, записанные наставниками компании: живые примеры общения с клиентами, разбор ошибок и проверенные приёмы продаж.",
+        "Рекомендации от опытных коллег — золотые правила, которые помогают избежать типичных промахов новичка.",
+        "Тесты и задания для закрепления знаний после каждого дня.",
+        "Живое общение с РОПом и командой — в чате всегда помогут и подскажут."
+      ]},
+      {type:"photo", id:"p-intro-process", caption:"Менеджер-дизайнер консультирует клиента за столом с образцами фасадов и столешниц, рядом открытый ноутбук с 3D-проектом кухни. Оба вовлечены в разговор, естественные жесты. Светлый шоурум на фоне, тёплый естественный свет."}
+    ]},
+    { id:"intro-5", menuTitle:"Чек-лист на 10 дней", kicker:"Маршрут стажёра", title:"Чек-лист на 10 дней", blocks:[
+      {type:"lead", text:"Отмечай прогресс — тесты подтверждаются сообщением в «Чате для стажёров»."},
+      {type:"checklist", id:"cl-10days", items:[
+        "День 1. компания, правила, регламенты, отчётность · тест",
+        "День 2. продукт, преимущества, условия, материалы · тест",
+        "День 3. первая встреча, скрипт, 8 этапов, КЭВ · тест",
+        "День 4. презентация, закрытие, возражения, точки касания · тест",
+        "День 5. работа в CRM (Bitrix24) · тест",
+        "День 6. договор, PRO100, расчёт, оформление сделки · тест",
+        "День 7. замер, спецификация, Splan · тест",
+        "День 8. вторичная встреча, подписание спецификации · тест",
+        "День 9. производство, доставка, монтаж, акт · тест",
+        "День 10. рекламации, ОКК, справочник · итоговый экзамен"
+      ]},
+      {type:"photo", id:"p-intro-checklist", caption:"Крупный план рук сотрудника, который отмечает пункты в бумажном чек-листе или блокноте на фоне рабочего стола с ноутбуком и чашкой кофе. Атмосфера организованности, тёплый дневной свет, деловой натюрморт."}
+    ]},
+    { id:"intro-6", menuTitle:"Важное", kicker:"Живые данные", title:"Важное", blocks:[
+      {type:"lead", text:"Важные правила Академии"},
+      {type:"callout", icon:"alert", text:"Жёлтые блоки — не баг: часть разделов ещё дорабатывается, просто пропусти их."},
+      {type:"list", items:[
+        "Нашёл ошибку — напиши в «Чат для стажёров», мы быстро исправим.",
+        "Есть вопрос — не стесняйся спросить в чате, там всегда подскажут. Мы одна команда."
+      ]},
+      {type:"photo", id:"p-intro-workplace", caption:"Опрятное рабочее место менеджера в офисе продаж: аккуратный стол, ноутбук, папка с документами, чашка кофе, немного зелени в кадре. Естественный свет из окна, светлые тона интерьера, ощущение порядка и профессионализма."},
+      {type:"quote", text:"Мы рады, что ты с нами! Впереди интересный путь — не торопись, впитывай знания и помни: за каждым успешным проектом стоит уверенный менеджер-дизайнер. Совсем скоро ты станешь именно таким. Счастливого прохождения обучения!"}
+    ]}
+  ]
+});
+</script>
+<script>
+DATA.sections.push({
+  id:"day1", badge:"01", icon:"home", title:"День 1", subtitle:"Знакомство с компанией",
+  pages:[
+    { id:"d1-0", menuTitle:"Обзор дня", kicker:"День 1 из 10", title:"Знакомство с компанией", isDayIntro:true, blocks:[
+      {type:"note", id:"d1-0", level:"P1", items:[
+        "План ниже — 6 пунктов, но по факту День 1 включает ещё регламенты и системы, сценарии поведения, сегментацию A·B·C·D, отчётность, ОКК и мотивацию — это фактически объём трёх обычных дней. Либо разбейте День 1 на 2–3 дня стажировки, либо явно допишите план, чтобы стажёр не удивился объёму."
+      ]},
+      {type:"list", title:"В этом разделе", items:[
+        "Миссия и ценности","История компании","Команда и производство",
+        "Важные правила работы","Структура рабочего дня","График работы",
+        "Регламенты и системы","Ситуации и действия менеджера","Сегментация клиентов А·B·C·D",
+        "Отчётность и показатели","Отдел контроля качества (ОКК)","Оплата и мотивационные игры","Тест дня"
+      ]}
+    ]},
+    { id:"d1-1", menuTitle:"Наша миссия", kicker:"Наша миссия", title:"Зачем мы работаем", blocks:[
+      {type:"quote", text:"Мы помогаем людям воплощать мечту о современном, уютном доме, создавая мебельные и интерьерные решения, идеально настроенные под комфорт, желания и привычки клиента."},
+      {type:"photo", id:"p-d1-mission", caption:"Полностью готовый и смонтированный кухонный гарнитур в интерьере квартиры клиента: современный дизайн, качественная фурнитура, встроенная техника, аккуратная сборка. Тёплый мягкий свет, атмосфера уюта и готового дома мечты."}
+    ]},
+    { id:"d1-2", menuTitle:"Наши ценности", kicker:"Наши ценности", title:"Принципы, на которых мы стоим", blocks:[
+      {type:"note", id:"d1-2", level:"P1", items:[
+        "Второй из трёх списков «ценностей» под одинаковым названием (см. также «Твоя должность» во Введении и «Ценности-ориентиры» ниже в этом же дне). Сведите в один согласованный список — сейчас непонятно, какой из трёх «настоящий»."
+      ]},
+      {type:"cards", cols:3, items:[
+        {icon:"sparkles", title:"Стремление к совершенству", text:"Развиваемся в дизайне и производстве, перенимая опыт лучших европейских специалистов."},
+        {icon:"shield", title:"Гарантии и ответственность", text:"Отвечаем за качество мебели и работы. Гарантия — 12 месяцев."},
+        {icon:"zap", title:"В духе времени", text:"Оперативно внедряем современные тренды, технологии и материалы."},
+        {icon:"heart", title:"Забота о клиенте", text:"Ценим время покупателей и предлагаем комплексный сервис."},
+        {icon:"leaf", title:"Бережно к природе", text:"Только безопасные и экологичные материалы или их качественные имитации."},
+        {icon:"gem", title:"Ценный продукт", text:"Профессиональная дизайнерская мебель, которой доволен клиент."}
+      ]}
+    ]},
+    { id:"d1-3", menuTitle:"История компании", kicker:"История компании", title:"Привет! Я Олег Семещенко, основатель компании", blocks:[
+      {type:"lead", text:"Я рад, что ты решил стать частью нашей команды. Мы не просто производим мебель — мы создаём уют в домах наших клиентов."},
+      {type:"list", items:[
+        {label:"2018 год", text:"У меня появилась идея — делать качественную корпусную мебель и самому заниматься её продажами. Тогда это была просто мысль, но она зажгла меня."},
+        {label:"Первые годы", text:"Я всё делал сам: искал клиентов, консультировал, контролировал каждый заказ. Тогда я понял главное — люди хотят не просто «шкаф», а доверие и уверенность, что их заказ сделают с душой. Это и стало нашим принципом."},
+        {label:"Рост команды", text:"Сегодня нас уже много: 9 дизайнеров, 4–6 технологов, 8 монтажников, администратор, отдел маркетинга (5 человек), 4 оператора колл-центра и отдел контроля качества."},
+        {label:"Главное", text:"Это не просто должности — это люди, которые горят своим делом, поддерживают друг друга и растут вместе."}
+      ]}
+    ]},
+    { id:"d1-4", menuTitle:"Цель и планы", kicker:"История компании", title:"Наша цель, ценности и планы на будущее", blocks:[
+      {type:"list", items:[
+        {label:"Наша цель", text:"Дать клиентам сервис, хорошую мебель и профессиональный подход. Мы не продаём «ящики из ДСП» — мы создаём пространство, в котором комфортно жить. Каждый проект — часть чужого дома, и мы относимся к этому с уважением."},
+        {label:"Что мы ценим", text:"Сервис — сопровождаем клиента от консультации до монтажа и дальше. Качество — только проверенные материалы (Lamarty, Egger) и лучшая фурнитура (Boyard, Samet, Blum, Hettich, Grass, Hafele). Профессионализм — каждый сотрудник эксперт и постоянно учится."},
+        {label:"Где мы сейчас", text:"В Красноярске — два салона. Планы: ещё 3 салона в городе, выход за его пределы, рост команды менеджеров до 30 человек."},
+        {label:"Моё слово тебе", text:"Самое ценное в бизнесе — люди, которые разделяют твои ценности. Ты часть нашей истории, которая пишется прямо сейчас. Будь честен с клиентами, гордись своей работой — и не бойся задавать вопросы. Добро пожаловать!"}
+      ]}
+    ]},
+    { id:"d1-5", menuTitle:"Ценности-ориентиры", kicker:"История компании", title:"Наши ценности — твои ориентиры", blocks:[
+      {type:"note", id:"d1-5", level:"P1", items:[
+        "Третий из трёх списков «ценностей» под одинаковым названием. Итог: 3 непересекающихся списка за 11 страниц. Объедините в один — это должен быть единственный источник правды о ценностях компании."
+      ]},
+      {type:"list", items:[
+        {label:"Ответственность", text:"ты отвечаешь за каждое слово. Не обещай того, что не можешь выполнить — держи слово."},
+        {label:"Качество", text:"ты работаешь с лучшими материалами — знай их, умей о них рассказывать, будь экспертом."},
+        {label:"Клиентоориентированность", text:"клиент — это не заказ, это человек, который доверил тебе свой дом. Отнесись к нему с уважением."},
+        {label:"Развитие", text:"компания растёт — расти вместе с ней. Учись, осваивай новое, становись лучше каждый день."},
+        {label:"Команда", text:"мы одно целое. Поддерживай коллег, делись опытом, будь открытым и добрым."}
+      ]},
+      {type:"photo", id:"p-d1-values", caption:"Неформальное фото сотрудников компании во время короткого перерыва или обсуждения проекта — искренние улыбки, доверительное взаимодействие друг с другом. Светлый интерьер офиса или производства на фоне, естественный свет."}
+    ]},
+    { id:"d1-6", menuTitle:"Команда «в лицах»", kicker:"Команда и производство", title:"Компания «в лицах»", blocks:[
+      {type:"note", id:"d1-6", level:"P0", items:[
+        "Пустой шаблон — ни одного реального имени. Это единственная страница, которая отвечает на вопрос «к кому идти с конкретным вопросом» — заполните фото, ФИО, должность и зону ответственности каждого сотрудника в приоритете."
+      ]},
+      {type:"lead", text:"Список сотрудников компании с указанием тем, по которым к ним можно обратиться. Загрузите фото и заполните карточки своих коллег."},
+      {type:"people", items:[
+        {id:"person-1", name:"", role:"", note:""},
+        {id:"person-2", name:"", role:"", note:""},
+        {id:"person-3", name:"", role:"", note:""},
+        {id:"person-4", name:"", role:"", note:""}
+      ]}
+    ]},
+    { id:"d1-7", menuTitle:"Важные правила работы", kicker:"Организационная политика", title:"Важные правила работы", blocks:[
+      {type:"lead", text:"Правила и регламенты, обязательные для каждого сотрудника: они выстраивают эффективную и слаженную работу и создают единую культуру. Правила хорошего тона мы не повторяем — на этапе стажировки вежливость и тактичность уже естественны для тебя."},
+      {type:"cards", cols:3, items:[
+        {icon:"handshake", title:"Командный игрок", text:"Общий результат важнее личного. Помогайте коллегам."},
+        {icon:"message", title:"Упёрлись — сообщите", text:"Проблему, которую не решить самому, сразу выносите в нужный канал."},
+        {icon:"clipboardCheck", title:"Спросили — запомнили", text:"Фиксируйте ответы, чтобы не возвращаться к одному и тому же."}
+      ]}
+    ]},
+    { id:"d1-8", menuTitle:"Начало рабочего дня", kicker:"Регламент", title:"Структура рабочего дня: начало", blocks:[
+      {type:"list", title:"10:00–10:10", items:[
+        "Включи свет.","Открой смену на кассе.","Отправь в ОП «План работы на день».",
+        "Проверь чистоту выставочной мебели.","Улыбнись и налей себе чашечку кофе — продуктивный день начинается с хорошего настроения."
+      ]},
+      {type:"photo", id:"p-d1-morning", caption:"Утро в салоне: сотрудник включает свет или протирает витринную мебель, готовя шоурум к началу дня. Мягкий утренний свет из окон, ощущение начала рабочего дня, чистота и порядок."},
+      {type:"list", title:"10:10–10:30", items:[
+        "Сначала выполняй задачи текущего дня.","Затем разберись с просроченными задачами, если они есть.",
+        "Просмотри задачи на завтра — возможно, нужно позвонить клиенту и подтвердить встречу.","Ответь на вопросы технологов в чате."
+      ]}
+    ]},
+    { id:"d1-9", menuTitle:"Разгар и окончание дня", kicker:"Регламент", title:"Структура рабочего дня: разгар и окончание", blocks:[
+      {type:"list", title:"10:30–18:30", items:[
+        "Консультируй клиентов и закрывай на КЭВ.","Проектируй и рассчитывай мебель.",
+        "Не забывай про обед: 1 час, время выбираешь сам, но офис не должен оставаться пустым.",
+        "С 13:00 до 14:00 — координация ОП, точное время уточняй в чате «Отдел продаж».",
+        "Выполняй текущие задачи и планируй следующий рабочий день."
+      ]},
+      {type:"photo", id:"p-d1-midday", caption:"Разгар рабочего дня: менеджер за столом переговоров с клиентом обсуждает проект кухни, на столе — образцы материалов, каталог, ноутбук с визуализацией. Естественный дневной свет, деловая, но тёплая атмосфера."},
+      {type:"list", title:"18:30–20:00", items:[
+        "Проверь, все ли запланированные на сегодня задачи выполнены.","Закрой смену на кассе и подготовься к следующему дню.",
+        "Отключи свет и подсветку, закрой окна, вынеси мусор.","Разложи образцы по местам."
+      ]}
+    ]},
+    { id:"d1-10", menuTitle:"График работы", kicker:"Живые данные", title:"График работы", blocks:[
+      {type:"list", title:"Сменный график", items:[
+        "Работаем посменно с 10:00 до 20:00, графики 2/2 или 3/3.",
+        "Нужны выходные — предупреди за 14 дней; если нужен срочный выходной — найди себе замену.",
+        "График может меняться в зависимости от загруженности."
+      ]},
+      {type:"callout", icon:"alert", text:"Главное правило: офис не должен оставаться пустым."},
+      {type:"photo", id:"p-d1-schedule", caption:"Общий план шоурума в рабочее время: несколько выставочных кухонь, естественный свет из больших окон, на среднем плане силуэты сотрудников и клиентов (без крупных лиц). Ощущение живого работающего салона."}
+    ]},
+    { id:"d1-11", menuTitle:"Регламенты и системы", kicker:"Раздел", title:"Регламенты и системы", blocks:[
+      {type:"lead", text:"Базовые правила работы и обзор инструментов, которыми вы будете пользоваться каждый день."},
+      {type:"photo", id:"p-d1-systems-intro", caption:"Рабочее место с открытым ноутбуком, на экране размыто виден интерфейс рабочей программы, рядом блокнот и телефон. Современный, технологичный, но тёплый по свету кадр."}
+    ]},
+    { id:"d1-12", menuTitle:"Правила работы", kicker:"Регламенты", title:"Правила работы", blocks:[
+      {type:"note", id:"d1-12", level:"P0", items:[
+        "Ни один из 9 документов ниже не заполнен — сейчас это просто заголовки без содержания. Загрузите или привяжите ссылками реальные регламенты: внешний вид, чаты, сейф, касса, документы, рассрочка, принтер, обе гугл-таблицы."
+      ]},
+      {type:"lead", text:"Профессиональный вид создаёт доверие. Ключевой принцип — опрятность. Вежливость и уважение к коллегам в чатах — это очень важно. Ниже — ссылки на регламенты и рабочие таблицы; вставьте свои ссылки или загрузите файлы."},
+      {type:"resources", kind:"doc", items:[
+        {id:"res-dresscode", title:"Внешний вид", text:"Профессиональный вид создаёт доверие. Ключевой принцип — опрятность."},
+        {id:"res-chats", title:"Корпоративные чаты", text:"Вежливость и уважение к коллегам в чатах — это очень важно."},
+        {id:"res-safe", title:"Как пользоваться сейфом", text:"Порядок хранения и ответственность сотрудников."},
+        {id:"res-docs", title:"Работа с документами", text:"Порядок регистрации, согласования, хранения и ответственность сотрудников."},
+        {id:"res-cashbox", title:"Работа с кассой", text:"Кассовая дисциплина по правилам Банка России: документы и контроль наличных."},
+        {id:"res-installment", title:"Оформление рассрочки", text:"Порядок оформления рассрочки для клиента."},
+        {id:"res-printer", title:"Как пользоваться принтером", text:"Инструкция по печати документов."},
+        {id:"res-gsheet-admin", title:"Google-таблица «Заявки Админ»", text:"Учёт заявок администратору."},
+        {id:"res-gsheet-salary", title:"Google-таблица «Зарплата»", text:"Учёт зарплаты и мотивации."}
+      ]}
+    ]},
+    { id:"d1-13", menuTitle:"Опрятность во всём", kicker:"Регламент", title:"Опрятность во всём", blocks:[
+      {type:"lead", text:"Опрятность касается и внешнего вида сотрудника, и состояния выставочных образцов — это лицо компании. Чистая мебель продаётся легче. Выставочный образец должен быть:"},
+      {type:"list", items:[
+        "Чистой, без пыли, пятен и загрязнений.","Со стеклянными поверхностями без разводов.",
+        "С фасадами, стенками и ручками без замыленных пятен.","Со столами и столешницами без мусора.",
+        "Со шкафчиками, которые отрегулированы и правильно закрываются.","С исправной подсветкой в кухнях и шкафах.",
+        "С фурнитурой и элементами мебели в рабочем состоянии.","С рабочим освещением и лампами."
+      ]},
+      {type:"photo", id:"p-d1-tidiness", caption:"Крупный план идеально чистого выставочного кухонного фасада: аккуратная фурнитура без разводов и пятен, подсветка под шкафами включена, стеклянные поверхности блестят. Подчёркнуто чистая, глянцевая, премиальная подача."}
+    ]},
+    { id:"d1-14", menuTitle:"Инструменты для работы", kicker:"Системы · обзор", title:"Инструменты для работы", blocks:[
+      {type:"note", id:"d1-14", level:"P2", items:[
+        "Не хватает: кто и когда выдаёт стажёру доступы к Bitrix24, PRO100, Splan. Добавьте короткую инструкцию по получению логинов — материалы других дней сразу начинают ссылаться на эти программы."
+      ]},
+      {type:"cards", cols:3, items:[
+        {icon:"monitor", title:"Bitrix24 (CRM)", text:"Задачи и напоминания, контроль замеров и КП, прозрачность на каждом этапе. Подробнее — День 5."},
+        {icon:"pencilruler", title:"PRO100", text:"Программа для проектирования корпусной мебели и интерьеров."},
+        {icon:"layers", title:"Базис Мебельщик", text:"Программа, в которой технолог отрисовывает проект, который ты создал с клиентом."},
+        {icon:"filetext", title:"Splan", text:"Программа для подготовки документации при передаче проекта технологу."},
+        {icon:"sparkles", title:"Искусственный интеллект", text:"Используется для создания фотореалистичных изображений интерьера."},
+        {icon:"clipboard", title:"Google-таблицы", text:"Площадка для подготовки спецификации для технолога."}
+      ]}
+    ]},
+    { id:"d1-15", menuTitle:"Ситуации и действия", kicker:"Раздел", title:"Как вести себя в разных ситуациях", blocks:[
+      {type:"lead", text:"Как реагировать на разных посетителей, как вести отчёт дня и какие показатели за этим стоят."},
+      {type:"photo", id:"p-d1-situations-intro", caption:"Менеджер стоит у выставочного образца кухни и показывает клиенту деталь фасада или ящика, клиент внимательно слушает. Естественный свет шоурума, живая, не постановочная атмосфера общения."},
+      {type:"resources", kind:"doc", items:[
+        {id:"res-sit1", title:"Клиент зашёл в офис — все менеджеры заняты", text:"Регламент действий."},
+        {id:"res-sit2", title:"Вам позвонил не ваш клиент", text:"Регламент действий."},
+        {id:"res-sit3", title:"Пришёл разъярённый не ваш клиент", text:"Регламент действий."},
+        {id:"res-sit4", title:"Клиент звонит по рекламации", text:"Регламент действий."},
+        {id:"res-sit5", title:"Пришёл разъярённый ваш клиент", text:"Регламент действий."},
+        {id:"res-sit6", title:"Пришёл не ваш клиент произвести оплату", text:"Регламент действий."},
+        {id:"res-sit7", title:"Пришёл кто-то и спрашивает номер руководства", text:"Регламент действий."},
+        {id:"res-sit8", title:"Клиент хочет сделать отказ", text:"Регламент действий."},
+        {id:"res-sit9", title:"Пришёл не ваш клиент уточнить нюансы по заказу", text:"Регламент действий."}
+      ]}
+    ]},
+    { id:"d1-16", menuTitle:"Сегментация А", kicker:"Сегментация · A·B·C·D", title:"Клиенты категории А", blocks:[
+      {type:"segment", letter:"A", title:"Клиенты категории А", text:"Клиент, которому нужна наша мебель, готов купить срочно, и у него есть деньги. Это самый «горячий» клиент — с конкретным запросом, готовый к замеру и решению в день обращения.", items:[
+        "Проводи полный цикл выявления потребностей, используй закрывающие вопросы и правило трёх «да» — без промедления.",
+        "Предлагай полный комплекс услуг: подбор техники, подсветки, доп. опций — клиент ценит сервис и готов платить.",
+        "Фиксируй цену договором; всегда назначай следующий шаг, даже если договор не подписан сразу.",
+        "Назначай замер в ближайшее время — идеально сегодня или завтра."
+      ]}
+    ]},
+    { id:"d1-17", menuTitle:"Сегментация B", kicker:"Сегментация · A·B·C·D", title:"Клиенты категории B", blocks:[
+      {type:"segment", letter:"B", title:"Клиенты категории B", text:"Клиент, которому нужна наша мебель, деньги есть, но покупка не срочная — часто на этапе ремонта, строительства дома или планирования обновления кухни.", items:[
+        "Зафиксируй контакт и потребности: возьми телефон, email, добавь в CRM.",
+        "Поставь задачу на регулярный контакт (раз в 1–2 недели), интересуйся стадией готовности помещения.",
+        "Расскажи о возможности фиксации цены на 6 месяцев — это мотивирует не затягивать решение.",
+        "Присылай подборки проектов, каталог, видео о компании — повышай лояльность и экспертность бренда.",
+        "Приглашай на мероприятия и акции месяца — создавай повод для касания.",
+        "Не дави агрессивно, но регулярно «прогревай» через точки касания.",
+        "Как только появляется конкретная дата готовности — переводи клиента в категорию А и действуй быстро."
+      ]}
+    ]},
+    { id:"d1-18", menuTitle:"Сегментация C", kicker:"Сегментация · A·B·C·D", title:"Клиенты категории C", blocks:[
+      {type:"segment", letter:"C", title:"Клиенты категории C", text:"Клиенту нужна наша мебель, но нет денег, и сроки не определены. Планы размыты, решение может долго откладываться.", items:[
+        "Не трать много времени на глубокую проработку сейчас, но вежливо проконсультируй и ответь на вопросы.",
+        "Предложи бюджетные альтернативы, расскажи про внутреннюю рассрочку, подарочный сертификат или акционные условия.",
+        "Зафиксируй контакт, уточни примерные сроки появления бюджета.",
+        "Поставь в CRM задачу с напоминанием через 1–2–3 месяца.",
+        "Категория С иногда переходит в В, когда появляются деньги — оставайся в поле зрения клиента, но без активной ежедневной работы.",
+        "Если клиент явно нецелевой и не идёт на контакт — не уговаривай, переключись на более перспективных."
+      ]}
+    ]},
+    { id:"d1-19", menuTitle:"Сегментация D", kicker:"Сегментация · A·B·C·D", title:"Клиенты категории D", blocks:[
+      {type:"segment", letter:"D", title:"Клиенты категории D", text:"Конфликтные клиенты: рекламации, недовольство сервисом, агрессивное поведение или изначально негативный настрой.", items:[
+        "Сохраняй спокойствие и профессионализм. Никогда не отвечай агрессией на агрессию.",
+        "Внимательно выслушай, дай клиенту выговориться, задавай уточняющие вопросы, чтобы понять истинную причину недовольства.",
+        "Зафиксируй суть претензии, извинись за доставленные неудобства — даже если вины компании нет.",
+        "Предложи конкретный план решения: подключи клиентского менеджера, руководителя или специалиста по рекламациям.",
+        "Если вопрос выходит за твои полномочия — немедленно передай информацию РОПу или в отдел контроля качества.",
+        "Не принимай негатив на свой счёт: правильно решённая проблема часто превращает недовольного клиента в лояльного.",
+        "После решения вопроса обязательно убедись, что клиент удовлетворён итогом."
+      ]}
+    ]},
+    { id:"d1-20", menuTitle:"План: начало дня", kicker:"Отчётность", title:"Ежедневный план: начало дня", blocks:[
+      {type:"lead", text:"Зачем нужно планирование"},
+      {type:"list", items:[
+        "Определение приоритетов — делать важное в первую очередь.",
+        "Оптимизация ресурсов — эффективно использовать время и знания.",
+        "Снижение стресса — при чётком плане уровень неопределённости падает.",
+        "Контроль и результат — легче отслеживать движение к цели и принимать верные решения."
+      ]},
+      {type:"photo", id:"p-d1-planning", caption:"Утренняя сцена планирования: сотрудник за столом с блокнотом и ручкой составляет список задач на день, рядом чашка кофе и ноутбук. Мягкий утренний свет, сосредоточенная спокойная атмосфера."},
+      {type:"list", title:"Что фиксируем утром", items:[
+        "Количество записанных встреч: реальные, удалённые, выездные, повторные.",
+        "Спецификации: подготовка спецификаций (№ договора).",
+        "Просроченные задачи.","Задачи на сегодня."
+      ]}
+    ]},
+    { id:"d1-21", menuTitle:"Итоги дня", kicker:"Отчётность", title:"Ежедневный отчёт: итоги дня", blocks:[
+      {type:"list", title:"Что входит в вечерний отчёт", items:[
+        "Отражается весь входящий трафик, включая проведённые КЭВ, а также все целевые и нецелевые действия.",
+        "Количество проведённых встреч: реальные, без записи, удалённые, выездные, повторные.",
+        "Количество подготовленных спецификаций (с номером договора).",
+        "Количество звонков и результативных звонков."
+      ]},
+      {type:"photo", id:"p-d1-report", caption:"Вечерняя сцена подведения итогов дня: сотрудник вносит данные в ноутбук, сверяясь с блокнотом, за окном — вечерний свет города. Спокойная деловая атмосфера завершения рабочего дня."},
+      {type:"list", title:"Зачем это нужно", items:[
+        "На основе этих данных формируется аналитика конверсий по каждому менеджеру и по отделу в целом."
+      ]}
+    ]},
+    { id:"d1-22", menuTitle:"Конверсии", kicker:"Показатели", title:"Конверсии", blocks:[
+      {type:"note", id:"d1-22", level:"P2", items:[
+        "Нет числовых ориентиров: что считать хорошей конверсией в КЭВ, сколько встреч в день — норма для стажёра и для опытного менеджера. Добавьте хотя бы примерные бенчмарки, иначе стажёру не с чем сверяться."
+      ]},
+      {type:"lead", text:"Конверсия — это показатель эффективности: какая часть клиентов совершила целевое действие. Она показывает, какая часть"},
+      {type:"list", items:["...лидов дошла до презентации;","...клиентов закрылась на КЭВ;","...клиентов заключила договор;","...клиентов повторно заключила договор."]},
+      {type:"photo", id:"p-d1-conversion", caption:"Рука указывает на экран ноутбука с графиками роста (без реального читаемого текста и цифр, размыто или стилизовано), рядом чашка кофе на столе. Современный технологичный стиль, приглушённые деловые тона. (Для этого слайда, возможно, лучше подойдёт настоящий скриншот аналитики CRM, а не сгенерированное фото.)"},
+      {type:"list", title:"Конверсии показывают", items:[
+        "Качество работы менеджеров — умение доводить клиента до сделки.","Эффективность рекламы и скриптов.",
+        "Слабые звенья в воронке продаж.","Зоны, где нужен индивидуальный план обучения для каждого менеджера."
+      ]}
+    ]},
+    { id:"d1-23", menuTitle:"ОКК", kicker:"Путь клиента", title:"Отдел контроля качества (ОКК)", blocks:[
+      {type:"lead", text:"ОКК играет ключевую роль в поддержании стандартов компании и высокого уровня обслуживания клиентов — не только следит за соблюдением стандартов, но и помогает улучшать процессы."},
+      {type:"steps", items:[
+        {n:1, title:"Оценка работы сотрудников", text:"Анализ работы менеджеров, консультантов и других представителей компании на соответствие стандартам качества."},
+        {n:2, title:"Обратная связь от клиентов", text:"Анализ отзывов клиентов помогает выявлять слабые места в обслуживании."},
+        {n:3, title:"Аудит продаж", text:"Регулярная проверка процесса продаж, документации и процедур на соответствие стандартам."},
+        {n:4, title:"Обучение и развитие", text:"Тренинги и семинары для повышения квалификации и качества обслуживания."},
+        {n:5, title:"Разработка стандартов", text:"Создание и обновление регламентов, повышающих качество продаж."},
+        {n:6, title:"Мониторинг и отчётность", text:"Отслеживание конверсии, закрытых сделок, скорости обработки запросов; отчёты для руководства."}
+      ]}
+    ]},
+    { id:"d1-24", menuTitle:"ОКК: чистота CRM", kicker:"Показатели", title:"ОКК: независимость и чистота CRM", blocks:[
+      {type:"list", items:[
+        {label:"Независимость", text:"ОКК — независимая структура, подчиняется напрямую руководству компании; проводит проверки и собирает аналитику для стратегических решений."},
+        {label:"Обратная связь", text:"регулярно даёт обратную связь менеджерам и руководителям отделов по результатам проверок."},
+        {label:"Цель отдела", text:"повышение удовлетворённости клиентов и качества услуг, что способствует росту продаж и укреплению репутации компании."},
+        {label:"Чистота CRM", text:"еженедельный отчёт о твоей работе в CRM: не созданные карточки после закрытия на КЭВ, ошибки в новых карточках, просроченные задачи, карточки без задач. Отчёт передаётся РОПу и руководителю компании."}
+      ]},
+      {type:"photo", id:"p-d1-okk", caption:"Сотрудник отдела контроля качества изучает отчёт или таблицу на экране ноутбука, сосредоточенное выражение лица, современный светлый офис на фоне. (Как и выше — здесь тоже может лучше сработать реальный скриншот отчёта, а не иллюстративное фото.)"}
+    ]},
+    { id:"d1-25", menuTitle:"Оплата и игры", kicker:"Мотивация", title:"Оплата и игры", blocks:[
+      {type:"note", id:"d1-25", level:"P0", items:[
+        "Ставки и проценты мотивации не заполнены. Это первое, что хочет знать новый сотрудник — закройте в самом первом приоритете, ещё до досъёмки видео."
+      ]},
+      {type:"callout", icon:"alert", text:"Ставки и проценты мотивации — раздел уточняется и обновляется."},
+      {type:"resources", kind:"doc", items:[
+        {id:"res-payment-system", title:"Система оплаты", text:"Ставки и проценты мотивации."},
+        {id:"res-games", title:"Мотивационные игры", text:"Правила и условия текущих мотивационных игр."}
+      ]}
+    ]},
+    { id:"d1-test", menuTitle:"Тест дня", kicker:"Проверка знаний", title:"Тест: День 1", blocks:[
+      {type:"lead", text:"Короткий тест по материалам дня: компания, правила, регламенты, отчётность."},
+      {type:"resources", kind:"doc", items:[{id:"res-test-d1", title:"Ссылка на опросник", text:"Google-опросник по материалам Дня 1."}]},
+      {type:"callout", icon:"clipboardCheck", text:"Результат прохождения подтверди сообщением в «Чате для стажёров»."}
+    ]}
+  ]
+});
+</script>
+<script>
+DATA.sections.push({
+  id:"day2", badge:"02", icon:"shield", title:"День 2", subtitle:"Знакомство с продуктом",
+  pages:[
+    { id:"d2-0", menuTitle:"Обзор дня", kicker:"День 2 из 10", title:"Знакомство с продуктом", isDayIntro:true, blocks:[
+      {type:"note", id:"d2-0", level:"P2", items:[
+        "В плане есть пункт «Наши проекты» — среди страниц ниже такой темы нет (вместо неё «путь клиента»). Зато бытовая техника — тема с отдельным доходом менеджера — в план вообще не попала. Обновите план под фактическое содержание."
+      ]},
+      {type:"list", title:"В этом разделе", items:[
+        "Брендбук и «боли» клиента","Наши преимущества","Оплата, рассрочка, сертификат",
+        "Акции","Каталог и подборки","Наши проекты","Материалы и фурнитура","Тест дня"
+      ]}
+    ]},
+    { id:"d2-1", menuTitle:"Брендбук и «боли»", kicker:"Позиционирование", title:"Брендбук и «боли» клиента", blocks:[
+      {type:"lead", text:"Брендбук обеспечивает единство облика бренда. Знание «болей» клиента помогает продавать, отрабатывать возражения и проявлять экспертность."},
+      {type:"list", title:"Знание «болей» клиента помогает", items:[
+        "Повысить продажи — решая конкретные проблемы клиента.",
+        "Отработать возражения — проводить предварительную работу со страхами клиента.",
+        "Увеличить лояльность — показать заинтересованность в решении задач покупателя.",
+        "Проявить экспертность — вызвать доверие к компетенциям компании."
+      ]},
+      {type:"photo", id:"p-d2-brand", caption:"Плоская раскладка (flat lay) элементов фирменного стиля компании сверху: образцы фасадов и материалов, палитра цветов, брендированный блокнот или каталог, аккуратно разложены на светлом фоне. Минималистичная, стильная, премиальная подача, мягкий естественный свет."},
+      {type:"resources", kind:"doc", items:[{id:"res-brandbook", title:"Брендбук", text:"Полный брендбук компании."}]}
+    ]},
+    { id:"d2-2", menuTitle:"Наши преимущества", kicker:"Аргументы для клиента", title:"Наши преимущества", blocks:[
+      {type:"list", items:[
+        {label:"Бесплатно", text:"выезд дизайнера, замер и составление проекта."},
+        {label:"Производство", text:"собственный современный цех 3000 м², итальянские и корейские станки с ЧПУ."},
+        {label:"Сроки", text:"изготовление мебели — 40 рабочих дней; при сложных заказах срок увеличивается до 60 рабочих дней."},
+        {label:"Гарантия", text:"12 месяцев."},
+        {label:"Комплекс", text:"подбор техники и сантехники по ценам производителей с доставкой вместе с кухней."},
+        {label:"Сервис после договора", text:"бесплатный план розеток, освещения и обеденной зоны (полная эргономика)."},
+        {label:"Под ключ", text:"в стоимость включены доставка, подъём, сборка, монтаж мебели и сервисное обслуживание. Важно: монтаж бытовой техники оплачивается отдельно, если техника приобреталась не у нас."}
+      ]},
+      {type:"photo", id:"p-d2-advantages", caption:"Широкий кадр полностью реализованного проекта кухни премиум-класса в интерьере: качественные материалы, встроенная техника, продуманная подсветка фартука и шкафов, стильная сервировка на столе. Атмосфера дорогого уютного современного дома."}
+    ]},
+    { id:"d2-3", menuTitle:"Варианты оплаты", kicker:"Живые данные", title:"Варианты оплаты", blocks:[
+      {type:"note", id:"d2-3", level:"P1", items:[
+        "График читается как «10 000 ₽ + 60% + 40% = больше 100%». Уточните явно: «60%, включая предоплату 10 000 ₽ при заключении договора» — иначе стажёр может решить, что суммы складываются поверх друг друга."
+      ]},
+      {type:"list", title:"Способы оплаты", items:[
+        "Наличные.","Оплата картой через терминал.","Оплата по QR-коду.","Оплата переводом с карты на карту.",
+        "Оплата по безналичному расчёту, в том числе с НДС 22%.","Рассрочка на 12 месяцев без переплаты."
+      ]},
+      {type:"photo", id:"p-d2-payment", caption:"Крупный план подписания договора: руки клиента и менеджера за столом, договор и ручка в кадре, на фоне размыто виден шоурум. Деловая доверительная атмосфера, тёплый естественный свет."},
+      {type:"list", title:"График платежей", items:[
+        "Предоплата 10 000 ₽ при заключении договора.","60% — при подписании спецификации.",
+        "40% — за 2 дня до доставки мебели клиенту.","Рассрочка без первоначального взноса или частичная (часть суммы в рассрочку, часть — любым другим способом).",
+        "При безналичном расчёте оплата желательна в размере 100% при заключении договора."
+      ]}
+    ]},
+    { id:"d2-4", menuTitle:"Сертификат и акции", kicker:"Инструменты закрытия", title:"Сертификат и акции", blocks:[
+      {type:"note", id:"d2-4", level:"P1", items:[
+        "Сертификат 50 000 ₽ можно списать не больше 10–15% чека — на заказ дешевле ~330 000 ₽ он не гасится полностью. Допишите, что происходит с остатком: сгорает, переносится на следующую покупку или компенсируется скидкой. Это прямой вопрос клиента."
+      ]},
+      {type:"list", title:"Подарочный сертификат — 50 000 ₽", items:[
+        "Оплатить можно до 10% стоимости кухни (комплекс — до 12–15%).","Срок действия — 3 месяца, продление через менеджера."
+      ]},
+      {type:"photo", id:"p-d2-promo", caption:"Красиво оформленный подарочный сертификат или рекламный материал об акции лежит на столе рядом с образцами материалов или каталогом. Аккуратная flat lay композиция, привлекательный премиальный стиль, естественный свет."},
+      {type:"list", title:"Ежемесячные акции", items:[
+        "Условия и подарки уточняй у РОП каждый месяц.","Идеальный повод «дожать» клиента на замере (КЭВ)."
+      ]}
+    ]},
+    { id:"d2-5", menuTitle:"Каталог и подборки", kicker:"Где брать материалы", title:"Каталог и подборки", blocks:[
+      {type:"lead", text:"При закрытии на «КЭВ» или «Взял контакт» отправь клиенту каталог и видео «Знакомство с компанией». Полные пути ко всем папкам — на странице «Где что лежит в Bitrix24»."},
+      {type:"resources", kind:"doc", items:[
+        {id:"res-catalog", title:"Каталог мебели", text:"Диск → Общий диск → «Каталоги, гайды, сертификаты и всё для ТК»."}
+      ]},
+      {type:"resources", kind:"video", items:[
+        {id:"res-video-production", title:"Видео с производства", text:"Диск → Общий диск → папка «Кухни» — повышает насмотренность."},
+        {id:"res-video-about", title:"Видео о компании", text:"Знакомство с компанией для клиента."},
+        {id:"res-video-choose", title:"Видео: как выбрать мебельную компанию", text:"Помогает клиенту сравнивать предложения."},
+        {id:"res-video-price", title:"Видео: почему у одних дешевле, а у других дороже", text:"Обоснование ценообразования для клиента."}
+      ]}
+    ]},
+    { id:"d2-6", menuTitle:"Путь клиента (1/2)", kicker:"Путь клиента", title:"Как клиенты видят работу с нами (1/2)", blocks:[
+      {type:"steps", items:[
+        {n:1, title:"Обращение", text:"Клиент находит нашу рекламу в интернете, в соцсетях или на картах города — звонит нам или оставляет заявку."},
+        {n:2, title:"Первый звонок", text:"Менеджер (Лидоруб) выявляет потребность и приглашает на встречу в офис или на выезд дизайнера на дом."},
+        {n:3, title:"Встреча в офисе", text:"Задача менеджера — произвести правильное впечатление и показать профессионализм; заключить договор при первой встрече."},
+        {n:4, title:"Подтверждение замера", text:"На следующий день администратор созванивается с клиентом и договаривается о дате замера — в течение 3 рабочих дней."},
+        {n:5, title:"Замер", text:"Замерщик передаёт материалы менеджеру, который уточняет параметры техники и готовит спецификацию."},
+        {n:6, title:"Спецификация", text:"Проверяются документы, подписывается спецификация — клиент вносит 60% предоплаты."}
+      ]}
+    ]},
+    { id:"d2-7", menuTitle:"Путь клиента (2/2)", kicker:"Путь клиента", title:"Как клиенты видят работу с нами (2/2)", blocks:[
+      {type:"steps", items:[
+        {n:7, title:"Передача технологу", text:"Информация передаётся технологу, который отрисовывает проект в «Базис Мебельщик»."},
+        {n:8, title:"Согласование", text:"Технолог отправляет проект менеджеру, который согласовывает его с клиентом ещё раз."},
+        {n:9, title:"Производство", text:"После согласования заказ переходит на производство."},
+        {n:10, title:"Дата доставки", text:"Администратор договаривается о дате доставки и монтажа; клиент вносит оставшиеся 40% за 2 дня до доставки."},
+        {n:11, title:"Доставка и монтаж", text:"Клиент подписывает акт приёма-передачи; при рекламациях далее взаимодействует с администратором."},
+        {n:12, title:"Обратная связь", text:"Сотрудник ОКК связывается с клиентом и уточняет впечатление о работе с компанией."}
+      ]}
+    ]},
+    { id:"d2-8", menuTitle:"Материалы", kicker:"Материалы", title:"Из чего мы делаем мебель", blocks:[
+      {type:"resources", kind:"doc", items:[
+        {id:"res-mat1", title:"Материалы: ЛДСП, ДВП, МДФ", text:"Основные материалы корпуса."},
+        {id:"res-mat2", title:"Конструкция и кромка", text:"Правила конструирования."},
+        {id:"res-mat3", title:"Соединения и фасады", text:"Виды соединений и фасадов."},
+        {id:"res-mat4", title:"Фурнитура", text:"Обзор используемой фурнитуры."},
+        {id:"res-mat5", title:"Столешница", text:"Материалы и варианты столешниц."},
+        {id:"res-mat6", title:"Скрипты и чек-листы", text:"Материалы для консультации клиента."}
+      ]}
+    ]},
+    { id:"d2-9", menuTitle:"Бытовая техника — прибыль", kicker:"Живые данные", title:"Бытовая техника в проекте: твоя прибыль и комфорт клиента", blocks:[
+      {type:"list", title:"Что это даёт тебе, менеджеру", items:[
+        "Растёт средний чек — техника увеличивает сумму договора и твой процент от выполнения плана.",
+        "Дополнительный доход — 3% от стоимости техники плюс бонусы от партнёров (например, компании «Тетрасис»).",
+        "Лояльность и повторные продажи — довольный клиент возвращается и советует тебя друзьям."
+      ]},
+      {type:"photo", id:"p-d2-appliances", caption:"Крупный план кухни со встроенной бытовой техникой премиум-класса (духовой шкаф, варочная панель, вытяжка) — стильная интеграция техники в фасады. Чистые линии, современный дизайн, мягкое естественное освещение."},
+      {type:"list", title:"Что получает клиент", items:[
+        "Избавление от беготни по магазинам — мы подбираем технику под проект, бюджет и дизайн.",
+        "Бесплатную доставку, подъём и монтаж вместе с мебелью.","Гарантию 2 года — все вопросы решаем сами.",
+        "Полную ответственность за размер — если модель не подойдёт, мы заменим технику или скорректируем мебель за свой счёт."
+      ]}
+    ]},
+    { id:"d2-10", menuTitle:"Как выбрать технику", kicker:"Материалы", title:"Как выбрать бытовую технику", blocks:[
+      {type:"resources", kind:"doc", items:[
+        {id:"res-tech1", title:"Варочная панель", text:"Критерии выбора."},
+        {id:"res-tech2", title:"Духовой шкаф", text:"Критерии выбора."},
+        {id:"res-tech3", title:"Микроволновая печь (СВЧ)", text:"Критерии выбора."},
+        {id:"res-tech4", title:"Посудомоечная машина", text:"Критерии выбора."},
+        {id:"res-tech5", title:"Вытяжка", text:"Критерии выбора."},
+        {id:"res-tech6", title:"Холодильник", text:"Критерии выбора."},
+        {id:"res-tech7", title:"Стиральная машина", text:"Критерии выбора."},
+        {id:"res-tech8", title:"Скрипт по продаже бытовой техники", text:"Как предлагать технику клиенту."}
+      ]}
+    ]},
+    { id:"d2-test", menuTitle:"Тест дня", kicker:"Проверка знаний", title:"Тест: День 2", blocks:[
+      {type:"lead", text:"Короткий тест по материалам дня: продукт, преимущества, оплата, материалы."},
+      {type:"resources", kind:"doc", items:[{id:"res-test-d2", title:"Ссылка на опросник", text:"Google-опросник по материалам Дня 2."}]},
+      {type:"callout", icon:"clipboardCheck", text:"Результат прохождения подтверди сообщением в «Чате для стажёров»."}
+    ]}
+  ]
+});
+</script>
+<script>
+DATA.sections.push({
+  id:"day3", badge:"03", icon:"target", title:"День 3", subtitle:"Первая встреча и скрипт продаж",
+  pages:[
+    { id:"d3-0", menuTitle:"Обзор дня", kicker:"День 3 из 10", title:"Первая встреча и скрипт продаж", isDayIntro:true, blocks:[
+      {type:"list", title:"В этом разделе", items:["8 этапов продаж","Что такое скрипт и почему КЭВ важен","Курс «Гребень продаж 2.0»","Психологические приёмы контакта","Тест дня"]}
+    ]},
+    { id:"d3-1", menuTitle:"8 этапов продаж", kicker:"Основа", title:"8 этапов продаж", blocks:[
+      {type:"steps", items:[
+        {n:1, title:"Установление контакта"},{n:2, title:"Выявление потребностей"},
+        {n:3, title:"Презентация решения"},{n:4, title:"Презентация цены"},
+        {n:5, title:"Предзакрытие"},{n:6, title:"Закрытие"},
+        {n:7, title:"Отработка возражений"},{n:8, title:"Оформление заказа"}
+      ]}
+    ]},
+    { id:"d3-2", menuTitle:"Что такое скрипт", kicker:"Инструмент", title:"Что такое скрипт", blocks:[
+      {type:"note", id:"d3-2", level:"P2", items:[
+        "Внутри курса нет ни одного текстового примера скрипта — только ссылки на видео. Добавьте хотя бы один короткий письменный пример диалога, который можно быстро освежить в памяти перед встречей, не пересматривая видео заново."
+      ]},
+      {type:"lead", text:"Скрипт — сценарий разговора менеджера с клиентом: шаблоны фраз, вопросов, комментариев и речевых оборотов. Это подсказка, которая помогает не растеряться и не уйти от темы."},
+      {type:"p", text:"В скрипте детально описаны реплики, интонации, вопросы и аргументы. Его используют для обучения новичков или когда важно соблюдать шаблон общения."},
+      {type:"list", title:"Скрипты помогают", items:[
+        "Увеличивать продажи — менеджеры не забывают предлагать дополнительные и сопутствующие товары.",
+        "Обрабатывать больше обращений — разговор становится структурированным.",
+        "Повышать эффективность общения с клиентом."
+      ]},
+      {type:"resources", kind:"video", items:[{id:"res-script-tatiana", title:"Скрипт от наставника Татьяны", text:"Видеоразбор скрипта первичной встречи."}]},
+      {type:"resources", kind:"doc", items:[{id:"res-script-doc", title:"Текст скрипта", text:"Открыть документ со скриптом."}]}
+    ]},
+    { id:"d3-3", menuTitle:"Почему КЭВ — главное", kicker:"Ключевой этап", title:"Почему КЭВ — главное", blocks:[
+      {type:"lead", text:"КЭВ — ключевой этап воронки продаж. Его главная цель — создать доверие клиента. Если хочешь много продавать, проводи больше КЭВов."},
+      {type:"p", text:"Логика воронки: пришла заявка → закрыл на КЭВ → создал доверие → закрыл сделку. Менеджеру гораздо проще довести клиента до покупки, если он смог вызвать доверие — доверие является основой любой продажи."},
+      {type:"p", text:"В нашей компании КЭВ — это закрытие клиента на замер или на встречу в офисе. При удалённом расчёте старайся не проводить презентацию товара, пока клиент не приехал в офис."}
+    ]},
+    { id:"d3-4", menuTitle:"Курс «Гребень продаж»", kicker:"Обучение продажам", title:"Курс «Гребень продаж 2.0»", blocks:[
+      {type:"note", id:"d3-4", level:"P1", items:[
+        "Курс — 9 уроков, 8+ часов, а весь учебный день тоже 8 часов. На 8 этапов продаж, скрипт, КЭВ и психологию контакта в этот же день времени не останется. Вынесите курс за пределы учебного дня («домашнее задание») или разбейте на 2 дня."
+      ]},
+      {type:"lead", text:"Курс Михаила Гребенюка проходят все дизайнеры: 9 уроков, более 8 часов — спланируй время."},
+      {type:"list", title:"Что даёт курс", items:[
+        "Чёткую структуру разговора — от приветствия до финального закрытия.",
+        "Навык правильного выявления потребностей вместо общего «Что вам нужно?».",
+        "Уверенность в себе и в продукте, подкреплённую аргументами.",
+        "Сильную отработку возражений — через выгоды, сравнение, кейсы и эмоциональные якоря.",
+        "Конкретные скрипты и фразы для каждого этапа.",
+        "Понимание логики клиента: почему он «сливается» и как удержать его внимание без скидок."
+      ]},
+      {type:"resources", kind:"video", items:[
+        {id:"res-grebenuk-1", title:"Урок 1", text:""},
+        {id:"res-grebenuk-2", title:"Урок 2", text:""},
+        {id:"res-grebenuk-3", title:"Урок 3", text:""},
+        {id:"res-grebenuk-4", title:"Урок 4", text:""},
+        {id:"res-grebenuk-5", title:"Урок 5", text:""},
+        {id:"res-grebenuk-6", title:"Урок 6", text:""},
+        {id:"res-grebenuk-7", title:"Урок 7", text:""},
+        {id:"res-grebenuk-8", title:"Урок 8", text:""},
+        {id:"res-grebenuk-9", title:"Урок 9", text:""}
+      ]}
+    ]},
+    { id:"d3-5", menuTitle:"Психология контакта", kicker:"Психология", title:"Психологические приёмы для установления контакта", blocks:[
+      {type:"callout", icon:"sparkles", text:"Правило трёх «да»: на финальном этапе задай два вопроса, на которые клиент ответит «да», а затем переходи к продающему вопросу — после нескольких согласий проще согласиться и дальше."},
+      {type:"cards", cols:3, items:[
+        {icon:"smile", title:"Искренняя улыбка", text:"Она задаёт позитивный настрой и передаёт его клиенту."},
+        {icon:"eye", title:"Зрительный контакт", text:"Частый спокойный и уверенный взгляд говорит о вовлечённости в разговор."},
+        {icon:"handshake", title:"Партнёрство", text:"Показывай клиенту, что вы вместе ищете решение: используй «мы-высказывания», общайся на равных."},
+        {icon:"repeat", title:"Копирование", text:"Мягкое, естественное отражение позы, темпа речи и интонации клиента создаёт ощущение «одной волны»."},
+        {icon:"thumbsup", title:"Похвала", text:"Людям нравятся искренние и уместные комплименты — отметь вкус или точное наблюдение клиента."},
+        {icon:"briefcase", title:"Личный опыт", text:"Уместный личный опыт использования или рекомендаций усиливает твою экспертность."}
+      ]}
+    ]},
+    { id:"d3-test", menuTitle:"Тест дня", kicker:"Проверка знаний", title:"Тест: День 3", blocks:[
+      {type:"lead", text:"Короткий тест по материалам дня: 8 этапов продаж, скрипт, КЭВ."},
+      {type:"resources", kind:"doc", items:[{id:"res-test-d3", title:"Ссылка на опросник", text:"Google-опросник по материалам Дня 3."}]},
+      {type:"callout", icon:"clipboardCheck", text:"Результат прохождения подтверди сообщением в «Чате для стажёров»."}
+    ]}
+  ]
+});
+
+DATA.sections.push({
+  id:"day4", badge:"04", icon:"repeat", title:"День 4", subtitle:"Презентация, закрытие и возражения",
+  pages:[
+    { id:"d4-0", menuTitle:"Обзор дня", kicker:"День 4 из 10", title:"Презентация, закрытие и возражения", isDayIntro:true, blocks:[
+      {type:"note", id:"d4-0", level:"P1", items:[
+        "В плане обещан пункт «Итоги: чек-лист менеджера» — такого чек-листа нигде в этом дне нет, день заканчивается сразу тестом. Либо добавьте чек-лист, либо уберите пункт из плана."
+      ]},
+      {type:"list", title:"В этом разделе", items:["Предзакрытие и закрытие","Отработка частых возражений","Точки касания (ТК)","Итоги: чек-лист менеджера","Тест дня"]}
+    ]},
+    { id:"d4-1", menuTitle:"Предзакрытие и закрытие", kicker:"Вопросы", title:"Предзакрытие и закрытие", blocks:[
+      {type:"twocol",
+        colA:{title:"Предзакрытие — помогает понять настрой клиента и мягко подвести его к следующему шагу", items:[
+          "Ну как вам?","Кажется, вам очень понравилось?","Побольше или поменьше?","Что нравится больше всего?",
+          "Есть причины сомневаться?","Отложу, чтобы не забрали — обсудим детали.","Подскажите, когда будет удобно принять замерщика."
+        ]},
+        colB:{title:"Закрытие — прямые формулировки, когда клиент уже готов к следующему шагу", items:[
+          "Ну что, работаем?","Записываю? Бронирую?","Подписываем договор?","Предлагаю начать — погнали?","Готовлю счёт и жду оплату?"
+        ]}
+      }
+    ]},
+    { id:"d4-2", menuTitle:"Отработка возражений", kicker:"Работа с сомнениями", title:"Отработка частых возражений", blocks:[
+      {type:"note", id:"d4-2", level:"P2", items:[
+        "В тексте перечислено 6 возражений, включая «дом не сдан», а видео ниже есть только на 5 — ролика на «дом не сдан» нет. Также не хватает прямого сравнения с 2–3 конкретными конкурентами для возражения «у конкурентов дешевле» — сейчас есть только общая формулировка."
+      ]},
+      {type:"lead", text:"Возражение — причина, мешающая покупке. Частые: «дорого», «долго», «дешевле в другом месте», «не сейчас», «дом не сдан». Для каждого — подборка видеоразборов."},
+      {type:"resources", kind:"video", items:[
+        {id:"res-obj-expensive", title:"Дорого", text:"Видеоразбор отработки возражения."},
+        {id:"res-obj-cheaper", title:"У конкурентов дешевле", text:"Видеоразбор отработки возражения."},
+        {id:"res-obj-consult", title:"Надо посоветоваться", text:"Видеоразбор отработки возражения."},
+        {id:"res-obj-later", title:"Нам надо нескоро", text:"Видеоразбор отработки возражения."},
+        {id:"res-obj-long", title:"У вас долго по времени", text:"Видеоразбор отработки возражения."}
+      ]}
+    ]},
+    { id:"d4-3", menuTitle:"Точки касания", kicker:"Сопровождение", title:"Точки касания (ТК)", blocks:[
+      {type:"lead", text:"Даже если вы отработали все возражения клиента, это не значит, что он купит. Тогда начинается следующий этап работы — прогревающие сообщения после того, как клиент ушёл без решения."},
+      {type:"resources", kind:"video", items:[{id:"res-tk", title:"Точки касания (Гребенюк / Татьяна)", text:"Видео о системе точек касания."}]},
+      {type:"resources", kind:"doc", items:[{id:"res-tk-doc", title:"Документ по точкам касания", text:"Шаблоны прогревающих сообщений."}]}
+    ]},
+    { id:"d4-test", menuTitle:"Тест дня", kicker:"Проверка знаний", title:"Тест: День 4", blocks:[
+      {type:"lead", text:"Короткий тест по материалам дня: предзакрытие, возражения, точки касания."},
+      {type:"resources", kind:"doc", items:[{id:"res-test-d4", title:"Ссылка на опросник", text:"Google-опросник по материалам Дня 4."}]},
+      {type:"callout", icon:"clipboardCheck", text:"Результат прохождения подтверди сообщением в «Чате для стажёров»."}
+    ]}
+  ]
+});
+
+DATA.sections.push({
+  id:"day5", badge:"05", icon:"database", title:"День 5", subtitle:"Работа в CRM (Bitrix24)",
+  pages:[
+    { id:"d5-0", menuTitle:"Обзор дня", kicker:"День 5 из 10", title:"Работа в CRM (Bitrix24)", isDayIntro:true, blocks:[
+      {type:"note", id:"d5-0", level:"P1", items:[
+        "План обещает «Стадии сделок» отдельным пунктом, но нигде в курсе нет единого списка всех стадий воронки — названия («Замер», «Спецификация», «Договор подписан», «Передан технологу» и т.д.) разбросаны по другим дням. Добавьте один канонический список всех стадий CRM — лучше всего прямо в этот день."
+      ]},
+      {type:"list", title:"В этом разделе", items:["Что такое CRM","Задачи и «чистота» CRM","Стадии сделок","Пошаговые инструкции","Приложения для коммуникации"]}
+    ]},
+    { id:"d5-1", menuTitle:"Что такое CRM", kicker:"Основа", title:"Что такое CRM и главные правила", blocks:[
+      {type:"lead", text:"CRM — система управления отношениями с клиентами. Она хранит данные о клиентах, чтобы вы строили с ними качественные отношения: Customer — клиент, Relationship — отношения, Management — управление процессом."},
+      {type:"cards", cols:2, items:[
+        {icon:"message", title:"Пишите комментарии", text:"После каждого контакта с клиентом — встречи, звонка или переписки — должен обновляться комментарий. Без него через 2–3 недели ты забудешь, что это был за клиент."},
+        {icon:"route", title:"Двигайте по воронке", text:"Каждая сделка должна двигаться по воронке слева направо; передвигать её в обратном порядке запрещено."},
+        {icon:"listchecks", title:"Дела", text:"У каждой сделки должно быть запланировано дело на следующий шаг: созвониться, написать, отправить КП, подготовить информацию."},
+        {icon:"database", title:"Всё в CRM", text:"Вся переписка и звонки — только в CRM, никаких коммуникаций с личного телефона: так вся информация хранится в одном месте."}
+      ]}
+    ]},
+    { id:"d5-2", menuTitle:"Пошаговые инструкции", kicker:"Инструкции", title:"Пошаговые действия в CRM", blocks:[
+      {type:"lead", text:"К видео есть подробные пошаговые инструкции с изображениями: что заполнять, куда нажимать, что сохранять."},
+      {type:"resources", kind:"video", items:[{id:"res-crm-video", title:"Работа в CRM", text:"Создание клиента и сделки, движение по стадиям, постановка задач."}]},
+      {type:"resources", kind:"doc", items:[
+        {id:"res-crm-doc1", title:"Создание контакта и карточки", text:"Какие поля заполнять, как отправить сообщение."},
+        {id:"res-crm-doc2", title:"Движение по стадиям и задачи", text:"Канбан, фильтры, постановка и продление задач."}
+      ]}
+    ]},
+    { id:"d5-3", menuTitle:"Приложения для общения", kicker:"Коммуникация", title:"Приложения для общения", blocks:[
+      {type:"note", id:"d5-3", level:"P2", items:[
+        "Есть только техническая инструкция по звонкам и Wazzup. Не хватает сценария именно продающего диалога в мессенджере — судя по всему, это не менее важный канал первого контакта, чем офис."
+      ]},
+      {type:"resources", kind:"doc", items:[
+        {id:"res-telephony", title:"Телефония", text:"Инструкция: как совершать звонок."},
+        {id:"res-wazzup", title:"Wazzup", text:"Инструкция по продажам в переписке."}
+      ]}
+    ]},
+    { id:"d5-test", menuTitle:"Тест дня", kicker:"Проверка знаний", title:"Тест: День 5", blocks:[
+      {type:"lead", text:"Короткий тест по материалам дня: работа в CRM Bitrix24."},
+      {type:"resources", kind:"doc", items:[{id:"res-test-d5", title:"Ссылка на опросник", text:"Google-опросник по материалам Дня 5."}]},
+      {type:"callout", icon:"clipboardCheck", text:"Результат прохождения подтверди сообщением в «Чате для стажёров»."}
+    ]}
+  ]
+});
+</script>
+<script>
+DATA.sections.push({
+  id:"day6", badge:"06", icon:"filetext", title:"День 6", subtitle:"Оформление сделки на встрече",
+  pages:[
+    { id:"d6-0", menuTitle:"Обзор дня", kicker:"День 6 из 10", title:"Оформление сделки на встрече", isDayIntro:true, blocks:[
+      {type:"note", id:"d6-0", level:"P2", items:[
+        "План обещает «Приём оплаты и чек» отдельным пунктом — по факту растворено внутри общего раздела «Оформление сделки на встрече». Также в план не попали два добавленных ниже раздела — «Отдельные элементы» и «План по розеткам» (это нормально, просто обновите план под факт)."
+      ]},
+      {type:"list", title:"В этом разделе", items:["Договор: что это и зачем","PRO100 и расчёт стоимости","Оформление договора и предоплата 10 000 ₽","Приём оплаты и чек","Bitrix24 и Google-таблица","Тест дня"]}
+    ]},
+    { id:"d6-1", menuTitle:"Договор", kicker:"Оформление", title:"Договор", blocks:[
+      {type:"note", id:"d6-1", level:"P1", items:[
+        "Не хватает юридического минимума: право клиента на отказ по закону о защите прав потребителей, обработка персональных данных при заведении карточки в CRM (152-ФЗ). Это прямая ответственность менеджера при работе с договором и контактами клиента — стоит добавить отдельным блоком именно здесь."
+      ]},
+      {type:"lead", text:"Главный инструмент защиты. Договор — не формальность. В кухонном бизнесе всё делается под конкретные размеры и пожелания, и договор фиксирует все договорённости до запуска дорогостоящего производства."},
+      {type:"p", text:"Менеджер обязан проговорить ключевые пункты вслух, а не просто дать документ на подпись. Идеально — скрепить подписями оба экземпляра, каждый лист спецификации и все приложения."},
+      {type:"callout", icon:"alert", text:"Без пустых строк. Никогда не оставляй незаполненные строки (сроки, суммы, прочерки) — это простор для злоупотреблений."},
+      {type:"photo", id:"p-d6-contract", caption:"Сцена оформления сделки: на столе подписанный договор, спецификация, калькулятор или ноутбук с расчётом, ручка рядом. Руки менеджера аккуратно раскладывают документы. Деловая аккуратная доверительная атмосфера."},
+      {type:"resources", kind:"doc", items:[
+        {id:"res-contract-sample", title:"Договор для ознакомления", text:"Диск → Общий диск → «Шаблоны документов по сделке»."},
+        {id:"res-addendum", title:"Доп. соглашение", text:"Шаблон дополнительного соглашения."}
+      ]}
+    ]},
+    { id:"d6-2", menuTitle:"Проектирование: элементы", kicker:"Проектирование", title:"Отдельные элементы и особенности", blocks:[
+      {type:"lead", text:"Перед работой в программах разберите правила построения элементов (документы на Диске). Разделы «Электрика» и «Особенности» постоянно пополняются."},
+      {type:"resources", kind:"doc", items:[
+        {id:"res-corner-kitchen", title:"Угловая кухня · гардеробная · шкафы", text:"Базовые правила проектирования."},
+        {id:"res-metal-slide", title:"Металлоконструкции · раздвижные системы", text:"Отдельные элементы."},
+        {id:"res-install-features", title:"Особенности установки", text:"Модули, фасады, подсветка, расстояния, полки, цоколь, плинтуса, фартук, техника."}
+      ]}
+    ]},
+    { id:"d6-3", menuTitle:"План по розеткам", kicker:"Безопасность и удобство", title:"План по розеткам", blocks:[
+      {type:"lead", text:"В компании план выполняет специалист по замеру, но знать его нужно каждому. Грамотные розетки — это удобство и безопасность."},
+      {type:"list", items:[
+        "Количество — по числу приборов, с запасом на будущее.",
+        "Рабочая зона (фартук) — 3–5 розеток; встроенная техника — за модулями.",
+        "У мойки и плиты — защита от воды и перегрузок.",
+        "Отдельные линии для духовки, варочной, посудомоечной и стиральной машин.",
+        "Скрытая проводка, заземление, защита от скачков напряжения."
+      ]},
+      {type:"resources", kind:"video", items:[{id:"res-sockets-video", title:"План по розеткам (Татьяна)", text:"Видеоразбор построения плана розеток."}]}
+    ]},
+    { id:"d6-4", menuTitle:"Программа PRO100", kicker:"Проектирование", title:"Программа PRO100", blocks:[
+      {type:"lead", text:"PRO100 — профессиональная программа для проектирования корпусной мебели и интерьеров, особенно популярная среди дизайнеров кухонь, шкафов-купе и другой встроенной мебели."},
+      {type:"p", text:"Она создавалась для «дизайнера-продавца», а не инженера-конструктора: баланс скорости, наглядности и точности. Ты проходишь всю встречу по скрипту, держа в руках готовую 3D-модель — а не абстрактные цифры на листке."},
+      {type:"resources", kind:"video", items:[{id:"res-pro100-video", title:"Как нарисовать кухню в PRO100", text:"Обучающее видео по программе."}]}
+    ]},
+    { id:"d6-5", menuTitle:"Расчёт в Festt", kicker:"Расчёт", title:"Расчёт стоимости в прайсе", blocks:[
+      {type:"lead", text:"Итоговая калькуляция проекта выполняется в программе Festt. Видео шаг за шагом показывает, как собрать корректный расчёт по спецификации."},
+      {type:"resources", kind:"video", items:[{id:"res-festt-video", title:"Калькуляция в Festt", text:"Обучающее видео по расчёту стоимости."}]}
+    ]},
+    { id:"d6-6", menuTitle:"Оформление сделки: шаги", kicker:"Договоры", title:"Оформление сделки на встрече", blocks:[
+      {type:"lead", text:"Шаги менеджера от первой встречи до записи клиента на замер."},
+      {type:"twocol",
+        colA:{title:"После подписания договора", items:[
+          "Провести встречу по скрипту: проект в PRO100, презентация материала, расчёт стоимости по прайсу, презентация стоимости.",
+          "Оформить договор и предоплату 10 000 ₽; выбить чек и прикрепить к договору.",
+          "Рассказать клиенту последовательность дальнейших действий.",
+          "Наличная оплата — упаковать в конверт с пометкой (№ договора, сумма; при смешанной оплате расписать подробно), убрать в сейф. Безналичная оплата — передать администратору для подготовки документов для компаний.",
+          "Сделать фото клиента с папкой на фоне кухни и отправить в группу «Общение».",
+          "Отметить заказ в Google-таблице «Заявки Админ».",
+          "Написать в Bitrix24-группу «Сделка»: предоплата по шаблону.",
+          "В карточке клиента в Bitrix24 заполнить обязательные поля."
+        ]},
+        colB:{title:"Организация замера", items:[
+          "Перевести сделку в статус «Замер», если клиент готов принять замерщика.",
+          "Если клиент не готов (идёт ремонт) — оставить статус «Договор подписан» до момента готовности.",
+          "Написать клиенту в Telegram или MAX: визитка и приветствие, отправить проект клиента, запросить схемы бытовой техники, сообщить следующие шаги; если техника не наша — сразу запросить её размеры.",
+          "Администратор созванивается с клиентом и договаривается о дате замера."
+        ]}
+      }
+    ]},
+    { id:"d6-test", menuTitle:"Тест дня", kicker:"Проверка знаний", title:"Тест: День 6", blocks:[
+      {type:"lead", text:"Короткий тест по материалам дня: договор, PRO100, оформление сделки."},
+      {type:"resources", kind:"doc", items:[{id:"res-test-d6", title:"Ссылка на опросник", text:"Google-опросник по материалам Дня 6."}]},
+      {type:"callout", icon:"clipboardCheck", text:"Результат прохождения подтверди сообщением в «Чате для стажёров»."}
+    ]}
+  ]
+});
+
+DATA.sections.push({
+  id:"day7", badge:"07", icon:"pencilruler", title:"День 7", subtitle:"Замер и спецификация",
+  pages:[
+    { id:"d7-0", menuTitle:"Обзор дня", kicker:"День 7 из 10", title:"Замер и спецификация", isDayIntro:true, blocks:[
+      {type:"list", title:"В этом разделе", items:["Замер: организация и результат","Спецификация в программе Splan","Правила подготовки проекта","Предварительное согласование с клиентом","Тест дня"]}
+    ]},
+    { id:"d7-1", menuTitle:"От замера до согласования", kicker:"Спецификация", title:"От замера до предварительного согласования", blocks:[
+      {type:"lead", text:"Что делает менеджер после замера — до встречи с клиентом на подписание."},
+      {type:"twocol",
+        colA:{title:"После замера", items:[
+          "Администратор загружает данные замера в карточку клиента в Bitrix24.",
+          "Сделка переводится в статус «Спецификация».",
+          "Подготовить спецификацию в программе Splan.",
+          "Чётко указать параметры фурнитуры на эскизе — по правилам Splan (см. следующий раздел).",
+          "Спецификация готовится только после контрольного замера.",
+          "Использовать утверждённые шаблоны документов.",
+          "Проверить комплектность: материалы, фурнитура, техника клиента.",
+          "Сверитьcя с проектом в PRO100 и расчётом стоимости."
+        ]},
+        colB:{title:"Согласование с клиентом", items:[
+          "Отправить клиенту спецификацию для предварительного ознакомления.",
+          "Проверить всё: убедиться, что ничего не упущено.",
+          "Внести корректировки при необходимости.",
+          "После удалённого согласования проекта и размеров — доделать спецификацию.",
+          "Пригласить клиента на встречу для подписания."
+        ]}
+      }
+    ]},
+    { id:"d7-2", menuTitle:"Splan: правила", kicker:"Передача конструктору", title:"Splan: правила подготовки проекта", blocks:[
+      {type:"list", items:[
+        "Чётко указывай параметры фурнитуры на эскизе.",
+        "Проект передаётся только после контрольного замера.",
+        "Используй утверждённые шаблоны документов."
+      ]},
+      {type:"photo", id:"p-d7-splan", caption:"Менеджер и технолог обсуждают проект за столом с чертежами или экраном программы проектирования, возможно с распечатанным эскизом кухни в руках. Рабочая сосредоточенная атмосфера современного офиса."}
+    ]},
+    { id:"d7-test", menuTitle:"Тест дня", kicker:"Проверка знаний", title:"Тест: День 7", blocks:[
+      {type:"lead", text:"Короткий тест по материалам дня: замер и спецификация в Splan."},
+      {type:"resources", kind:"doc", items:[{id:"res-test-d7", title:"Ссылка на опросник", text:"Google-опросник по материалам Дня 7."}]},
+      {type:"callout", icon:"clipboardCheck", text:"Результат прохождения подтверди сообщением в «Чате для стажёров»."}
+    ]}
+  ]
+});
+
+DATA.sections.push({
+  id:"day8", badge:"08", icon:"signature", title:"День 8", subtitle:"Вторичная встреча",
+  pages:[
+    { id:"d8-0", menuTitle:"Обзор дня", kicker:"День 8 из 10", title:"Вторичная встреча", isDayIntro:true, blocks:[
+      {type:"list", title:"В этом разделе", items:["Подготовка ко второй встрече","Скрипт ВВ","Финальная отработка возражений","Переход к оформлению договора"]}
+    ]},
+    { id:"d8-1", menuTitle:"ВВ: подготовка и скрипт", kicker:"Главное оружие", title:"Вторичная встреча: подготовка и скрипт ВВ", blocks:[
+      {type:"lead", text:"Вторичная встреча (ВВ) нужна, когда клиент не закрылся на договор сразу после замера — например, ждёт согласования бюджета или сравнивает предложения."},
+      {type:"list", items:[
+        {label:"Перед встречей", text:"подготовь материалы — обновлённый проект, расчёт, сравнение с конкурентами, актуальные акции месяца."},
+        {label:"Скрипт ВВ", text:"включает подготовку материалов, финальную отработку возражений и уверенное закрытие на договор."},
+        {label:"Отработка возражений", text:"используй те же техники, что и на КЭВ — выгоды, сравнение, кейсы, эмоциональные якоря — но уже прицельно под конкретные сомнения клиента."},
+        {label:"Закрытие", text:"после снятия возражений переходи к прямым закрывающим формулировкам и оформлению договора."},
+        {label:"Сдача скрипта", text:"скрипт ВВ сдаётся устно РОПу — так же, как и скрипт КЭВ."}
+      ]},
+      {type:"photo", id:"p-d8-meeting", caption:"Менеджер показывает клиенту обновлённый проект на экране ноутбука или планшета в шоуруме или переговорной, клиент внимательно рассматривает изображение. Тёплая доверительная атмосфера, естественный свет."}
+    ]},
+    { id:"d8-2", menuTitle:"Подписание спецификации", kicker:"Договоры", title:"Подписание спецификации", blocks:[
+      {type:"twocol",
+        colA:{title:"На встрече с клиентом", items:[
+          "Ещё раз ознакомить клиента с выбранным материалом.","Показать итоговую спецификацию и разобрать все позиции.",
+          "Подписать спецификацию.","Если стоимость изменилась — подписать дополнительное соглашение."
+        ]},
+        colB:{title:"Оплата и передача в производство", items:[
+          "Клиент вносит остаток предоплаты до 60% от суммы; чек прикрепить к договору.",
+          "Сообщить в Bitrix24-группу «Сделка» о внесении предоплаты по шаблону.",
+          "Загрузить спецификацию в Bitrix24.","Перевести сделку в статус «Передан технологу»."
+        ]}
+      }
+    ]},
+    { id:"d8-test", menuTitle:"Тест дня", kicker:"Проверка знаний", title:"Тест: День 8", blocks:[
+      {type:"lead", text:"Короткий тест по материалам дня: вторичная встреча и подписание спецификации."},
+      {type:"resources", kind:"doc", items:[{id:"res-test-d8", title:"Ссылка на опросник", text:"Google-опросник по материалам Дня 8."}]},
+      {type:"callout", icon:"clipboardCheck", text:"Результат прохождения подтверди сообщением в «Чате для стажёров»."}
+    ]}
+  ]
+});
+</script>
+<script>
+DATA.sections.push({
+  id:"day9", badge:"09", icon:"truck", title:"День 9", subtitle:"Производство и доставка",
+  pages:[
+    { id:"d9-0", menuTitle:"Обзор дня", kicker:"День 9 из 10", title:"Производство и доставка", isDayIntro:true, blocks:[
+      {type:"list", title:"В этом разделе", items:["Заказ уходит технологу","Проверка проекта менеджером","Передача в производство","Доставка и монтаж, оплата 40%","Акт приёма-передачи","Рекламации и ОКК"]}
+    ]},
+    { id:"d9-1", menuTitle:"Производство и завершение", kicker:"Договоры", title:"Производство, доставка и завершение сделки", blocks:[
+      {type:"note", id:"d9-1", level:"P1", items:[
+        "Весь день (6 тем в плане) сжат в один раздел по одному предложению на пункт — при этом производство/доставка чаще всего становится точкой рекламаций. Расширьте: что именно менеджер сверяет в проекте технолога, что делать при переносе даты доставки, как оформляется акт при частичных претензиях на приёмке."
+      ]},
+      {type:"twocol",
+        colA:{title:"Производство", items:[
+          "Заказ в работу берёт технолог.",
+          "Как только проект отрисован, технолог отправляет его менеджеру — менеджер сверяет со спецификацией по шаблону, всё ли сходится.",
+          "После проверки заказ отправляется в производство."
+        ]},
+        colB:{title:"Доставка и завершение сделки", items:[
+          "Когда заказ готов, администратор созванивается с клиентом и договаривается о дате доставки и монтажа.",
+          "За 2 дня до доставки клиент оплачивает оставшиеся 40% — пробить чек и написать в группу «Сделка».",
+          "После монтажа клиент подписывает акт приёма-передачи.",
+          "Если есть рекламация — все вопросы решает администратор.",
+          "Далее с клиентом связывается ОКК и собирает обратную связь."
+        ]}
+      }
+    ]},
+    { id:"d9-test", menuTitle:"Тест дня", kicker:"Проверка знаний", title:"Тест: День 9", blocks:[
+      {type:"lead", text:"Короткий тест по материалам дня: производство, доставка, монтаж."},
+      {type:"resources", kind:"doc", items:[{id:"res-test-d9", title:"Ссылка на опросник", text:"Google-опросник по материалам Дня 9."}]},
+      {type:"callout", icon:"clipboardCheck", text:"Результат прохождения подтверди сообщением в «Чате для стажёров»."}
+    ]}
+  ]
+});
+
+DATA.sections.push({
+  id:"day10", badge:"10", icon:"book", title:"День 10", subtitle:"Справочник и итоговый экзамен",
+  pages:[
+    { id:"d10-0", menuTitle:"Обзор дня", kicker:"День 10 из 10", title:"Справочник и итоговый экзамен", isDayIntro:true, blocks:[
+      {type:"list", title:"В этом разделе", items:["Скрипты ПВ · КЭВ · ВВ","Глоссарий терминов","Живые данные","Рекламации и обратная связь","Итоговый экзамен"]}
+    ]},
+    { id:"d10-1", menuTitle:"Справочник и шпаргалки", kicker:"Раздел", title:"Справочник и шпаргалки", blocks:[
+      {type:"note", id:"d10-1", level:"P0", items:[
+        "«Рекламации и обратная связь» заявлены в плане Дня 10 (и в чек-листе на 10 дней), но отдельного протокола во всём курсе нет — только мимоходом в Дне 1 и Дне 9. Добавьте отдельную страницу: сроки ответа, кто подключается на каждом этапе, что фиксировать в CRM."
+      ]},
+      {type:"lead", text:"Быстрый доступ для тех, кто уже в работе: скрипты, пути к файлам, тесты, контакты."},
+      {type:"photo", id:"p-d10-reference", caption:"Аккуратная flat lay композиция из рабочих материалов менеджера сверху: блокнот со скриптами, ручка, ноутбук, чашка кофе — как «рабочий набор» готового специалиста. Чистый организованный современный стиль."}
+    ]},
+    { id:"d10-2", menuTitle:"Скрипты ПВ · КЭВ · ВВ", kicker:"Главное оружие", title:"Скрипты (ПВ · КЭВ · ВВ)", blocks:[
+      {type:"lead", text:"Три скрипта работают как единая система. Скачай файлы — КЭВ и ВВ сдаются устно РОПу."},
+      {type:"cards", cols:3, items:[
+        {icon:"handshake", title:"ПВ", text:"Установление контакта и закрытие на КЭВ. Анализируется ОКК по чек-листу."},
+        {icon:"target", title:"КЭВ", text:"Приветствие → присоединение → квалификация → апсейл → предзакрытие → закрытие."},
+        {icon:"signature", title:"ВВ", text:"Подготовка материалов, финальная отработка возражений, закрытие на договор."}
+      ]},
+      {type:"resources", kind:"doc", items:[
+        {id:"res-script-pv", title:"Скрипт ПВ — файл", text:"Скачать документ."},
+        {id:"res-script-kev", title:"Скрипт КЭВ — файл", text:"Скачать документ."},
+        {id:"res-script-vv", title:"Скрипт ВВ — файл", text:"Скачать документ."}
+      ]}
+    ]},
+    { id:"d10-3", menuTitle:"Глоссарий", kicker:"Раздел", title:"Глоссарий", blocks:[
+      {type:"lead", text:"Единые расшифровки терминов и аббревиатур — чтобы все понимали друг друга одинаково."},
+      {type:"photo", id:"p-d10-glossary", caption:"Крупный план открытого блокнота или карточек с аккуратно оформленными терминами и сокращениями, рядом ручка. Минималистичная образовательная подача, мягкий естественный свет."}
+    ]},
+    { id:"d10-4", menuTitle:"Термины и аббревиатуры", kicker:"Словарь", title:"Термины и аббревиатуры", blocks:[
+      {type:"note", id:"d10-4", level:"P2", items:[
+        "Термин «Лидоруб» используется один раз (День 2) без объяснения — отдельная это роль или прозвище менеджера на входящих. В структуре команды (День 1) такой позиции нет. Уточните и, если это отдельная роль, добавьте в структуру команды."
+      ]},
+      {type:"glossary", columns:[
+        {title:"Встречи и воронка", items:[
+          {term:"ПВ", def:"первичная встреча в салоне"},
+          {term:"ВВ", def:"вторичная встреча"},
+          {term:"КЭВ", def:"закрытие клиента на замер или встречу в офисе"},
+          {term:"ТК", def:"точки касания с клиентом"},
+          {term:"КП", def:"коммерческое предложение"},
+          {term:"А·В·С·D", def:"категории клиентов по бюджету и срочности"}
+        ]},
+        {title:"Роли и отделы", items:[
+          {term:"ОП", def:"отдел продаж"},
+          {term:"РОП", def:"руководитель отдела продаж"},
+          {term:"ОКК", def:"отдел контроля качества"},
+          {term:"Лид / Лидоруб", def:"заявка / специалист, передающий карточки"}
+        ]},
+        {title:"Системы", items:[
+          {term:"CRM", def:"система работы с клиентами (Bitrix24)"},
+          {term:"SaaS", def:"ПО как услуга (работа через браузер)"},
+          {term:"ERP", def:"планирование ресурсов предприятия (Festt)"},
+          {term:"Wazzup / Телфин", def:"коммуникаторы: WhatsApp и телефония"}
+        ]},
+        {title:"Термины", items:[
+          {term:"АРО", def:"аффинити · реальность · общение"},
+          {term:"RFM", def:"анализ по давности, частоте и сумме покупок"},
+          {term:"ТО", def:"товарооборот"},
+          {term:"ПММ", def:"посудомоечная машина"}
+        ]}
+      ]}
+    ]},
+    { id:"d10-5", menuTitle:"Живые данные", kicker:"Раздел", title:"Живые данные", blocks:[
+      {type:"lead", text:"Эти данные меняются чаще всего — держи их в одном месте и обновляй регулярно."},
+      {type:"photo", id:"p-d10-livedata", caption:"Сотрудник вносит правки в таблицу на экране ноутбука, рядом на столе календарь или стикеры с пометками. Современная рабочая атмосфера, естественный свет, ощущение регулярного обновления данных."}
+    ]},
+    { id:"d10-6", menuTitle:"Что относится к живым данным", kicker:"Обновлять регулярно", title:"Что относится к живым данным", blocks:[
+      {type:"lead", text:"У каждой такой страницы в материале указан ответственный и метка «обновлено»."},
+      {type:"cards", cols:3, items:[
+        {icon:"calendar", title:"График работы", text:"Сменность 2/2 или 3/3, ответственный — Наталья Володина."},
+        {icon:"wallet", title:"Система оплаты", text:"Ставки и проценты мотивации — согласовать."},
+        {icon:"creditcard", title:"Оплата и рассрочка", text:"Свести версии Дня 2 и Дня 8 к единой."},
+        {icon:"gift", title:"Сертификат и акции", text:"Номинал, проценты, акция месяца — у РОП."},
+        {icon:"truck", title:"Расчёт доставки", text:"Ставка 80 ₽/км — сверять регулярно."},
+        {icon:"tag", title:"Прайс доп. работ", text:"24 позиции — обновлять при изменении цен."}
+      ]}
+    ]},
+    { id:"d10-7", menuTitle:"Итоговый экзамен", kicker:"Раздел", title:"Итоговый экзамен", blocks:[
+      {type:"lead", text:"Комбинированный экзамен: тест, практический кейс и ролевая игра по скриптам — финальная проверка перед стартом самостоятельной работы."},
+      {type:"photo", id:"p-d10-exam", caption:"Стажёр сидит за столом напротив наставника или РОПа, идёт диалог или ролевая игра, на столе блокнот и рабочие материалы. Сосредоточенная, но доброжелательная атмосфера, естественный свет."}
+    ]},
+    { id:"d10-8", menuTitle:"Часть 1. Тест", kicker:"Проверка знаний", title:"Часть 1. Тест", blocks:[
+      {type:"note", id:"d10-8", level:"P1", items:[
+        "«Проходной балл и правила пересдачи уточняй у наставника» — для итогового экзамена это должно быть зафиксировано заранее в самом материале, а не оставлено на устную договорённость."
+      ]},
+      {type:"lead", text:"Итоговый тест по всем 10 дням обучения — теория, термины, регламенты."},
+      {type:"resources", kind:"doc", items:[{id:"res-final-test", title:"Ссылка на опросник", text:"Итоговый Google-опросник."}]},
+      {type:"callout", icon:"alert", text:"Проходной балл и правила пересдачи уточняй у наставника."}
+    ]},
+    { id:"d10-9", menuTitle:"Часть 2. Кейс", kicker:"Практический кейс", title:"Часть 2. Кейс — сделка от А до Я", blocks:[
+      {type:"lead", text:"Проведи учебную сделку по вводным от наставника — от встречи до передачи технологу."},
+      {type:"twocol",
+        colA:{title:"Что нужно сделать", items:[
+          "Провести встречу по скрипту и презентовать проект в PRO100.",
+          "Рассчитать стоимость по прайсу и презентовать её клиенту.",
+          "Оформить договор и предоплату 10 000 ₽, пробить чек.",
+          "Заполнить карточку клиента и обязательные поля в Bitrix24.",
+          "Отметить заказ в Google-таблице «Заявки Админ».",
+          "Перевести сделку в статус «Замер» и написать клиенту в Telegram/MAX.",
+          "Подготовить спецификацию по вводным замера.",
+          "Довести сделку до статуса «Передан технологу»."
+        ]},
+        colB:{title:"Как оценивается", items:[
+          "Каждый шаг сверяется с чек-листом сделки (Дни 6–9).","Оценивает наставник или РОП.",
+          "Скорость и точность заполнения Bitrix24.","Соответствие скриптам ПВ · КЭВ · ВВ.",
+          "Итог — зачёт/незачёт с комментариями."
+        ]}
+      }
+    ]},
+    { id:"d10-10", menuTitle:"Часть 3. Ролевая игра", kicker:"Ролевая игра", title:"Часть 3. Скрипты вживую", blocks:[
+      {type:"lead", text:"Отработай все три скрипта перед наставником или РОПом — по очереди, без бумажки."},
+      {type:"cards", cols:3, items:[
+        {icon:"handshake", title:"ПВ", text:"Установление контакта и закрытие на КЭВ — играешь менеджера, наставник изображает клиента."},
+        {icon:"target", title:"КЭВ", text:"Приветствие → присоединение → квалификация → апсейл → предзакрытие → закрытие."},
+        {icon:"signature", title:"ВВ", text:"Финальная отработка возражений и закрытие на договор — подпись, оплата, следующий шаг."}
+      ]}
+    ]},
+    { id:"d10-final", menuTitle:"Контакты", kicker:"Финал", title:"Мы всегда на связи и готовы помочь", blocks:[
+      {type:"contact", text:"Нашёл ошибку или не открывается документ — напиши разработчику или в «Чат для стажёров».", handle:"@Dsr676 · «Чат для стажёров»", tagline:"«Не так, как у всех, а так, как нужно вам» — МОДЕРНМ · Академия знаний «Дизайнер»"}
+    ]}
+  ]
+});
+</script>
+<script>
+/* ============ NAV BUILD ============ */
+const sidebarNav = document.getElementById('navList');
+const DAY_TO_CHECKLIST_INDEX = {day1:0,day2:1,day3:2,day4:3,day5:4,day6:5,day7:6,day8:7,day9:8,day10:9};
+
+function buildNav(){
+  let html = `<div class="nav-item" data-nav="cover" style="margin-bottom:14px;">
+    <div class="nav-badge">${icon('home',13)}</div>
+    <div class="nav-text"><span class="t1">Обложка</span></div>
+  </div>`;
+  html += `<div class="nav-group-label">Программа обучения</div>`;
+  DATA.sections.forEach(sec=>{
+    html += `<div class="nav-item" data-nav="${sec.id}">
+      <div class="nav-badge">${sec.badge}</div>
+      <div class="nav-text"><span class="t1">${sec.title}</span><span class="t2">${sec.subtitle}</span></div>
+    </div>`;
+  });
+  sidebarNav.innerHTML = html;
+  sidebarNav.querySelectorAll('.nav-item').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      location.hash = '#'+el.getAttribute('data-nav');
+      closeSidebarMobile();
+    });
+  });
+}
+buildNav();
+
+function updateNavActive(sectionId){
+  document.querySelectorAll('.nav-item').forEach(el=>{
+    el.classList.toggle('active', el.getAttribute('data-nav')===sectionId);
+  });
+}
+function updateProgress(){
+  const done = getDone();
+  let count = 0;
+  for(let i=0;i<10;i++){ if(done['cl-10days_'+i]) count++; }
+  const pct = Math.round(count/10*100);
+  document.getElementById('progressPct').textContent = pct+'%';
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.querySelectorAll('.nav-item').forEach(el=>{
+    const secId = el.getAttribute('data-nav');
+    const idx = DAY_TO_CHECKLIST_INDEX[secId];
+    if(idx!==undefined){ el.classList.toggle('done', !!done['cl-10days_'+idx]); }
+  });
+}
+
+/* ============ CONTENT RENDER ============ */
+const contentEl = document.getElementById('content');
+const crumbsEl = document.getElementById('crumbs');
+
+function renderCover(){
+  crumbsEl.innerHTML = 'МОДЕРНМ <span>/</span> Обложка';
+  contentEl.innerHTML = `
+    <div class="hero-cover">
+      <div class="hero-eyebrow">${COVER.eyebrow}</div>
+      <div class="hero-title">${COVER.title}</div>
+      <div class="hero-desc">${COVER.desc}</div>
+      <div class="hero-meta">${COVER.meta}</div>
+    </div>
+    <div class="page-block">${photoSlotHTML('p-cover-main','Широкий кадр входной зоны шоурума МОДЕРНМ: светлая просторная витрина с 2–3 выставочными кухнями в современном минималистичном стиле (матовые фасады, дерево, встроенная техника), мягкий естественный свет из окон, на переднем плане размытый силуэт человека, рассматривающего кухню. Тёплая, дорогая, современная атмосфера. Реалистичное фото, без текста и логотипов в кадре, горизонтальная ориентация.',320)}
+      <div style="margin-top:10px;font-size:12px;color:var(--ink-faint);">Совет: если генератор картинок лучше работает на английском — переведите текст описания перед вставкой, смысл сцены не изменится.</div>
+    </div>
+    <div class="page-block">
+      <div class="section-eyebrow">Навигатор</div>
+      <div class="section-title" style="font-size:22px;">Два входа в Академию</div>
+      <div class="twocol" style="margin-top:14px;">
+        <div class="twocol-col">
+          <h4>Я новичок — прохожу обучение по дням</h4>
+          <ul>
+            <li>День 1. Знакомство с компанией</li><li>День 2. Знакомство с продуктом</li>
+            <li>День 3. Первая встреча и скрипт</li><li>День 4. Презентация и закрытие</li>
+            <li>День 5. Работа в CRM (Bitrix24)</li><li>День 6. Договор, PRO100, расчёт</li>
+            <li>День 7. Замер и спецификация</li><li>День 8. Подписание спецификации</li>
+            <li>День 9. Производство и доставка</li><li>День 10. Справочник и экзамен</li>
+          </ul>
+        </div>
+        <div class="twocol-col">
+          <h4>Я уже в работе — нужна быстрая справка</h4>
+          <ul>
+            <li>Чек-лист стажёра и тесты</li><li>Скрипты (ПВ · КЭВ · ВВ)</li><li>Отработка возражений</li>
+            <li>Категории клиентов А·В·С·D</li><li>Точки касания · дневной отчёт</li><li>Оплата, рассрочка, сертификат</li>
+            <li>Расчёт доставки · прайс работ</li><li>Договоры, Splan · где что в Bitrix24</li><li>Глоссарий</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="page-attach-wrap" data-attach-page="cover"></div>
+    <div class="page-tools">
+      <button type="button" class="page-tool-btn" data-addnote-page="cover">${icon('message',13)} Добавить свою заметку</button>
+      <label class="page-tool-btn">${icon('upload',13)} Прикрепить файл<input type="file" data-attach-input="cover"></label>
+    </div>
+    <div class="usernotes-wrap" data-usernotes-page="cover"></div>
+  `;
+  mountPhotoSlots(contentEl);
+  wireAttachInputs(contentEl);
+  mountPageAttach('cover', contentEl);
+  mountUserNotes('cover', contentEl);
+  mountAddNoteButton('cover', contentEl);
+}
+
+function renderSection(sec){
+  crumbsEl.innerHTML = `МОДЕРНМ <span>/</span> ${sec.title}`;
+  let html = `<div class="section-head">
+    <div class="section-eyebrow">${sec.badge? 'День '+sec.badge.replace(/^0/,'') : 'Раздел'}</div>
+    <div class="section-title">${sec.title}${sec.subtitle? ' · '+sec.subtitle:''}</div>
+  </div>`;
+  html += `<div class="jumpnav"><div class="jumpnav-label">В этом разделе</div>`;
+  sec.pages.forEach(p=>{ html += `<a href="#${sec.id}/${p.id}">${p.menuTitle}</a>`; });
+  html += `</div>`;
+
+  sec.pages.forEach(p=>{
+    const pageDomId = sec.id+'-'+p.id;
+    html += `<div id="${pageDomId}" style="scroll-margin-top:90px;">`;
+    html += `<div class="page-kicker">${p.kicker||''}</div>`;
+    html += `<div class="page-title">${p.title}</div>`;
+    p.blocks.forEach((b,bi)=>{ html += renderBlock(b, pageDomId+'_'+bi); });
+    html += `<div class="page-attach-wrap" data-attach-page="${pageDomId}"></div>`;
+    html += `<div class="page-tools">
+      <button type="button" class="page-tool-btn" data-addnote-page="${pageDomId}">${icon('message',13)} Добавить свою заметку</button>
+      <label class="page-tool-btn">${icon('upload',13)} Прикрепить файл<input type="file" data-attach-input="${pageDomId}"></label>
+    </div>`;
+    html += `<div class="usernotes-wrap" data-usernotes-page="${pageDomId}"></div>`;
+    html += `</div><div style="height:52px;"></div>`;
+  });
+
+  contentEl.innerHTML = html;
+  mountPhotoSlots(contentEl);
+  mountResourceSlots(contentEl);
+  mountChecklist(contentEl);
+  mountNotes(contentEl);
+  mountEditableBlocks(contentEl);
+  wireAttachInputs(contentEl);
+  sec.pages.forEach(p=>{
+    const pageDomId = sec.id+'-'+p.id;
+    mountPageAttach(pageDomId, contentEl);
+    mountUserNotes(pageDomId, contentEl);
+    mountAddNoteButton(pageDomId, contentEl);
+  });
+  updateProgress();
+  updateNotesCounter();
+
+  contentEl.querySelectorAll('.jumpnav a').forEach(a=>{
+    a.addEventListener('click',(e)=>{
+      e.preventDefault();
+      const targetId = sec.id+'-'+a.getAttribute('href').split('/')[1];
+      const targetEl = document.getElementById(targetId);
+      if(targetEl){ targetEl.scrollIntoView({behavior:'smooth', block:'start'}); }
+    });
+  });
+}
+
+function router(){
+  const hash = location.hash.replace('#','');
+  const [secId] = hash.split('/');
+  window.scrollTo(0,0);
+  if(!secId || secId==='cover'){
+    renderCover();
+    updateNavActive('cover');
+    return;
+  }
+  const sec = DATA.sections.find(s=>s.id===secId);
+  if(!sec){ renderCover(); updateNavActive('cover'); return; }
+  renderSection(sec);
+  updateNavActive(secId);
+  updateProgress();
+}
+window.addEventListener('hashchange', router);
+router();
+
+/* ============ STORAGE HEALTH CHECK ============ */
+(async ()=>{
+  const ok = await idbCapable();
+  const banner = document.getElementById('storageBanner');
+  const dismissed = sessionStorage.getItem('academyStorageBannerDismissed')==='1';
+  if(!ok && !dismissed){
+    document.getElementById('storageBannerText').textContent =
+      'Этот браузер блокирует основное локальное хранилище для файлов, открытых с диска (частая особенность Firefox и Safari при открытии .html двойным кликом). Фото всё равно сохранятся через запасной способ, но с ограничением по размеру — для видео и больших файлов лучше открыть этот файл в Google Chrome.';
+    banner.style.display = 'flex';
+  }
+  document.getElementById('storageBannerClose').addEventListener('click', ()=>{
+    banner.style.display = 'none';
+    sessionStorage.setItem('academyStorageBannerDismissed','1');
+  });
+})();
+
+/* ============ MOBILE SIDEBAR ============ */
+const sidebarEl = document.getElementById('sidebar');
+const backdropEl = document.getElementById('sidebarBackdrop');
+document.getElementById('menuToggle').addEventListener('click', ()=>{
+  sidebarEl.classList.add('open'); backdropEl.classList.add('open');
+});
+backdropEl.addEventListener('click', closeSidebarMobile);
+function closeSidebarMobile(){ sidebarEl.classList.remove('open'); backdropEl.classList.remove('open'); }
+
+/* ============ NOTES TOGGLE ============ */
+const notesToggleBtn = document.getElementById('notesToggleBtn');
+function applyNotesVisibility(){
+  const hidden = localStorage.getItem('academyHideNotes')==='1';
+  document.body.classList.toggle('hide-notes', hidden);
+  notesToggleBtn.textContent = hidden ? 'Показать' : 'Скрыть';
+}
+notesToggleBtn.addEventListener('click', ()=>{
+  const hidden = localStorage.getItem('academyHideNotes')==='1';
+  localStorage.setItem('academyHideNotes', hidden ? '0' : '1');
+  applyNotesVisibility();
+});
+applyNotesVisibility();
+
+/* ============ NOTES COUNTER + EXPORT ============ */
+function allNoteEntries(){
+  const out = [];
+  DATA.sections.forEach(sec=>{
+    sec.pages.forEach(p=>{
+      p.blocks.forEach(b=>{
+        if(b.type==='note'){
+          b.items.forEach((text,idx)=>{
+            out.push({
+              sectionTitle: sec.title+(sec.subtitle?' · '+sec.subtitle:''),
+              pageTitle: p.title,
+              storeId: 'note_'+b.id+'_'+idx,
+              text: text
+            });
+          });
+        }
+      });
+    });
+  });
+  return out;
+}
+function allPagesFlat(){
+  // returns [{key, sectionTitle, pageTitle}] including the cover page
+  const out = [{ key:'cover', sectionTitle:'Обложка', pageTitle:'Обложка' }];
+  DATA.sections.forEach(sec=>{
+    sec.pages.forEach(p=>{
+      out.push({ key: sec.id+'-'+p.id, sectionTitle: sec.title+(sec.subtitle?' · '+sec.subtitle:''), pageTitle: p.title });
+    });
+  });
+  return out;
+}
+function updateNotesCounter(){
+  const all = allNoteEntries();
+  const done = getDone();
+  const checkedCount = all.filter(n=>!!done[n.storeId]).length;
+  const userNotesMap = getUserNotesMap();
+  const userNotesCount = Object.values(userNotesMap).reduce((s,arr)=>s+arr.length,0);
+  const editsCount = Object.keys(getEdits()).length;
+  const counterEl = document.getElementById('notesCounter');
+  if(counterEl) counterEl.textContent = checkedCount+' из '+all.length+' отмечено · '+userNotesCount+' своих заметок · '+editsCount+' правок текста';
+}
+updateNotesCounter();
+
+async function pageHasAttachment(pageKey){
+  try{ const f = await idbGet('pagefile_'+pageKey); return f ? f.name : null; }catch(e){ return null; }
+}
+
+document.getElementById('exportNotesBtn').addEventListener('click', async ()=>{
+  const allChecklist = allNoteEntries();
+  const done = getDone();
+  const checked = allChecklist.filter(n=>!!done[n.storeId]);
+  const userNotesMap = getUserNotesMap();
+  const edits = getEdits();
+  const pages = allPagesFlat();
+
+  // group everything by page
+  const byPage = {};
+  function ensure(key, sectionTitle, pageTitle){
+    if(!byPage[key]) byPage[key] = { sectionTitle, pageTitle, checklist:[], userNotes:[], editedText:null, attachment:null };
+    return byPage[key];
+  }
+
+  DATA.sections.forEach(sec=>{
+    sec.pages.forEach(p=>{
+      const pageKey = sec.id+'-'+p.id;
+      checked.filter(n=>n.pageTitle===p.title && n.sectionTitle===(sec.title+(sec.subtitle?' · '+sec.subtitle:''))).forEach(n=>{
+        ensure(pageKey, n.sectionTitle, n.pageTitle).checklist.push(n.text);
+      });
+    });
+  });
+
+  pages.forEach(pg=>{
+    const notes = userNotesMap[pg.key] || [];
+    if(notes.length){
+      notes.forEach(n=> ensure(pg.key, pg.sectionTitle, pg.pageTitle).userNotes.push(n.text));
+    }
+  });
+
+  Object.keys(edits).forEach(blockId=>{
+    const pageKey = blockId.replace(/_\d+$/, '');
+    const pg = pages.find(x=>x.key===pageKey);
+    if(pg){
+      const tmp = document.createElement('div');
+      tmp.innerHTML = edits[blockId].replace(/<\/(li|p|div|h4|h5)>/g, '$& ');
+      const plain = tmp.textContent.replace(/\s+/g,' ').trim();
+      const entry = ensure(pageKey, pg.sectionTitle, pg.pageTitle);
+      if(!entry.editedText) entry.editedText = [];
+      entry.editedText.push(plain);
+    }
+  });
+
+  for(const pg of pages){
+    const fname = await pageHasAttachment(pg.key);
+    if(fname){ ensure(pg.key, pg.sectionTitle, pg.pageTitle).attachment = fname; }
+  }
+
+  const keys = Object.keys(byPage);
+  if(keys.length===0){
+    toast('Пока нечего экспортировать — отметьте пункты, добавьте заметку, правку или файл');
+    return;
+  }
+
+  let text = 'Правки для Академии «Дизайнер» — прошу исправить следующее:\n';
+  keys.forEach(key=>{
+    const pg = byPage[key];
+    text += '\n'+pg.sectionTitle+' — '+pg.pageTitle+'\n';
+    pg.checklist.forEach(t=> text += '- [из аудита] '+t+'\n');
+    pg.userNotes.forEach(t=> text += '- [моя заметка] '+t+'\n');
+    if(pg.editedText){
+      pg.editedText.forEach(t=> text += '- [я отредактировал текст на странице, новая версия]: '+t+'\n');
+    }
+    if(pg.attachment){
+      text += '- [приложен файл-образец]: '+pg.attachment+' — если нужно, чтобы Claude использовал его содержимое, прикрепите этот файл отдельным сообщением в чате.\n';
+    }
+  });
+
+  try{
+    await navigator.clipboard.writeText(text.trim());
+  }catch(err){
+    const ta = document.createElement('textarea');
+    ta.value = text.trim(); document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+  }
+  toast('Скопировано по '+keys.length+' страниц(ам). Вставьте это в чат с Claude.');
+});
+
+/* ============ BACKUP EXPORT / IMPORT ============ */
+async function idbExportAllFiles(){
+  const out = {};
+  if(!(await idbCapable())) return out;
+  try{
+    const db = await openDB();
+    const keys = await new Promise((res,rej)=>{
+      const tx = db.transaction(STORE,'readonly');
+      const rq = tx.objectStore(STORE).getAllKeys();
+      rq.onsuccess=()=>res(rq.result); rq.onerror=()=>rej(rq.error);
+    });
+    for(const k of keys){
+      const val = await new Promise((res,rej)=>{
+        const tx = db.transaction(STORE,'readonly');
+        const rq = tx.objectStore(STORE).get(k);
+        rq.onsuccess=()=>res(rq.result); rq.onerror=()=>rej(rq.error);
+      });
+      if(val instanceof Blob){
+        const dataURL = await fileToDataURL(val);
+        out[k] = { name: val.name||'файл', type: val.type||'', dataURL };
+      }
+    }
+  }catch(e){ console.error('backup export failed', e); }
+  return out;
+}
+async function buildBackupObject(){
+  const backup = { version:1, exportedAt: new Date().toISOString(), localStorage:{}, files:{} };
+  Object.keys(localStorage).forEach(k=>{
+    if(k.startsWith('academy')) backup.localStorage[k] = localStorage.getItem(k);
+  });
+  backup.files = await idbExportAllFiles();
+  return backup;
+}
+document.getElementById('backupExportBtn').addEventListener('click', async ()=>{
+  toast('Готовлю резервную копию…');
+  const backup = await buildBackupObject();
+  const blob = new Blob([JSON.stringify(backup)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const stamp = new Date().toISOString().slice(0,16).replace(/[:T]/g,'-');
+  a.href = url; a.download = 'academy-backup-'+stamp+'.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 2000);
+  toast('Бэкап скачан — сохраните его отдельно от самого файла академии');
+});
+document.getElementById('backupImportInput').addEventListener('change', async (e)=>{
+  const file = e.target.files && e.target.files[0];
+  if(!file) return;
+  if(!confirm('Восстановить данные из этого бэкапа? Текущие фото, правки и заметки в этом браузере будут заменены.')){
+    e.target.value=''; return;
+  }
+  try{
+    const text = await file.text();
+    const backup = JSON.parse(text);
+    Object.keys(backup.localStorage||{}).forEach(k=>{
+      localStorage.setItem(k, backup.localStorage[k]);
+    });
+    const entries = Object.entries(backup.files||{});
+    for(const [key, info] of entries){
+      const blob = dataURLtoBlob(info.dataURL, info.name);
+      await idbSet(key, blob);
+    }
+    toast('Бэкап восстановлен — обновляю страницу…');
+    setTimeout(()=>location.reload(), 1200);
+  }catch(err){
+    console.error('backup import failed', err);
+    toast('Не удалось прочитать файл бэкапа — проверьте, что он не повреждён');
+  }
+  e.target.value='';
+});
+
+/* ============ RESET BUTTON ============ */
+document.getElementById('resetBtn').addEventListener('click', async ()=>{
+  if(confirm('Удалить все загруженные фото и видео из этого браузера? Это действие необратимо.')){
+    await idbClear();
+    localStorage.removeItem('academyLinks');
+    location.reload();
+  }
+});
+</script>
+</body>
+</html>
