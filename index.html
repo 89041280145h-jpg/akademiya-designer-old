@@ -656,41 +656,49 @@ function jsonp(url){
     }, 12000);
   });
 }
-function formPost(url, dataObj){
+function formPostFireAndForget(url, dataObj){
+  // Submits via hidden iframe form POST. Does NOT wait for a response —
+  // Apps Script wraps its reply in a nested sandboxed iframe, so postMessage
+  // back to the page is unreliable. We just need the browser to deliver the
+  // POST, which a plain form submission always does regardless of CORS.
   return new Promise((resolve)=>{
-    const iframeName = 'academyFrame_'+Date.now()+'_'+Math.floor(Math.random()*100000);
-    const iframe = document.createElement('iframe');
-    iframe.name = iframeName;
-    iframe.style.display = 'none';
-    let settled = false;
-    function finish(result){
-      if(settled) return;
-      settled = true;
-      window.removeEventListener('message', onMsg);
-      setTimeout(()=>{ form.remove(); iframe.remove(); }, 300);
-      resolve(result);
-    }
-    function onMsg(ev){
-      try{ finish(JSON.parse(ev.data)); }catch(e){ /* ignore unrelated postMessage traffic */ }
-    }
-    window.addEventListener('message', onMsg);
-    document.body.appendChild(iframe);
+    try{
+      const iframeName = 'academyFrame_'+Date.now()+'_'+Math.floor(Math.random()*100000);
+      const iframe = document.createElement('iframe');
+      iframe.name = iframeName;
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
 
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = url;
-    form.target = iframeName;
-    form.style.display = 'none';
-    const input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = 'payload';
-    input.value = JSON.stringify(dataObj);
-    form.appendChild(input);
-    document.body.appendChild(form);
-    form.submit();
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = url;
+      form.target = iframeName;
+      form.style.display = 'none';
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'payload';
+      input.value = JSON.stringify(dataObj);
+      form.appendChild(input);
+      document.body.appendChild(form);
+      form.submit();
 
-    setTimeout(()=>finish(null), 15000);
+      setTimeout(()=>{ form.remove(); iframe.remove(); }, 4000);
+      setTimeout(()=>resolve(true), 700);
+    }catch(e){
+      resolve(false);
+    }
   });
+}
+async function pollForUpload(requestId, tries){
+  tries = tries || 12;
+  for(let i=0;i<tries;i++){
+    await new Promise(r=>setTimeout(r, 1200));
+    try{
+      const data = await jsonp(SYNC_URL + '?action=getUpload&requestId=' + encodeURIComponent(requestId));
+      if(data && data.ok) return data;
+    }catch(e){ /* keep trying */ }
+  }
+  return null;
 }
 
 function scheduleSync(){
@@ -702,8 +710,8 @@ async function pushCloudState(){
   syncInFlight = true;
   updateSyncIndicator('busy');
   try{
-    const result = await formPost(SYNC_URL, {action:'save', data: collectCloudState()});
-    updateSyncIndicator(result && result.ok ? 'ok' : 'error');
+    const sent = await formPostFireAndForget(SYNC_URL, {action:'save', data: collectCloudState()});
+    updateSyncIndicator(sent ? 'ok' : 'error');
   }catch(e){
     console.error('cloud sync push failed', e);
     updateSyncIndicator('error');
@@ -744,7 +752,9 @@ async function uploadFileToCloud(key, file){
   try{
     updateSyncIndicator('busy');
     const base64 = await fileToBase64(file);
-    const data = await formPost(SYNC_URL, {action:'uploadFile', filename:file.name||'файл', mime:file.type||'application/octet-stream', base64});
+    const requestId = 'req_'+Date.now()+'_'+Math.floor(Math.random()*100000);
+    await formPostFireAndForget(SYNC_URL, {action:'uploadFile', filename:file.name||'файл', mime:file.type||'application/octet-stream', base64, requestId});
+    const data = await pollForUpload(requestId);
     if(data && data.ok){
       const map = getFileUrlMap();
       map[key] = {url:data.url, id:data.id, name:file.name||'файл', type:file.type||''};
@@ -768,7 +778,7 @@ async function deleteFileFromCloud(key){
     setFileUrlMap(map);
     scheduleSync();
     if(entry.id){
-      try{ await formPost(SYNC_URL, {action:'deleteFile', id:entry.id}); }catch(e){}
+      try{ await formPostFireAndForget(SYNC_URL, {action:'deleteFile', id:entry.id}); }catch(e){}
     }
   }
 }
