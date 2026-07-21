@@ -60,6 +60,11 @@ button{font-family:inherit;}
 .sidebar-title{margin-top:14px;font-size:19px;font-weight:700;line-height:1.3;color:#fff;}
 .sidebar-title em{color:var(--accent);font-style:normal;}
 .sidebar-sub{margin-top:6px;font-size:12.5px;color:var(--sidebar-soft);line-height:1.5;}
+.sync-indicator{margin-top:12px;font-size:11px;font-weight:700;display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;background:rgba(255,255,255,.06);color:var(--sidebar-soft);}
+.sync-indicator::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;}
+.sync-indicator.ok{color:#7FC79A;}
+.sync-indicator.error{color:#E38B7A;}
+.sync-indicator.busy{color:#D9B96B;}
 
 .progress-wrap{padding:16px 24px 4px;}
 .progress-label{display:flex;justify-content:space-between;font-size:11px;color:var(--sidebar-soft);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em;}
@@ -375,6 +380,7 @@ body.hide-notes .rev-note{display:none;}
       <div class="sidebar-brand"><span class="dot"></span>МОДЕРНМ</div>
       <div class="sidebar-title">Академия знаний «<em>Дизайнер</em>»</div>
       <div class="sidebar-sub">Обучение и рабочие регламенты для менеджеров по продажам-дизайнерам</div>
+      <div id="syncIndicator" class="sync-indicator busy">Синхронизация…</div>
     </div>
     <div class="progress-wrap">
       <div class="progress-label"><span>Прогресс</span><span id="progressPct">0%</span></div>
@@ -539,6 +545,7 @@ async function idbSet(key,val){
         tx.oncomplete=()=>res(); tx.onerror=()=>rej(tx.error);
       });
       try{ localStorage.removeItem(lsFallbackKey(key)); }catch(e){}
+      uploadFileToCloud(key, val);
       return;
     }catch(e){ /* fall through to localStorage fallback */ }
   }
@@ -551,11 +558,16 @@ async function idbSet(key,val){
       dataURL = await fileToDataURL(val);
     }
     localStorage.setItem(lsFallbackKey(key), JSON.stringify({name: val.name||'файл', data: dataURL}));
+    uploadFileToCloud(key, val);
   }catch(e){
     throw new Error('STORAGE_UNAVAILABLE');
   }
 }
 async function idbGet(key){
+  const cloudEntry = getFileUrlEntry(key);
+  if(cloudEntry && cloudEntry.url){
+    return {__remoteUrl: cloudEntry.url, name: cloudEntry.name||'файл', type: cloudEntry.type||''};
+  }
   if(await idbCapable()){
     try{
       const db = await openDB();
@@ -576,8 +588,194 @@ async function idbGet(key){
   }
   return undefined;
 }
+function mediaUrlOf(fileOrRemote){
+  if(fileOrRemote && fileOrRemote.__remoteUrl) return fileOrRemote.__remoteUrl;
+  return URL.createObjectURL(fileOrRemote);
+}
+
+/* ============ CLOUD SYNC (Google Apps Script + Sheet + Drive) ============ */
+const SYNC_URL = 'https://script.google.com/macros/s/AKfycbwzuV9E_HMSxRyi50r2LvubsIVRL10JY6x0MnYnnUv1UVMp_hyGX5amtZRNlJk-pyNvTA/exec';
+let syncTimer = null;
+let syncInFlight = false;
+let syncPending = false;
+
+function getFileUrlMap(){ try{ return JSON.parse(localStorage.getItem('academyFileUrls')||'{}'); }catch(e){ return {}; } }
+function setFileUrlMap(map){ localStorage.setItem('academyFileUrls', JSON.stringify(map)); }
+function getFileUrlEntry(key){ return getFileUrlMap()[key]; }
+
+function collectCloudState(){
+  return {
+    edits: getEdits(),
+    fieldEdits: getFieldEdits(),
+    done: getDone(),
+    userNotes: getUserNotesMap(),
+    cardGroups: getCardGroups(),
+    links: getLinks(),
+    files: getFileUrlMap()
+  };
+}
+function applyCloudState(state){
+  if(!state || typeof state !== 'object') return;
+  if(state.edits) localStorage.setItem('academyEdits', JSON.stringify(state.edits));
+  if(state.fieldEdits) localStorage.setItem('academyFieldEdits', JSON.stringify(state.fieldEdits));
+  if(state.done) localStorage.setItem('academyDone', JSON.stringify(state.done));
+  if(state.userNotes) localStorage.setItem('academyUserNotes', JSON.stringify(state.userNotes));
+  if(state.cardGroups) localStorage.setItem('academyCardGroups', JSON.stringify(state.cardGroups));
+  if(state.links) localStorage.setItem('academyLinks', JSON.stringify(state.links));
+  if(state.files) localStorage.setItem('academyFileUrls', JSON.stringify(state.files));
+}
+
+/* ---- CORS-safe transport: JSONP for reads, hidden-iframe form POST + postMessage for writes ---- */
+function jsonp(url){
+  return new Promise((resolve,reject)=>{
+    const cbName = 'academyCb_'+Date.now()+'_'+Math.floor(Math.random()*100000);
+    const script = document.createElement('script');
+    let settled = false;
+    window[cbName] = (data)=>{
+      if(settled) return;
+      settled = true;
+      resolve(data);
+      delete window[cbName];
+      script.remove();
+    };
+    script.src = url + (url.indexOf('?')>-1?'&':'?') + 'callback=' + cbName;
+    script.onerror = ()=>{
+      if(settled) return;
+      settled = true;
+      reject(new Error('jsonp-failed'));
+      delete window[cbName];
+      script.remove();
+    };
+    document.body.appendChild(script);
+    setTimeout(()=>{
+      if(settled) return;
+      settled = true;
+      reject(new Error('jsonp-timeout'));
+      delete window[cbName];
+      script.remove();
+    }, 12000);
+  });
+}
+function formPost(url, dataObj){
+  return new Promise((resolve)=>{
+    const iframeName = 'academyFrame_'+Date.now()+'_'+Math.floor(Math.random()*100000);
+    const iframe = document.createElement('iframe');
+    iframe.name = iframeName;
+    iframe.style.display = 'none';
+    let settled = false;
+    function finish(result){
+      if(settled) return;
+      settled = true;
+      window.removeEventListener('message', onMsg);
+      setTimeout(()=>{ form.remove(); iframe.remove(); }, 300);
+      resolve(result);
+    }
+    function onMsg(ev){
+      try{ finish(JSON.parse(ev.data)); }catch(e){ /* ignore unrelated postMessage traffic */ }
+    }
+    window.addEventListener('message', onMsg);
+    document.body.appendChild(iframe);
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = url;
+    form.target = iframeName;
+    form.style.display = 'none';
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'payload';
+    input.value = JSON.stringify(dataObj);
+    form.appendChild(input);
+    document.body.appendChild(form);
+    form.submit();
+
+    setTimeout(()=>finish(null), 15000);
+  });
+}
+
+function scheduleSync(){
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(pushCloudState, 900);
+}
+async function pushCloudState(){
+  if(syncInFlight){ syncPending = true; return; }
+  syncInFlight = true;
+  updateSyncIndicator('busy');
+  try{
+    const result = await formPost(SYNC_URL, {action:'save', data: collectCloudState()});
+    updateSyncIndicator(result && result.ok ? 'ok' : 'error');
+  }catch(e){
+    console.error('cloud sync push failed', e);
+    updateSyncIndicator('error');
+  }
+  syncInFlight = false;
+  if(syncPending){ syncPending = false; pushCloudState(); }
+}
+async function pullCloudState(){
+  try{
+    updateSyncIndicator('busy');
+    const state = await jsonp(SYNC_URL);
+    applyCloudState(state);
+    updateSyncIndicator('ok');
+    return true;
+  }catch(e){
+    console.error('cloud sync pull failed', e);
+    updateSyncIndicator('error');
+    return false;
+  }
+}
+function updateSyncIndicator(status){
+  const el = document.getElementById('syncIndicator');
+  if(!el) return;
+  if(status==='ok'){ el.textContent = 'Синхронизировано'; el.className='sync-indicator ok'; }
+  else if(status==='error'){ el.textContent = 'Нет связи с облаком'; el.className='sync-indicator error'; }
+  else { el.textContent = 'Синхронизация…'; el.className='sync-indicator busy'; }
+}
+
+function fileToBase64(file){
+  return new Promise((resolve,reject)=>{
+    const r = new FileReader();
+    r.onload = ()=>resolve(String(r.result).split(',')[1]);
+    r.onerror = ()=>reject(r.error);
+    r.readAsDataURL(file);
+  });
+}
+async function uploadFileToCloud(key, file){
+  try{
+    updateSyncIndicator('busy');
+    const base64 = await fileToBase64(file);
+    const data = await formPost(SYNC_URL, {action:'uploadFile', filename:file.name||'файл', mime:file.type||'application/octet-stream', base64});
+    if(data && data.ok){
+      const map = getFileUrlMap();
+      map[key] = {url:data.url, id:data.id, name:file.name||'файл', type:file.type||''};
+      setFileUrlMap(map);
+      scheduleSync();
+      updateSyncIndicator('ok');
+      return data.url;
+    }
+    updateSyncIndicator('error');
+  }catch(e){
+    console.error('cloud upload failed', e);
+    updateSyncIndicator('error');
+  }
+  return null;
+}
+async function deleteFileFromCloud(key){
+  const map = getFileUrlMap();
+  const entry = map[key];
+  if(entry){
+    delete map[key];
+    setFileUrlMap(map);
+    scheduleSync();
+    if(entry.id){
+      try{ await formPost(SYNC_URL, {action:'deleteFile', id:entry.id}); }catch(e){}
+    }
+  }
+}
+
 async function idbDelete(key){
   try{ localStorage.removeItem(lsFallbackKey(key)); }catch(e){}
+  deleteFileFromCloud(key);
   if(await idbCapable()){
     try{
       const db = await openDB();
@@ -605,11 +803,11 @@ async function idbClear(){
   }
 }
 function getLinks(){ try{ return JSON.parse(localStorage.getItem('academyLinks')||'{}'); }catch(e){ return {}; } }
-function setLink(id,url){ const l=getLinks(); l[id]=url; localStorage.setItem('academyLinks', JSON.stringify(l)); }
-function removeLink(id){ const l=getLinks(); delete l[id]; localStorage.setItem('academyLinks', JSON.stringify(l)); }
+function setLink(id,url){ const l=getLinks(); l[id]=url; localStorage.setItem('academyLinks', JSON.stringify(l)); scheduleSync(); }
+function removeLink(id){ const l=getLinks(); delete l[id]; localStorage.setItem('academyLinks', JSON.stringify(l)); scheduleSync(); }
 
 function getDone(){ try{ return JSON.parse(localStorage.getItem('academyDone')||'{}'); }catch(e){ return {}; } }
-function setDone(id,val){ const d=getDone(); if(val) d[id]=true; else delete d[id]; localStorage.setItem('academyDone', JSON.stringify(d)); }
+function setDone(id,val){ const d=getDone(); if(val) d[id]=true; else delete d[id]; localStorage.setItem('academyDone', JSON.stringify(d)); scheduleSync(); }
 
 function toast(msg){
   const t=document.getElementById('toast');
@@ -808,13 +1006,13 @@ const EDITABLE_TYPES = ['lead','p','quote','list','callout','steps','twocol','gl
 
 function getEdits(){ try{ return JSON.parse(localStorage.getItem('academyEdits')||'{}'); }catch(e){ return {}; } }
 function getBlockEdit(id){ const m = getEdits(); return Object.prototype.hasOwnProperty.call(m,id) ? m[id] : null; }
-function setBlockEdit(id, html){ const m = getEdits(); m[id]=html; localStorage.setItem('academyEdits', JSON.stringify(m)); }
-function clearBlockEdit(id){ const m = getEdits(); delete m[id]; localStorage.setItem('academyEdits', JSON.stringify(m)); }
+function setBlockEdit(id, html){ const m = getEdits(); m[id]=html; localStorage.setItem('academyEdits', JSON.stringify(m)); scheduleSync(); }
+function clearBlockEdit(id){ const m = getEdits(); delete m[id]; localStorage.setItem('academyEdits', JSON.stringify(m)); scheduleSync(); }
 
 /* ---- Small editable text fields (ФИО, должность, названия карточек и т.п.) ---- */
 function getFieldEdits(){ try{ return JSON.parse(localStorage.getItem('academyFieldEdits')||'{}'); }catch(e){ return {}; } }
 function getFieldEdit(id, fallback){ const m=getFieldEdits(); return Object.prototype.hasOwnProperty.call(m,id) ? m[id] : fallback; }
-function setFieldEdit(id, val){ const m=getFieldEdits(); m[id]=val; localStorage.setItem('academyFieldEdits', JSON.stringify(m)); }
+function setFieldEdit(id, val){ const m=getFieldEdits(); m[id]=val; localStorage.setItem('academyFieldEdits', JSON.stringify(m)); scheduleSync(); }
 function editableFieldHTML(id, fallbackText, placeholder, tag){
   tag = tag || 'span';
   const text = getFieldEdit(id, fallbackText||'');
@@ -847,7 +1045,7 @@ function mountCarousels(container){
 /* ---- Dynamic card groups: add / delete cards inside a "resources" block ---- */
 function getCardGroups(){ try{ return JSON.parse(localStorage.getItem('academyCardGroups')||'{}'); }catch(e){ return {}; } }
 function getGroupMeta(groupId){ const m = getCardGroups(); return m[groupId] || {added:[], deleted:[]}; }
-function saveGroupMeta(groupId, meta){ const m = getCardGroups(); m[groupId]=meta; localStorage.setItem('academyCardGroups', JSON.stringify(m)); }
+function saveGroupMeta(groupId, meta){ const m = getCardGroups(); m[groupId]=meta; localStorage.setItem('academyCardGroups', JSON.stringify(m)); scheduleSync(); }
 function addCardToGroup(groupId){
   const meta = getGroupMeta(groupId);
   const newId = 'custom_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
@@ -970,8 +1168,8 @@ async function mountPhotoSlots(container){
 }
 function renderPhotoPreview(slot, file){
   slot.classList.add('has-media');
-  const url = URL.createObjectURL(file);
-  const isVideo = file.type.startsWith('video');
+  const url = mediaUrlOf(file);
+  const isVideo = (file.type||'').startsWith('video');
   slot.innerHTML = `
     ${isVideo? `<video src="${url}" controls></video>` : `<img src="${url}">`}
     <button class="media-remove" type="button">${icon('trash',15)}</button>
@@ -1031,7 +1229,7 @@ async function renderResourceActions(id, el){
     return;
   }
   if(file){
-    const url = URL.createObjectURL(file);
+    const url = mediaUrlOf(file);
     el.innerHTML = `<div class="res-filled"><a href="${url}" target="_blank" rel="noopener">${icon('check',13)} ${esc(file.name)}</a><button data-act="rmfile">${icon('x',14)}</button></div>`;
     el.querySelector('[data-act="rmfile"]').addEventListener('click', async ()=>{ await idbDelete('res:'+id); renderResourceActions(id, el); });
     return;
@@ -1121,7 +1319,7 @@ async function mountPageAttach(pageId, container){
   let file = null;
   try{ file = await idbGet('pagefile_'+pageId); }catch(e){}
   if(file){
-    const url = URL.createObjectURL(file);
+    const url = mediaUrlOf(file);
     wrap.innerHTML = `<div class="page-attach-chip">${icon('filetext',14)}<a href="${url}" target="_blank" rel="noopener">${esc(file.name)}</a><button type="button" data-rm-attach>${icon('x',13)}</button></div>`;
     wrap.querySelector('[data-rm-attach]').addEventListener('click', async ()=>{
       await idbDelete('pagefile_'+pageId);
@@ -1157,11 +1355,13 @@ function addUserNote(pageId, text){
   if(!m[pageId]) m[pageId] = [];
   m[pageId].push({ id:'u'+Date.now().toString(36)+Math.random().toString(36).slice(2,6), text });
   localStorage.setItem('academyUserNotes', JSON.stringify(m));
+  scheduleSync();
 }
 function removeUserNote(pageId, noteId){
   const m = getUserNotesMap();
   if(m[pageId]) m[pageId] = m[pageId].filter(n=>n.id!==noteId);
   localStorage.setItem('academyUserNotes', JSON.stringify(m));
+  scheduleSync();
 }
 function mountUserNotes(pageId, container){
   const wrap = container.querySelector(`[data-usernotes-page="${pageId}"]`);
@@ -2386,6 +2586,14 @@ function router(){
 }
 window.addEventListener('hashchange', router);
 router();
+
+(async ()=>{
+  const ok = await pullCloudState();
+  if(ok){
+    buildNav();
+    router();
+  }
+})();
 
 /* ============ STORAGE HEALTH CHECK ============ */
 (async ()=>{
