@@ -278,6 +278,7 @@ body.hide-notes .rev-note{display:none;}
 
 /* ===== Generic small editable text fields ===== */
 .editable-field{display:block;border-radius:6px;padding:2px 5px;margin:0 -5px;cursor:text;transition:background .15s,box-shadow .15s;outline:none;}
+.editable-field.editable-field-inline{display:inline-block;}
 .editable-field:hover{background:rgba(181,96,42,.06);}
 .editable-field:focus{background:#FFFDF9;box-shadow:0 0 0 1.5px var(--accent);}
 .editable-field:empty:before{content:attr(data-placeholder);color:var(--ink-faint);font-style:italic;}
@@ -380,7 +381,10 @@ body.hide-notes .rev-note{display:none;}
       <div class="sidebar-brand"><span class="dot"></span>МОДЕРНМ</div>
       <div class="sidebar-title">Академия знаний «<em>Дизайнер</em>»</div>
       <div class="sidebar-sub">Обучение и рабочие регламенты для менеджеров по продажам-дизайнерам</div>
-      <div id="syncIndicator" class="sync-indicator busy">Синхронизация…</div>
+      <div class="sync-row" style="display:flex;align-items:center;gap:8px;">
+        <div id="syncIndicator" class="sync-indicator busy">Синхронизация…</div>
+        <button type="button" id="forceRefreshBtn" title="Принудительно подтянуть самые свежие данные с сервера" style="background:none;border:1px solid rgba(255,255,255,.25);border-radius:6px;color:inherit;font-size:11px;padding:3px 8px;cursor:pointer;opacity:.85;">Обновить с сервера</button>
+      </div>
     </div>
     <div class="progress-wrap">
       <div class="progress-label"><span>Прогресс</span><span id="progressPct">0%</span></div>
@@ -945,10 +949,10 @@ function rChecklist(b){
     const isDone = !!done[id];
     return `<div class="cl-item ${isDone?'checked':''}" data-clid="${id}">
       <div class="cl-box">${isDone?icon('check',12):''}</div>
-      <div class="cl-text">${esc(it)}</div>
+      <div class="cl-text">${editableFieldHTML('clitem_'+b.id+'_'+idx, it||'', 'Пункт чек-листа', 'span')}</div>
     </div>`;
   }).join('');
-  return `<div class="checklist">${items}</div>${b.note?`<div class="b-p" style="margin-top:12px;font-size:13px;">${esc(b.note)}</div>`:''}`;
+  return `<div class="checklist">${items}</div>${b.note!==undefined?`<div class="b-p" style="margin-top:12px;font-size:13px;">${editableFieldHTML('clnote_'+b.id, b.note||'', 'Примечание к чек-листу', 'span')}</div>`:''}`;
 }
 
 function rGlossary(b){
@@ -1031,7 +1035,7 @@ function rNote(b){
   const items = b.items.map((it,idx)=>{
     const id = 'note_'+b.id+'_'+idx;
     const isDone = !!done[id];
-    return `<li data-noteid="${id}" class="${isDone?'done':''}"><span class="rn-box">${isDone?icon('check',10):''}</span><span>${esc(it)}</span></li>`;
+    return `<li data-noteid="${id}" class="${isDone?'done':''}"><span class="rn-box">${isDone?icon('check',10):''}</span><span>${editableFieldHTML('noteitem_'+b.id+'_'+idx, it||'', 'Текст заметки', 'span')}</span></li>`;
   }).join('');
   const labels = {P0:'Сделать в первую очередь', P1:'Стоит поправить', P2:'Можно доработать позже'};
   return `<div class="rev-note" data-level="${b.level}">
@@ -1069,7 +1073,17 @@ function mountEditableFields(container){
     if(el._wired) return;
     el._wired = true;
     el.addEventListener('blur', ()=>{
-      setFieldEdit(el.getAttribute('data-field-id'), el.innerText.trim());
+      const fieldId = el.getAttribute('data-field-id');
+      setFieldEdit(fieldId, el.innerText.trim());
+      // Названия разделов дублируются в сайдбаре и хлебных крошках — обновляем их сразу же,
+      // без ожидания полной перерисовки страницы.
+      if(fieldId && (fieldId.indexOf('sectitle_')===0 || fieldId.indexOf('secsub_')===0)){
+        buildNav();
+        updateNavActive(location.hash.replace('#','').split('/')[0] || 'cover');
+        const secId = fieldId.replace(/^sectitle_|^secsub_/,'');
+        const sec = DATA.sections.find(s=>s.id===secId);
+        if(sec && crumbsEl) crumbsEl.innerHTML = `МОДЕРНМ <span>/</span> ${esc(getFieldEdit('sectitle_'+sec.id, sec.title))}`;
+      }
     });
   });
 }
@@ -1121,6 +1135,17 @@ function renderBlock(b, blockId){
     </div>`;
   }
   return `<div class="page-block">${fn(b, blockId)}</div>`;
+}
+
+/* Универсальная обёртка для мест ВНЕ системы page.blocks (обложка, заголовки разделов/страниц и т.п.),
+   где нужно сохранить произвольную HTML-разметку (например <em>) при редактировании — в отличие от
+   editableFieldHTML, которая хранит только чистый текст. */
+function inlineEditableBlockHTML(id, fallbackHTML, extraClass, tag){
+  tag = tag || 'span';
+  const saved = getBlockEdit(id);
+  const html = saved!==null ? saved : fallbackHTML;
+  const isEdited = saved!==null;
+  return `<${tag} class="editable-block inline-editable-block ${extraClass||''} ${isEdited?'is-edited':''}" contenteditable="true" spellcheck="false" data-block-id="${id}">${isEdited?`<span class="edited-tag" contenteditable="false">${icon('check',10)}<button type="button" data-revert-block title="Вернуть оригинал">↺</button></span>`:''}${html}</${tag}>`;
 }
 
 /* ============ MEDIA SLOT HTML ============ */
@@ -1317,7 +1342,8 @@ async function renderResourceActions(id, el){
 
 function mountChecklist(container){
   container.querySelectorAll('.cl-item').forEach(item=>{
-    item.addEventListener('click', ()=>{
+    item.addEventListener('click', (e)=>{
+      if(e.target.closest('.editable-field')) return;
       const id = item.getAttribute('data-clid');
       const nowDone = !item.classList.contains('checked');
       setDone(id, nowDone);
@@ -1329,7 +1355,8 @@ function mountChecklist(container){
 
 function mountNotes(container){
   container.querySelectorAll('.rev-note li').forEach(li=>{
-    li.addEventListener('click', ()=>{
+    li.addEventListener('click', (e)=>{
+      if(e.target.closest('.editable-field')) return;
       const id = li.getAttribute('data-noteid');
       const nowDone = !li.classList.contains('done');
       setDone(id, nowDone);
@@ -2489,9 +2516,11 @@ function buildNav(){
   </div>`;
   html += `<div class="nav-group-label">Программа обучения</div>`;
   DATA.sections.forEach(sec=>{
+    const navTitle = esc(getFieldEdit('sectitle_'+sec.id, sec.title));
+    const navSub = esc(getFieldEdit('secsub_'+sec.id, sec.subtitle));
     html += `<div class="nav-item" data-nav="${sec.id}">
       <div class="nav-badge">${sec.badge}</div>
-      <div class="nav-text"><span class="t1">${sec.title}</span><span class="t2">${sec.subtitle}</span></div>
+      <div class="nav-text"><span class="t1">${navTitle}</span><span class="t2">${navSub}</span></div>
     </div>`;
   });
   sidebarNav.innerHTML = html;
@@ -2531,10 +2560,10 @@ function renderCover(){
   crumbsEl.innerHTML = 'МОДЕРНМ <span>/</span> Обложка';
   contentEl.innerHTML = `
     <div class="hero-cover">
-      <div class="hero-eyebrow">${COVER.eyebrow}</div>
-      <div class="hero-title">${COVER.title}</div>
-      <div class="hero-desc">${COVER.desc}</div>
-      <div class="hero-meta">${COVER.meta}</div>
+      <div class="hero-eyebrow">${editableFieldHTML('cover_eyebrow', COVER.eyebrow, 'Надпись над заголовком', 'span')}</div>
+      <div class="hero-title">${inlineEditableBlockHTML('cover_title', COVER.title, 'hero-title-edit', 'div')}</div>
+      <div class="hero-desc">${editableFieldHTML('cover_desc', COVER.desc, 'Описание', 'div')}</div>
+      <div class="hero-meta">${editableFieldHTML('cover_meta', COVER.meta, 'Метаданные (например: компания · сколько дней · сколько разделов)', 'span')}</div>
     </div>
     <div class="page-block">${photoSlotHTML('p-cover-main','Широкий кадр входной зоны шоурума МОДЕРНМ: светлая просторная витрина с 2–3 выставочными кухнями в современном минималистичном стиле (матовые фасады, дерево, встроенная техника), мягкий естественный свет из окон, на переднем плане размытый силуэт человека, рассматривающего кухню. Тёплая, дорогая, современная атмосфера. Реалистичное фото, без текста и логотипов в кадре, горизонтальная ориентация.',320)}
       <div style="margin-top:10px;font-size:12px;color:var(--ink-faint);">Совет: если генератор картинок лучше работает на английском — переведите текст описания перед вставкой, смысл сцены не изменится.</div>
@@ -2542,7 +2571,7 @@ function renderCover(){
     <div class="page-block">
       <div class="section-eyebrow">Навигатор</div>
       <div class="section-title" style="font-size:22px;">Два входа в Академию</div>
-      <div class="twocol" style="margin-top:14px;">
+      ${inlineEditableBlockHTML('cover_nav_twocol', `<div class="twocol" style="margin-top:14px;">
         <div class="twocol-col">
           <h4>Я новичок — прохожу обучение по дням</h4>
           <ul>
@@ -2561,7 +2590,7 @@ function renderCover(){
             <li>Расчёт доставки · прайс работ</li><li>Договоры, Splan · где что в Bitrix24</li><li>Глоссарий</li>
           </ul>
         </div>
-      </div>
+      </div>`, '', 'div')}
     </div>
     <div class="page-attach-wrap" data-attach-page="cover"></div>
     <div class="page-tools">
@@ -2575,23 +2604,25 @@ function renderCover(){
   mountPageAttach('cover', contentEl);
   mountUserNotes('cover', contentEl);
   mountAddNoteButton('cover', contentEl);
+  mountEditableFields(contentEl);
+  mountEditableBlocks(contentEl);
 }
 
 function renderSection(sec){
-  crumbsEl.innerHTML = `МОДЕРНМ <span>/</span> ${sec.title}`;
+  crumbsEl.innerHTML = `МОДЕРНМ <span>/</span> ${esc(getFieldEdit('sectitle_'+sec.id, sec.title))}`;
   let html = `<div class="section-head">
     <div class="section-eyebrow">${sec.badge? 'День '+sec.badge.replace(/^0/,'') : 'Раздел'}</div>
-    <div class="section-title">${sec.title}${sec.subtitle? ' · '+sec.subtitle:''}</div>
+    <div class="section-title">${editableFieldHTML('sectitle_'+sec.id, sec.title||'', 'Название раздела', 'span').replace('class="editable-field"','class="editable-field editable-field-inline"')} · ${editableFieldHTML('secsub_'+sec.id, sec.subtitle||'', 'Подзаголовок раздела', 'span').replace('class="editable-field"','class="editable-field editable-field-inline"')}</div>
   </div>`;
   html += `<div class="jumpnav"><div class="jumpnav-label">В этом разделе</div>`;
-  sec.pages.forEach(p=>{ html += `<a href="#${sec.id}/${p.id}">${p.menuTitle}</a>`; });
+  sec.pages.forEach(p=>{ html += `<a href="#${sec.id}/${p.id}">${esc(getFieldEdit('pagemenu_'+sec.id+'_'+p.id, p.menuTitle))}</a>`; });
   html += `</div>`;
 
   sec.pages.forEach(p=>{
     const pageDomId = sec.id+'-'+p.id;
     html += `<div id="${pageDomId}" style="scroll-margin-top:90px;">`;
-    html += `<div class="page-kicker">${p.kicker||''}</div>`;
-    html += `<div class="page-title">${p.title}</div>`;
+    html += `<div class="page-kicker">${editableFieldHTML('pagekicker_'+pageDomId, p.kicker||'', 'Надзаголовок (необязательно)', 'span')}</div>`;
+    html += `<div class="page-title">${editableFieldHTML('pagetitle_'+pageDomId, p.title||'', 'Название страницы', 'span')}</div>`;
     p.blocks.forEach((b,bi)=>{ html += renderBlock(b, pageDomId+'_'+bi); });
     html += `<div class="page-attach-wrap" data-attach-page="${pageDomId}"></div>`;
     html += `<div class="page-tools">
@@ -2646,13 +2677,43 @@ function router(){
 window.addEventListener('hashchange', router);
 router();
 
+async function pullCloudStateWithRetries(maxTries){
+  maxTries = maxTries || 3;
+  for(let i=0;i<maxTries;i++){
+    const ok = await pullCloudState();
+    if(ok) return true;
+    if(i < maxTries-1) await new Promise(r=>setTimeout(r, 1500));
+  }
+  return false;
+}
+
 (async ()=>{
-  const ok = await pullCloudState();
+  const ok = await pullCloudStateWithRetries(3);
   if(ok){
     buildNav();
     router();
+  } else {
+    console.error('Не удалось получить общие данные из облака за 3 попытки — показаны только локальные данные этого устройства. Нажмите «Обновить с сервера» в сайдбаре.');
   }
 })();
+
+const forceRefreshBtn = document.getElementById('forceRefreshBtn');
+if(forceRefreshBtn){
+  forceRefreshBtn.addEventListener('click', async ()=>{
+    forceRefreshBtn.disabled = true;
+    forceRefreshBtn.textContent = 'Обновляю…';
+    const ok = await pullCloudStateWithRetries(3);
+    if(ok){
+      buildNav();
+      router();
+      toast('Данные обновлены с сервера');
+    } else {
+      toast('Не удалось связаться с сервером — попробуйте ещё раз');
+    }
+    forceRefreshBtn.disabled = false;
+    forceRefreshBtn.textContent = 'Обновить с сервера';
+  });
+}
 
 /* ============ STORAGE HEALTH CHECK ============ */
 (async ()=>{
