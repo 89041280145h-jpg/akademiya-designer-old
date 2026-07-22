@@ -690,13 +690,13 @@ function formPostFireAndForget(url, dataObj){
   });
 }
 async function pollForUpload(requestId, tries){
-  tries = tries || 12;
+  tries = tries || 20;
   for(let i=0;i<tries;i++){
-    await new Promise(r=>setTimeout(r, 1200));
+    await new Promise(r=>setTimeout(r, 1500));
     try{
       const data = await jsonp(SYNC_URL + '?action=getUpload&requestId=' + encodeURIComponent(requestId));
       if(data && data.ok) return data;
-    }catch(e){ /* keep trying */ }
+    }catch(e){ console.warn('pollForUpload: попытка', i+1, 'из', tries, 'не удалась', e); }
   }
   return null;
 }
@@ -708,28 +708,46 @@ function scheduleSync(){
 async function pushCloudState(){
   if(syncInFlight){ syncPending = true; return; }
   syncInFlight = true;
-  updateSyncIndicator('busy');
+  syncOpStart();
+  let ok = false;
   try{
     const sent = await formPostFireAndForget(SYNC_URL, {action:'save', data: collectCloudState()});
-    updateSyncIndicator(sent ? 'ok' : 'error');
+    ok = !!sent;
+    if(!ok) console.error('cloud sync push: form post did not confirm delivery');
   }catch(e){
     console.error('cloud sync push failed', e);
-    updateSyncIndicator('error');
   }
+  syncOpEnd(ok);
   syncInFlight = false;
   if(syncPending){ syncPending = false; pushCloudState(); }
 }
 async function pullCloudState(){
+  syncOpStart();
   try{
-    updateSyncIndicator('busy');
     const state = await jsonp(SYNC_URL);
     applyCloudState(state);
-    updateSyncIndicator('ok');
+    syncOpEnd(true);
     return true;
   }catch(e){
     console.error('cloud sync pull failed', e);
-    updateSyncIndicator('error');
+    syncOpEnd(false);
     return false;
+  }
+}
+/* ---- Sync indicator: tracks ALL in-flight cloud operations (text sync + file uploads)
+   so a fast text save can't mask a slow/failing file upload happening at the same time. ---- */
+let syncActiveOps = 0;
+let syncHadError = false;
+function syncOpStart(){
+  syncActiveOps++;
+  updateSyncIndicator('busy');
+}
+function syncOpEnd(success){
+  syncActiveOps = Math.max(0, syncActiveOps - 1);
+  if(!success) syncHadError = true;
+  if(syncActiveOps === 0){
+    updateSyncIndicator(syncHadError ? 'error' : 'ok');
+    syncHadError = false;
   }
 }
 function updateSyncIndicator(status){
@@ -749,24 +767,42 @@ function fileToBase64(file){
   });
 }
 async function uploadFileToCloud(key, file){
+  syncOpStart();
+  console.log('uploadFileToCloud: старт загрузки', key, file && file.name, file && file.size, 'байт');
   try{
-    updateSyncIndicator('busy');
-    const base64 = await fileToBase64(file);
+    let uploadBlob = file;
+    let mime = file.type || 'application/octet-stream';
+    // Большие фото с телефона (часто 5-15 МБ) увеличивают риск таймаута при кодировании/отправке/опросе —
+    // сжимаем перед загрузкой в облако, если это изображение и оно тяжелее ~1.5 МБ.
+    if(file.type && file.type.startsWith('image/') && file.size > 1.5*1024*1024){
+      try{
+        const dataURL = await compressImageToDataURL(file, 1600, 0.82);
+        uploadBlob = dataURLtoBlob(dataURL, file.name);
+        mime = 'image/jpeg';
+        console.log('uploadFileToCloud: изображение сжато с', file.size, 'до', uploadBlob.size, 'байт');
+      }catch(e){
+        console.warn('uploadFileToCloud: не удалось сжать изображение, отправляю оригинал', e);
+      }
+    }
+    const base64 = await fileToBase64(uploadBlob);
     const requestId = 'req_'+Date.now()+'_'+Math.floor(Math.random()*100000);
-    await formPostFireAndForget(SYNC_URL, {action:'uploadFile', filename:file.name||'файл', mime:file.type||'application/octet-stream', base64, requestId});
+    console.log('uploadFileToCloud: отправляю на сервер, requestId=', requestId, 'размер base64=', base64.length);
+    await formPostFireAndForget(SYNC_URL, {action:'uploadFile', filename:file.name||'файл', mime, base64, requestId});
     const data = await pollForUpload(requestId);
     if(data && data.ok){
+      console.log('uploadFileToCloud: подтверждено сервером', data.url);
       const map = getFileUrlMap();
       map[key] = {url:data.url, id:data.id, name:file.name||'файл', type:file.type||''};
       setFileUrlMap(map);
       scheduleSync();
-      updateSyncIndicator('ok');
+      syncOpEnd(true);
       return data.url;
     }
-    updateSyncIndicator('error');
+    console.error('uploadFileToCloud: сервер не подтвердил загрузку за отведённое время (requestId='+requestId+')');
+    syncOpEnd(false);
   }catch(e){
-    console.error('cloud upload failed', e);
-    updateSyncIndicator('error');
+    console.error('uploadFileToCloud: ошибка', e);
+    syncOpEnd(false);
   }
   return null;
 }
