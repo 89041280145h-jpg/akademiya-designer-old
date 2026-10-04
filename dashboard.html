@@ -111,14 +111,14 @@ tr.row.sel td{background:var(--accent-soft)}
   <div class="card">
     <table>
       <thead><tr>
-        <th>Сотрудник</th><th>Сейчас на</th><th>Открыл дней</th><th class="hide-m">Отметил в чек-листе</th><th class="hide-m">Последний вход</th><th>Статус</th>
+        <th>Сотрудник</th><th>Сейчас на</th><th>Открыл дней</th><th class="hide-m">Сдал тестов</th><th class="hide-m">Последний вход</th><th>Статус</th>
       </tr></thead>
       <tbody id="rows"><tr><td colspan="6" class="empty">Загружаю…</td></tr></tbody>
     </table>
   </div>
 
   <div class="card detail" id="detail" style="display:none"></div>
-  <p class="note">«Открыл день» — сотрудник заходил на страницу дня. «Отметил» — поставил галочку в чек-листе на 10 дней. Результаты тестов появятся здесь, когда тесты будут встроены в сайт.</p>
+  <p class="note">«Открыл дней» — сколько дней сотрудник открывал. «Сдал тестов» — сколько тестов дней сдано на 80% и выше (день засчитан). Нажмите на сотрудника — увидите по дням и последние результаты тестов с баллами.</p>
 </div>
 
 <div class="login" id="login" style="display:none">
@@ -236,7 +236,7 @@ function evText(e){
   if(e.ev === 'отметил'){
     const m = e.item.match(/^cl-10days_(\d+)$/);
     const what = m ? 'День ' + (Number(m[1]) + 1) + ' (тест сдан)' : 'пункт «' + e.item + '»';
-    return (e.value === '1' ? 'Отметил ' : 'Снял отметку: ') + what;
+    return (e.value === '1' ? 'Засчитан ' : 'Снята отметка: ') + what;
   }
   return e.ev + ' ' + e.item;
 }
@@ -265,7 +265,7 @@ function renderDetail(){
     <h2>${esc(p.name)}</h2>
     <div class="meta">${esc(p.role)} · последний вход: ${fmtDate(p.lastAt)} · действий: ${p.events}${p.edits ? ' · правок в Академии: ' + p.edits : ''} · <span class="st ${a.st.c}">${a.st.t}</span></div>
     <div class="days">${days}</div>
-    <div class="legend"><span><i style="background:var(--ok-bg);border:1px solid #BFDCCB"></i>отметил день в чек-листе</span><span><i style="background:var(--accent-soft);border:1px solid #E9C7A6"></i>открывал</span><span><i style="background:#FCFAF6;border:1px solid var(--line)"></i>не открывал</span></div>
+    <div class="legend"><span><i style="background:var(--ok-bg);border:1px solid #BFDCCB"></i>тест дня сдан</span><span><i style="background:var(--accent-soft);border:1px solid #E9C7A6"></i>открывал</span><span><i style="background:#FCFAF6;border:1px solid var(--line)"></i>не открывал</span></div>
     <div class="cols2" style="margin-top:20px">
       <div><h3>Дни обучения</h3>${visits}</div>
       <div><h3>Последние действия</h3>${recent}</div>
