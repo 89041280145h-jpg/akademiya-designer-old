@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Панель руководителя — Академия «Дизайнер»</title>
+<style>
+:root{
+  --bg:#FAFAF8;--surface:#FFFFFF;--ink:#211E1B;--ink-soft:#645D54;--ink-faint:#9A9188;--line:#EBE5DC;
+  --accent:#B5602A;--accent-ink:#8A491F;--accent-soft:#F5E5D6;--dark:#1A1815;
+  --ok:#2F6B49;--ok-bg:#E3F1E8;--warn:#8A5A12;--warn-bg:#F7EBD3;--bad:#A33327;--bad-bg:#F8E1DD;
+  --radius:16px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.45;-webkit-font-smoothing:antialiased}
+button{font:inherit}
+.top{background:var(--dark);color:#EFE9E1;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.06em;font-size:14px}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--accent)}
+.brand span.sub{font-weight:600;letter-spacing:0;color:#948C81}
+.top .right{display:flex;align-items:center;gap:12px;font-size:13px;color:#948C81}
+.top a,.top button{color:#EFE9E1;background:none;border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:6px 12px;cursor:pointer;text-decoration:none;font-size:13px}
+.wrap{max-width:1240px;margin:0 auto;padding:28px 32px 60px}
+h1{font-size:28px;margin:0 0 4px}
+.lead{color:var(--ink-soft);margin:0 0 22px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px}
+.kpi .n{font-size:32px;font-weight:800;line-height:1.1}
+.kpi .l{color:var(--ink-soft);font-size:13px;margin-top:4px}
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:20px;padding:6px 14px;cursor:pointer;font-size:13px;color:var(--ink-soft)}
+.chip.on{background:var(--dark);color:#fff;border-color:var(--dark)}
+.toolbar .upd{margin-left:auto;font-size:12px;color:var(--ink-faint)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);font-weight:700;padding:12px 14px;border-bottom:1px solid var(--line);background:#FBF8F3}
+td{padding:12px 14px;border-bottom:1px solid #F3EEE6;vertical-align:middle}
+tr.row{cursor:pointer}
+tr.row:hover td{background:#FCF8F2}
+tr.row.sel td{background:var(--accent-soft)}
+.name{font-weight:700}
+.role{font-size:12px;color:var(--ink-faint)}
+.bar{display:flex;align-items:center;gap:8px}
+.track{flex:1;min-width:70px;height:7px;border-radius:7px;background:#F0EAE1;overflow:hidden}
+.fill{height:100%;background:var(--accent);border-radius:7px}
+.bar .t{font-size:12.5px;color:var(--ink-soft);white-space:nowrap}
+.st{display:inline-block;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap}
+.st.ok{background:var(--ok-bg);color:var(--ok)}.st.warn{background:var(--warn-bg);color:var(--warn)}.st.bad{background:var(--bad-bg);color:var(--bad)}.st.mute{background:#EFEBE5;color:var(--ink-soft)}
+.empty{padding:30px;text-align:center;color:var(--ink-soft)}
+.detail{margin-top:18px;padding:22px 24px}
+.detail h2{margin:0 0 4px;font-size:22px}
+.detail .meta{color:var(--ink-soft);font-size:13px;margin-bottom:16px}
+.days{display:grid;grid-template-columns:repeat(11,1fr);gap:8px;margin-bottom:20px}
+.day{border:1px solid var(--line);border-radius:12px;padding:10px 8px;text-align:center;font-size:12px;background:#FCFAF6}
+.day .b{font-weight:800;font-size:15px;color:var(--ink-faint)}
+.day .s{color:var(--ink-faint);margin-top:2px;min-height:30px;line-height:1.25}
+.day.open{background:var(--accent-soft);border-color:#E9C7A6}
+.day.open .b{color:var(--accent-ink)}
+.day.done{background:var(--ok-bg);border-color:#BFDCCB}
+.day.done .b{color:var(--ok)}
+.day .mark{font-size:11px;margin-top:4px;font-weight:700}
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.cols2 h3{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);margin:0 0 8px}
+.ev{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid #F3EEE6;font-size:13.5px}
+.ev .w{color:var(--ink-faint);flex:0 0 112px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--ink-soft);margin-top:4px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:6px;vertical-align:-2px}
+.note{font-size:12.5px;color:var(--ink-faint);margin-top:14px}
+/* вход */
+.login{position:fixed;inset:0;background:rgba(26,24,21,.97);display:flex;align-items:center;justify-content:center;padding:16px;z-index:10}
+.login form{background:var(--surface);border-radius:var(--radius);padding:30px 28px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px}
+.login h2{margin:0;font-size:21px}
+.login p{margin:0;color:var(--ink-soft);font-size:14px}
+.login input{font:inherit;font-size:20px;letter-spacing:.2em;text-align:center;padding:12px;border:1px solid var(--line);border-radius:10px}
+.login button{font-weight:700;padding:12px;border:none;border-radius:10px;background:var(--accent);color:#fff;cursor:pointer}
+.login .err{min-height:18px;color:var(--bad);font-size:13px}
+@media (max-width:900px){
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .days{grid-template-columns:repeat(4,1fr)}
+  .cols2{grid-template-columns:1fr}
+  .hide-m{display:none}
+  .wrap{padding:20px 16px 40px}
+  .top{padding:14px 16px}
+}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="brand"><span class="dot"></span>МОДЕРНМ · <span class="sub">Панель руководителя Академии</span></div>
+  <div class="right"><span id="who"></span><a href="./">Академия</a><button id="logout" type="button">Выйти</button></div>
+</div>
+
+<div class="wrap">
+  <h1>Кто где в обучении</h1>
+  <p class="lead">Данные берутся из таблицы «Академия — данные» и обновляются сами каждую минуту.</p>
+
+  <div class="kpis">
+    <div class="kpi"><div class="n" id="k-total">—</div><div class="l">стажёров в списке</div></div>
+    <div class="kpi"><div class="n" id="k-active">—</div><div class="l">заходили за последние 3 дня</div></div>
+    <div class="kpi"><div class="n" id="k-idle">—</div><div class="l">не заходят 3 дня и больше</div></div>
+    <div class="kpi"><div class="n" id="k-finished">—</div><div class="l">прошли все 10 дней</div></div>
+  </div>
+
+  <div class="toolbar">
+    <button class="chip on" data-f="trainee" type="button">Стажёры</button>
+    <button class="chip" data-f="all" type="button">Все сотрудники</button>
+    <span class="upd" id="upd"></span>
+  </div>
+
+  <div class="card">
+    <table>
+      <thead><tr>
+        <th>Сотрудник</th><th>Сейчас на</th><th>Открыл дней</th><th class="hide-m">Отметил в чек-листе</th><th class="hide-m">Последний вход</th><th>Статус</th>
+      </tr></thead>
+      <tbody id="rows"><tr><td colspan="6" class="empty">Загружаю…</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="card detail" id="detail" style="display:none"></div>
+  <p class="note">«Открыл день» — сотрудник заходил на страницу дня. «Отметил» — поставил галочку в чек-листе на 10 дней. Результаты тестов появятся здесь, когда тесты будут встроены в сайт.</p>
+</div>
+
+<div class="login" id="login" style="display:none">
+  <form id="loginForm" autocomplete="off">
+    <h2>Панель руководителя</h2>
+    <p>Введите ваш личный код. Панель доступна только руководителю.</p>
+    <input id="code" type="text" inputmode="numeric" placeholder="Ваш код" aria-label="Личный код">
+    <button type="submit" id="btn">Войти</button>
+    <div class="err" id="err" role="alert"></div>
+  </form>
+</div>
+
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycbzZkeOmdHRKTV96vH4sENhmnM-MbhSSrDT_j3Li2XoCihrqhhELXWZNGF9shTg0Pxo1/exec';
+const DAYS = [
+  {id:'intro', b:'0', t:'Введение'},
+  {id:'day1', b:'1', t:'Компания'},
+  {id:'day2', b:'2', t:'Продукт'},
+  {id:'day3', b:'3', t:'Первая встреча'},
+  {id:'day4', b:'4', t:'Презентация'},
+  {id:'day5', b:'5', t:'CRM'},
+  {id:'day6', b:'6', t:'Сделка'},
+  {id:'day7', b:'7', t:'Замер'},
+  {id:'day8', b:'8', t:'Вторичная встреча'},
+  {id:'day9', b:'9', t:'Производство'},
+  {id:'day10', b:'10', t:'Экзамен'}
+];
+const DAY_MS = 86400000;
+let DATA = null, FILTER = 'trainee', SELECTED = null;
+
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function getCode(){ try{ const u = JSON.parse(localStorage.getItem('academyUser')||'null'); return u && u.code; }catch(e){ return null; } }
+function fmtDate(ms){
+  if(!ms) return '—';
+  const d = new Date(ms), now = new Date();
+  const hm = d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+  const day0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  if(ms >= day0) return 'сегодня, ' + hm;
+  if(ms >= day0 - DAY_MS) return 'вчера, ' + hm;
+  return d.toLocaleDateString('ru-RU',{day:'numeric',month:'short'}) + ', ' + hm;
+}
+function plural(n, a, b, c){ n = Math.abs(n) % 100; const n1 = n % 10; if(n > 10 && n < 20) return c; if(n1 > 1 && n1 < 5) return b; if(n1 === 1) return a; return c; }
+
+async function api(action){
+  const r = await fetch(API_URL, {method:'POST', redirect:'follow', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify({action, code:getCode()})});
+  return r.json();
+}
+
+// аналитика по одному человеку
+function analyze(p, now){
+  const openedIdx = DAYS.map((d,i)=>p.opened[d.id] ? i : -1).filter(i=>i>=0);
+  const current = openedIdx.length ? Math.max(...openedIdx) : -1;
+  const checks = Object.keys(p.done).filter(k=>/^cl-10days_\d+$/.test(k));
+  const idleDays = p.lastAt ? Math.floor((now - p.lastAt)/DAY_MS) : null;
+  let st;
+  if(!p.active) st = {c:'mute', t:'Доступ закрыт'};
+  else if(p.lastAt == null) st = {c:'bad', t:'Ещё не заходил'};
+  else if(checks.length >= 10) st = {c:'ok', t:'Прошёл обучение'};
+  else if(idleDays >= 3) st = {c:'bad', t:'Не заходит ' + idleDays + ' ' + plural(idleDays,'день','дня','дней')};
+  else {
+    // ожидаемый день: по рабочим дням с первого входа
+    const firsts = Object.values(p.opened).map(o=>o.first);
+    const start = firsts.length ? Math.min(...firsts) : p.lastAt;
+    let work = 0;
+    for(let t = start; t <= now; t += DAY_MS){ const wd = new Date(t).getDay(); if(wd !== 0 && wd !== 6) work++; }
+    const expected = Math.min(10, work);
+    const lag = expected - Math.max(current, 0);
+    st = lag >= 2 ? {c:'warn', t:'Отстаёт на ' + lag + ' ' + plural(lag,'день','дня','дней')} : {c:'ok', t:'По графику'};
+  }
+  return {current, openedCount: openedIdx.length, checks: checks.length, idleDays, st};
+}
+
+function render(){
+  if(!DATA) return;
+  const now = Date.now();
+  const list = DATA.people.filter(p => FILTER === 'all' || p.role === 'стажёр');
+  const trainees = DATA.people.filter(p => p.role === 'стажёр' && p.active).map(p => ({p, a: analyze(p, now)}));
+  document.getElementById('k-total').textContent = trainees.length;
+  document.getElementById('k-active').textContent = trainees.filter(x => x.a.idleDays !== null && x.a.idleDays < 3).length;
+  document.getElementById('k-idle').textContent = trainees.filter(x => x.a.idleDays === null || x.a.idleDays >= 3).length;
+  document.getElementById('k-finished').textContent = trainees.filter(x => x.a.checks >= 10).length;
+  document.getElementById('upd').textContent = 'Обновлено ' + new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+
+  const tb = document.getElementById('rows');
+  if(!list.length){
+    tb.innerHTML = `<tr><td colspan="6" class="empty">${FILTER === 'trainee' ? 'Стажёров пока нет. Добавьте их в лист «Люди» с ролью «стажёр».' : 'Сотрудников пока нет.'}</td></tr>`;
+    document.getElementById('detail').style.display = 'none';
+    return;
+  }
+  tb.innerHTML = list.map(p => {
+    const a = analyze(p, now);
+    const cur = a.current >= 0 ? (DAYS[a.current].b === '0' ? 'Введение' : 'День ' + DAYS[a.current].b) : '—';
+    return `<tr class="row ${SELECTED === p.id ? 'sel' : ''}" data-id="${p.id}">
+      <td><div class="name">${esc(p.name)}</div><div class="role">${esc(p.role)}</div></td>
+      <td>${cur}</td>
+      <td><div class="bar"><div class="track"><div class="fill" style="width:${Math.round(a.openedCount/11*100)}%"></div></div><span class="t">${a.openedCount} из 11</span></div></td>
+      <td class="hide-m"><div class="bar"><div class="track"><div class="fill" style="width:${a.checks*10}%;background:var(--ok)"></div></div><span class="t">${a.checks} из 10</span></div></td>
+      <td class="hide-m">${fmtDate(p.lastAt)}</td>
+      <td><span class="st ${a.st.c}">${a.st.t}</span></td>
+    </tr>`;
+  }).join('');
+  tb.querySelectorAll('tr.row').forEach(tr => tr.addEventListener('click', () => { SELECTED = Number(tr.dataset.id); render(); }));
+  renderDetail();
+}
+
+function evText(e){
+  if(e.ev === 'открыл' && e.item.indexOf('раздел:') === 0){
+    const d = DAYS.find(x => x.id === e.item.slice(7));
+    return 'Открыл ' + (d ? (d.b === '0' ? 'Введение' : 'День ' + d.b + ' · ' + d.t) : 'обложку');
+  }
+  if(e.ev === 'тест'){
+    const [ok,n] = String(e.value||'').split('/').map(Number);
+    return e.item + ': ' + e.value + (n ? (ok/n >= 0.8 ? ' — сдал ✓' : ' — не сдал') : '');
+  }
+  if(e.ev === 'отметил'){
+    const m = e.item.match(/^cl-10days_(\d+)$/);
+    const what = m ? 'День ' + (Number(m[1]) + 1) + ' (тест сдан)' : 'пункт «' + e.item + '»';
+    return (e.value === '1' ? 'Отметил ' : 'Снял отметку: ') + what;
+  }
+  return e.ev + ' ' + e.item;
+}
+
+function renderDetail(){
+  const box = document.getElementById('detail');
+  const p = DATA.people.find(x => x.id === SELECTED);
+  if(!p){ box.style.display = 'none'; return; }
+  const a = analyze(p, Date.now());
+  box.style.display = 'block';
+  const days = DAYS.map((d, i) => {
+    const o = p.opened[d.id];
+    const checked = i > 0 && p.done['cl-10days_' + (i - 1)];
+    const cls = checked ? 'done' : (o ? 'open' : '');
+    const mark = checked ? 'тест сдан ✓' : (o ? fmtDate(o.last).replace(', ', ' ') : 'не открывал');
+    return `<div class="day ${cls}"><div class="b">${d.b === '0' ? 'Вв.' : d.b}</div><div class="s">${esc(d.t)}</div><div class="mark">${mark}</div></div>`;
+  }).join('');
+  const recent = p.recent.length
+    ? p.recent.map(e => `<div class="ev"><span class="w">${fmtDate(e.at)}</span><span>${esc(evText(e))}</span></div>`).join('')
+    : '<div class="ev"><span>Действий пока нет.</span></div>';
+  const visits = DAYS.filter(d => p.opened[d.id]).map(d => {
+    const o = p.opened[d.id];
+    return `<div class="ev"><span class="w">${d.b === '0' ? 'Введение' : 'День ' + d.b}</span><span>впервые ${fmtDate(o.first)} · последний раз ${fmtDate(o.last)} · заходов ${o.count}</span></div>`;
+  }).join('') || '<div class="ev"><span>Ещё ничего не открывал.</span></div>';
+  box.innerHTML = `
+    <h2>${esc(p.name)}</h2>
+    <div class="meta">${esc(p.role)} · последний вход: ${fmtDate(p.lastAt)} · действий: ${p.events}${p.edits ? ' · правок в Академии: ' + p.edits : ''} · <span class="st ${a.st.c}">${a.st.t}</span></div>
+    <div class="days">${days}</div>
+    <div class="legend"><span><i style="background:var(--ok-bg);border:1px solid #BFDCCB"></i>отметил день в чек-листе</span><span><i style="background:var(--accent-soft);border:1px solid #E9C7A6"></i>открывал</span><span><i style="background:#FCFAF6;border:1px solid var(--line)"></i>не открывал</span></div>
+    <div class="cols2" style="margin-top:20px">
+      <div><h3>Дни обучения</h3>${visits}</div>
+      <div><h3>Последние действия</h3>${recent}</div>
+    </div>`;
+}
+
+async function load(){
+  try{
+    const r = await api('dashboard');
+    if(!r.ok){
+      if(r.error === 'bad_code'){ showLogin('Код не подошёл.'); return; }
+      if(r.error === 'forbidden'){ showLogin('Панель доступна только руководителю.'); return; }
+      throw new Error(r.error || 'ошибка');
+    }
+    DATA = r;
+    if(SELECTED == null){
+      const first = DATA.people.find(p => p.role === 'стажёр') || DATA.people[0];
+      SELECTED = first ? first.id : null;
+    }
+    render();
+  }catch(e){
+    document.getElementById('upd').textContent = 'Нет связи с сервером — повторю через минуту';
+  }
+}
+
+function showLogin(msg){
+  document.getElementById('login').style.display = 'flex';
+  document.getElementById('err').textContent = msg || '';
+  setTimeout(() => document.getElementById('code').focus(), 50);
+}
+document.getElementById('loginForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const code = document.getElementById('code').value.trim();
+  if(!code) return;
+  const btn = document.getElementById('btn');
+  btn.disabled = true; btn.textContent = 'Проверяю…';
+  try{
+    const r = await fetch(API_URL, {method:'POST', redirect:'follow', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify({action:'login', code})}).then(x => x.json());
+    if(!r.ok) showLogin('Код не подошёл. Проверьте и попробуйте ещё раз.');
+    else if(['руководитель','админ'].indexOf(r.role) < 0) showLogin('Панель доступна только руководителю.');
+    else{
+      localStorage.setItem('academyUser', JSON.stringify({code, name:r.name, role:r.role, canEdit:r.canEdit}));
+      document.getElementById('login').style.display = 'none';
+      start();
+    }
+  }catch(err){ showLogin('Нет связи с сервером. Попробуйте ещё раз.'); }
+  btn.disabled = false; btn.textContent = 'Войти';
+});
+document.getElementById('logout').addEventListener('click', () => {
+  if(confirm('Выйти на этом устройстве?')){ localStorage.removeItem('academyUser'); location.reload(); }
+});
+document.querySelectorAll('.chip').forEach(ch => ch.addEventListener('click', () => {
+  FILTER = ch.dataset.f;
+  document.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c === ch));
+  render();
+}));
+
+let timer = null;
+function start(){
+  try{ const u = JSON.parse(localStorage.getItem('academyUser')||'null'); document.getElementById('who').textContent = u && u.name ? u.name : ''; }catch(e){}
+  load();
+  clearInterval(timer);
+  timer = setInterval(() => { if(!document.hidden) load(); }, 60000);
+}
+if(getCode()) start(); else showLogin();
+</script>
+</body>
+</html>

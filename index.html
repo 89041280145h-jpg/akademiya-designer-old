@@ -2,6 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
+<meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>МОДЕРНМ — Академия знаний «Дизайнер»</title>
 <style>
@@ -136,6 +137,108 @@ button{font-family:inherit;}
 .b-list li b, .b-list li .lbl{color:var(--ink);font-weight:700;}
 
 .b-callout{display:flex;gap:14px;padding:18px 20px;border-radius:14px;background:#FBF4E3;border:1px solid #F0DFB0;}
+/* ---- Тест дня ---- */
+.quiz{border:1px solid var(--line);border-radius:18px;background:var(--surface);overflow:hidden;}
+.quiz-head{display:flex;align-items:center;gap:14px;padding:18px 20px;background:linear-gradient(180deg,#FFFDF9,#FBF1E7);border-bottom:1px solid var(--line);flex-wrap:wrap;}
+.quiz-ic{width:46px;height:46px;border-radius:12px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+.quiz-hx{display:flex;flex-direction:column;gap:3px;flex:1;min-width:200px;}
+.quiz-hx b{font-size:17px;font-weight:800;}
+.quiz-hx span{font-size:12.5px;color:var(--ink-soft);}
+.quiz-last{font-size:12px;font-weight:700;padding:6px 12px;border-radius:999px;background:var(--bg);border:1px solid var(--line);color:var(--ink-soft);}
+.quiz-last.ok{background:#E8F3EA;border-color:#BFDCC5;color:#2E6B3E;}
+.quiz-body{padding:8px 20px;}
+.quiz-q{padding:16px 0;border-bottom:1px dashed var(--line);}
+.quiz-q:last-child{border-bottom:none;}
+.quiz-q.miss .quiz-qt{color:#B3412F;}
+.quiz-qt{display:flex;gap:10px;font-size:14.5px;font-weight:700;line-height:1.45;margin-bottom:10px;}
+.quiz-qn{flex:0 0 26px;height:26px;border-radius:8px;background:var(--accent-soft);color:var(--accent-ink);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+.quiz-q.right .quiz-qn{background:#2E6B3E;color:#fff;}
+.quiz-q.wrong .quiz-qn{background:#B3412F;color:#fff;}
+.quiz-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-left:36px;}
+@media (max-width:700px){.quiz-opts{grid-template-columns:1fr;padding-left:0;}}
+.quiz-opt{display:flex;align-items:flex-start;gap:10px;text-align:left;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);font:inherit;font-size:13.5px;line-height:1.4;color:var(--ink);cursor:pointer;transition:.12s;}
+.quiz-opt:hover:not(:disabled){border-color:var(--accent);}
+.quiz-mark{flex:0 0 18px;height:18px;border-radius:50%;border:2px solid #CDBFAE;margin-top:1px;}
+.quiz-opt.sel{border-color:var(--accent);background:var(--accent-soft2);}
+.quiz-opt.sel .quiz-mark{border-color:var(--accent);background:radial-gradient(circle,var(--accent) 45%,transparent 50%);}
+.quiz-opt:disabled{cursor:default;}
+.quiz-opt.correct{border-color:#3C8A51;background:#E8F3EA;}
+.quiz-opt.correct .quiz-mark{border-color:#3C8A51;background:#3C8A51;}
+.quiz-opt.incorrect{border-color:#C9503B;background:#FBE9E5;}
+.quiz-opt.incorrect .quiz-mark{border-color:#C9503B;background:#C9503B;}
+.quiz-exp{margin:10px 0 0 36px;font-size:12.5px;line-height:1.5;color:var(--ink-soft);display:flex;gap:6px;align-items:baseline;flex-wrap:wrap;}
+.quiz-exp em{font-style:normal;color:var(--ink-faint);}
+.quiz-q.right .quiz-exp svg{color:#2E6B3E;}.quiz-q.wrong .quiz-exp svg{color:#B3412F;}
+.quiz-foot{display:flex;align-items:center;gap:16px;padding:14px 20px;border-top:1px solid var(--line);background:#FFFDF9;flex-wrap:wrap;}
+.quiz-progress{flex:1;min-width:180px;display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--ink-soft);font-weight:600;}
+.quiz-bar{height:6px;border-radius:3px;background:var(--accent-soft);overflow:hidden;}
+.quiz-bar i{display:block;height:100%;background:var(--accent);transition:width .2s;}
+.quiz-btn{border:none;border-radius:10px;background:var(--accent);color:#fff;font:inherit;font-size:14px;font-weight:800;padding:12px 22px;cursor:pointer;}
+.quiz-btn:hover{background:var(--accent-ink);}
+.quiz-result{display:flex;align-items:center;gap:18px;padding:18px 20px;border-top:1px solid var(--line);}
+.quiz-result.ok{background:#E8F3EA;}.quiz-result.fail{background:#FBF1E7;}
+.quiz-score{font-size:40px;font-weight:800;line-height:1;color:var(--accent);}
+.quiz-result.ok .quiz-score{color:#2E6B3E;}
+.quiz-score small{font-size:14px;font-weight:700;color:var(--ink-soft);margin-left:4px;}
+.quiz-result b{display:block;font-size:16px;margin-bottom:3px;}
+.quiz-result span{font-size:13px;color:var(--ink-soft);line-height:1.45;}
+/* ---- Схемы (block type "scheme") ---- */
+.sch{background:linear-gradient(180deg,#FFFDF9,#FBF4EA);border:1px solid var(--line);border-radius:16px;padding:20px 22px;}
+.sch-title{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:6px;}
+.sch-note{font-size:12.5px;color:var(--ink-soft);margin-top:12px;line-height:1.5;}
+.sch-row{display:flex;align-items:stretch;gap:6px;}
+.sch-node{flex:1 1 0;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 12px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;position:relative;}
+.sch-node b{font-size:13px;font-weight:800;line-height:1.25;color:var(--ink);}
+.sch-node span{font-size:11.5px;color:var(--ink-soft);line-height:1.35;}
+.sch-node.hl{background:var(--accent);border-color:var(--accent);}
+.sch-node.hl b,.sch-node.hl span{color:#fff;}
+.sch-node.hl .sch-ic{background:rgba(255,255,255,.18);color:#fff;}
+.sch-ic{width:40px;height:40px;border-radius:50%;background:var(--accent-soft);color:var(--accent-ink);display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+.sch-num{position:absolute;top:8px;left:10px;font-size:10.5px;font-weight:800;color:var(--ink-faint);}
+.sch-node.hl .sch-num{color:rgba(255,255,255,.8);}
+.sch-arr{flex:0 0 18px;display:flex;align-items:center;justify-content:center;color:var(--accent);opacity:.7;}
+.sch-node .sch-tx{display:contents;}
+@media (max-width:820px){.sch-row{flex-direction:column;}.sch-arr{transform:rotate(90deg);flex-basis:16px;}.sch-node{flex-direction:row;text-align:left;align-items:center;}.sch-node .sch-tx{display:flex;flex-direction:column;gap:2px;}.sch-num{position:static;}}
+.sch-funnel{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.sch-fbar{border-radius:10px;padding:11px 16px;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:12px;min-width:220px;}
+.sch-fbar b{font-size:14px;font-weight:800;}
+.sch-fbar span{font-size:12px;opacity:.9;text-align:right;}
+.sch-tl{display:flex;overflow-x:auto;padding:6px 2px 4px;scrollbar-width:thin;}
+.sch-tl-it{flex:1 0 66px;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;padding:0 4px;}
+.sch-tl-it::before{content:'';position:absolute;top:15px;left:0;right:0;height:3px;background:var(--accent-soft);}
+.sch-tl-it:first-child::before{left:50%;}.sch-tl-it:last-child::before{right:50%;}
+.sch-tl-dot{width:32px;height:32px;border-radius:50%;background:var(--surface);border:3px solid var(--accent);color:var(--accent-ink);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;}
+.sch-tl-it.hl .sch-tl-dot{background:var(--accent);color:#fff;}
+.sch-tl-it.muted .sch-tl-dot{border-color:#CDBFAE;color:var(--ink-faint);}
+.sch-tl-it b{font-size:12px;font-weight:800;margin-top:7px;color:var(--ink);}
+.sch-tl-it span{font-size:11px;color:var(--ink-soft);line-height:1.3;margin-top:2px;}
+.sch-pay{display:flex;border-radius:12px;overflow:hidden;border:1px solid var(--line);}
+.sch-pay-seg{padding:14px 14px;display:flex;flex-direction:column;gap:4px;background:var(--surface);border-right:1px solid var(--line);min-width:0;}
+.sch-pay-seg:last-child{border-right:none;}
+.sch-pay-seg b{font-size:20px;font-weight:800;color:var(--accent-ink);line-height:1.1;}
+.sch-pay-seg span{font-size:11.5px;color:var(--ink-soft);line-height:1.35;}
+.sch-pay-seg.hl{background:var(--accent);}
+.sch-pay-seg.hl b,.sch-pay-seg.hl span{color:#fff;}
+@media (max-width:560px){.sch-pay{flex-direction:column;}.sch-pay-seg{flex-basis:auto!important;border-right:none;border-bottom:1px solid var(--line);}}
+.sch-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:10px;}
+.sch-stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 14px 12px;}
+.sch-stat b{display:block;font-size:30px;font-weight:800;line-height:1;color:var(--accent);letter-spacing:-.02em;}
+.sch-stat span{display:block;font-size:12px;color:var(--ink-soft);margin-top:6px;line-height:1.35;}
+.sch-chips{display:flex;flex-direction:column;gap:12px;}
+.sch-chips-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+.sch-chips-row > em{font-style:normal;font-size:11.5px;font-weight:800;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.05em;min-width:96px;}
+.sch-chip{background:var(--surface);border:1px solid var(--accent-soft);color:var(--accent-ink);border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:700;}
+.sch-days{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;}
+@media (max-width:820px){.sch-days{grid-template-columns:repeat(5,1fr);}}
+.sch-day{display:flex;flex-direction:column;align-items:center;text-align:center;gap:5px;padding:8px 2px;border-radius:10px;}
+.sch-day .sch-ic{width:36px;height:36px;background:var(--surface);border:1px solid var(--line);color:var(--ink-faint);}
+.sch-day b{font-size:10.5px;font-weight:800;color:var(--ink-faint);}
+.sch-day span{font-size:11px;line-height:1.25;color:var(--ink-faint);}
+.sch-day.past .sch-ic{background:var(--accent-soft);border-color:var(--accent-soft);color:var(--accent-ink);}
+.sch-day.past span,.sch-day.past b{color:var(--ink-soft);}
+.sch-day.hl{background:var(--accent-soft2);outline:2px solid var(--accent);}
+.sch-day.hl .sch-ic{background:var(--accent);border-color:var(--accent);color:#fff;}
+.sch-day.hl b{color:var(--accent);}.sch-day.hl span{color:var(--ink);font-weight:700;}
 .b-callout .ic{flex:0 0 auto;color:#96731C;}
 .b-callout .tx{font-size:14.5px;color:#5C4A15;line-height:1.6;}
 
@@ -339,6 +442,24 @@ body.hide-notes .rev-note{display:none;}
 .res-filled a{color:inherit;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .res-filled button{border:none;background:none;color:var(--accent-ink);cursor:pointer;opacity:.7;flex:0 0 auto;}
 .res-filled button:hover{opacity:1;}
+.res-filled:has(.res-open){background:none;border:none;padding:0;}
+.res-filled:has(.res-open){width:100%;gap:4px;}
+.res-open{flex:1 1 auto;min-width:0;height:44px;display:flex!important;align-items:center;gap:9px;padding:0 10px 0 6px;border-radius:10px;background:var(--accent-soft2);border:1px solid var(--accent-soft);color:var(--accent-ink)!important;transition:.15s;}
+.res-open:hover{background:var(--accent);border-color:var(--accent);color:#fff!important;}
+.res-open-ic{flex:0 0 30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;}
+.res-open.is-doc .res-open-ic{border-radius:8px;}
+.res-open:hover .res-open-ic{background:#fff;color:var(--accent);}
+.res-open-tx{display:flex;flex-direction:column;line-height:1.2;min-width:0;}
+.res-open-tx b{font-size:12.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.res-open-tx small{font-size:10.5px;font-weight:600;opacity:.75;white-space:nowrap;}
+/* ровная сетка карточек: заголовок и описание фиксированной высоты, блоки «Документ/Видео» прижаты вниз и одной высоты */
+.resource-card h5{line-height:1.35;min-height:calc(13.5px * 1.35 * 2);}
+.resource-card > p{min-height:calc(12.5px * 1.5 * 2);}
+.resource-card > p + .res-slot-row{margin-top:auto;}
+.resource-card .res-actions{min-height:44px;align-items:center;flex-wrap:nowrap;}
+.resource-card .res-actions > .res-btn{flex:1 1 0;justify-content:center;height:36px;}
+.resource-card .res-btn.primary{background:var(--bg);border-color:var(--accent);color:var(--accent-ink);}
+.resource-card .res-btn.primary:hover{background:var(--accent);color:#fff;}
 
 /* Toast */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--sidebar-bg);color:#fff;padding:12px 20px;border-radius:12px;font-size:13.5px;font-weight:600;box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;transition:.25s ease;z-index:100;}
@@ -363,6 +484,27 @@ body.hide-notes .rev-note{display:none;}
 .storage-banner button:hover{opacity:1;}
 @media (max-width:980px){.storage-banner{padding-left:56px;}}
 @media print{ .sidebar,.menu-toggle,.topbar{display:none!important;} .main{margin-left:0!important;} }
+/* ---- вход и режим «только чтение» ---- */
+.whoami{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;font-size:12px;color:var(--sidebar-soft);}
+.whoami:empty{display:none;}
+.whoami .dashlink{color:inherit;border:1px solid rgba(255,255,255,.25);border-radius:6px;font-size:11px;padding:3px 8px;text-decoration:none;margin-left:auto;}
+.whoami button{background:none;border:1px solid rgba(255,255,255,.25);border-radius:6px;color:inherit;font-size:11px;padding:3px 8px;cursor:pointer;}
+.login-overlay{position:fixed;inset:0;z-index:1000;background:rgba(26,24,21,.97);align-items:center;justify-content:center;padding:16px;}
+.login-card{background:var(--surface);border-radius:var(--radius);padding:32px 28px;width:100%;max-width:380px;box-shadow:var(--shadow-lg);display:flex;flex-direction:column;gap:12px;}
+.login-brand{display:flex;align-items:center;gap:8px;font-weight:800;letter-spacing:.06em;font-size:13px;color:var(--ink-soft);}
+.login-brand .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);}
+.login-card h2{margin:4px 0 0;font-size:22px;line-height:1.25;}
+.login-card p{margin:0;color:var(--ink-soft);font-size:14px;}
+.login-card input{font:inherit;font-size:20px;letter-spacing:.2em;text-align:center;padding:12px;border:1px solid var(--line);border-radius:var(--radius-sm);}
+.login-card input:focus{outline:2px solid var(--accent);outline-offset:1px;}
+.login-card button{font:inherit;font-weight:700;font-size:15px;padding:12px;border:none;border-radius:var(--radius-sm);background:var(--accent);color:#fff;cursor:pointer;}
+.login-card button:disabled{opacity:.6;cursor:default;}
+.login-err{min-height:18px;font-size:13px;color:#A33327;}
+body.readonly .res-btn,body.readonly .res-filled button,body.readonly .res-card-del,body.readonly .resource-add-card,
+body.readonly .page-tools,body.readonly .usernotes-wrap,body.readonly .edited-tag,body.readonly .rev-note,
+body.readonly .copy-prompt-btn,body.readonly .media-remove,body.readonly .carousel-add-wrap,body.readonly .sidebar-foot,
+body.readonly [data-add-card-group],body.readonly .photo-slot:has(.photo-slot-empty),
+body.readonly .res-slot-row:not(:has(.res-filled)){display:none!important;}
 </style>
 </head>
 <body>
@@ -385,6 +527,7 @@ body.hide-notes .rev-note{display:none;}
         <div id="syncIndicator" class="sync-indicator busy">Синхронизация…</div>
         <button type="button" id="forceRefreshBtn" title="Принудительно подтянуть самые свежие данные с сервера" style="background:none;border:1px solid rgba(255,255,255,.25);border-radius:6px;color:inherit;font-size:11px;padding:3px 8px;cursor:pointer;opacity:.85;">Обновить с сервера</button>
       </div>
+      <div id="whoami" class="whoami"></div>
     </div>
     <div class="progress-wrap">
       <div class="progress-label"><span>Прогресс</span><span id="progressPct">0%</span></div>
@@ -398,12 +541,12 @@ body.hide-notes .rev-note{display:none;}
         <button id="notesToggleBtn">Скрыть</button>
       </div>
       <button id="exportNotesBtn" style="width:100%;margin-top:8px;background:var(--accent);border-color:var(--accent);color:#fff;">Скопировать всё для правок</button>
-      Все загруженные фото и видео хранятся локально в этом браузере на этом компьютере. Если файл не загружается — откройте страницу в Google Chrome: некоторые браузеры блокируют хранилище для файлов, открытых напрямую с диска.
+      Все правки, фото и документы сохраняются в общем облаке Академии и через полминуты видны всем. Видео загружайте в VK и вставляйте ссылкой.
       <div style="display:flex;gap:8px;margin-top:10px;">
         <button id="backupExportBtn" style="flex:1;">Скачать бэкап</button>
-        <label class="page-tool-btn" style="flex:1;justify-content:center;margin:0;padding:9px 10px;font-size:12px;">Восстановить<input type="file" id="backupImportInput" accept="application/json" hidden></label>
+        <label class="page-tool-btn" style="display:none;flex:1;justify-content:center;margin:0;padding:9px 10px;font-size:12px;">Восстановить<input type="file" id="backupImportInput" accept="application/json" hidden></label>
       </div>
-      <button id="resetBtn">Очистить все загруженные файлы</button>
+      <button id="resetBtn" style="display:none">Очистить все загруженные файлы</button>
     </div>
   </aside>
 
@@ -414,6 +557,16 @@ body.hide-notes .rev-note{display:none;}
 </div>
 
 <div class="toast" id="toast"></div>
+<div id="loginOverlay" class="login-overlay" style="display:none">
+  <form id="loginForm" class="login-card" autocomplete="off">
+    <div class="login-brand"><span class="dot"></span>МОДЕРНМ</div>
+    <h2>Академия знаний «Дизайнер»</h2>
+    <p>Введите личный код, который вам выдал руководитель.</p>
+    <input id="loginCode" type="text" inputmode="numeric" placeholder="Ваш код" aria-label="Личный код">
+    <button id="loginBtn" type="submit">Войти</button>
+    <div id="loginErr" class="login-err" role="alert"></div>
+  </form>
+</div>
 
 <script>
 /* ============ ICONS ============ */
@@ -597,8 +750,18 @@ function mediaUrlOf(fileOrRemote){
   return URL.createObjectURL(fileOrRemote);
 }
 
-/* ============ CLOUD SYNC (Google Apps Script + Sheet + Drive) ============ */
-const SYNC_URL = 'https://script.google.com/macros/s/AKfycbwzuV9E_HMSxRyi50r2LvubsIVRL10JY6x0MnYnnUv1UVMp_hyGX5amtZRNlJk-pyNvTA/exec';
+/* ============ CLOUD SYNC (Google Apps Script + Таблица + Диск) ============
+   Каждая правка — отдельный ключ «карта|id» со своей версией на сервере.
+   Отправляем только изменённые ключи и ждём ответа сервера. Если ключ за это
+   время изменил другой человек, сервер возвращает конфликт, и мы спрашиваем,
+   чью версию оставить. Чужие правки подтягиваются сами раз в 30 секунд. */
+const API_URL = 'https://script.google.com/macros/s/AKfycbzZkeOmdHRKTV96vH4sENhmnM-MbhSSrDT_j3Li2XoCihrqhhELXWZNGF9shTg0Pxo1/exec';
+const SYNC_MAPS = {
+  edits:'academyEdits', fieldEdits:'academyFieldEdits', links:'academyLinks',
+  files:'academyFileUrls', cardGroups:'academyCardGroups', userNotes:'academyUserNotes'
+};
+const POLL_MS = 30000;
+const MAX_UPLOAD_BYTES = 25*1024*1024;
 let syncTimer = null;
 let syncInFlight = false;
 let syncPending = false;
@@ -607,168 +770,257 @@ function getFileUrlMap(){ try{ return JSON.parse(localStorage.getItem('academyFi
 function setFileUrlMap(map){ localStorage.setItem('academyFileUrls', JSON.stringify(map)); }
 function getFileUrlEntry(key){ return getFileUrlMap()[key]; }
 
-function collectCloudState(){
-  return {
-    edits: getEdits(),
-    fieldEdits: getFieldEdits(),
-    done: getDone(),
-    userNotes: getUserNotesMap(),
-    cardGroups: getCardGroups(),
-    links: getLinks(),
-    files: getFileUrlMap()
-  };
+function readMap(ls){ try{ return JSON.parse(localStorage.getItem(ls)||'{}'); }catch(e){ return {}; } }
+function getSnap(){
+  try{ return JSON.parse(localStorage.getItem('academySyncSnap')||'null') || {version:0, items:{}}; }
+  catch(e){ return {version:0, items:{}}; }
 }
-function applyCloudState(state){
-  if(!state || typeof state !== 'object') return;
-  if(state.edits) localStorage.setItem('academyEdits', JSON.stringify(state.edits));
-  if(state.fieldEdits) localStorage.setItem('academyFieldEdits', JSON.stringify(state.fieldEdits));
-  if(state.done) localStorage.setItem('academyDone', JSON.stringify(state.done));
-  if(state.userNotes) localStorage.setItem('academyUserNotes', JSON.stringify(state.userNotes));
-  if(state.cardGroups) localStorage.setItem('academyCardGroups', JSON.stringify(state.cardGroups));
-  if(state.links) localStorage.setItem('academyLinks', JSON.stringify(state.links));
-  if(state.files) localStorage.setItem('academyFileUrls', JSON.stringify(state.files));
-}
+function setSnap(s){ localStorage.setItem('academySyncSnap', JSON.stringify(s)); }
 
-/* ---- Слияние перед сохранением (защита от "последний сохранивший стирает всех остальных") ----
-   Раньше pushCloudState() отправлял в облако ПОЛНЫЙ локальный снимок состояния, слепо перезаписывая
-   всё, что там было — включая правки и фото, добавленные другими сотрудниками с других устройств,
-   если это устройство их ещё не успело подтянуть. Теперь перед каждым сохранением мы сначала берём
-   самую свежую версию с сервера и сливаем её с локальными данными ПОКЛЮЧЕВО (каждая правка, каждое
-   фото, каждое поле — отдельный ключ в объекте), а не одним большим блоком. Так чужие правки не
-   теряются, даже если это устройство немного отстало от актуальной версии. */
-async function mergeRemoteBeforePush(){
-  try{
-    const remote = await jsonp(SYNC_URL);
-    if(!remote || typeof remote !== 'object') return;
-    const mergeKey = (remoteObj, storageKey)=>{
-      if(!remoteObj || typeof remoteObj !== 'object') return;
-      let local = {};
-      try{ local = JSON.parse(localStorage.getItem(storageKey)||'{}'); }catch(e){}
-      const merged = Object.assign({}, remoteObj, local);
-      localStorage.setItem(storageKey, JSON.stringify(merged));
-    };
-    mergeKey(remote.edits, 'academyEdits');
-    mergeKey(remote.fieldEdits, 'academyFieldEdits');
-    mergeKey(remote.done, 'academyDone');
-    mergeKey(remote.userNotes, 'academyUserNotes');
-    mergeKey(remote.cardGroups, 'academyCardGroups');
-    mergeKey(remote.links, 'academyLinks');
-    mergeKey(remote.files, 'academyFileUrls');
-  }catch(e){
-    console.warn('mergeRemoteBeforePush: не удалось получить свежие данные перед сохранением — сохраняю как есть', e);
-  }
-}
+function currentUser(){ try{ return JSON.parse(localStorage.getItem('academyUser')||'null'); }catch(e){ return null; } }
+function canEdit(){ const u = currentUser(); return !!(u && u.canEdit); }
 
-/* ---- CORS-safe transport: JSONP for reads, hidden-iframe form POST + postMessage for writes ---- */
-function jsonp(url){
-  return new Promise((resolve,reject)=>{
-    const cbName = 'academyCb_'+Date.now()+'_'+Math.floor(Math.random()*100000);
-    const script = document.createElement('script');
-    let settled = false;
-    window[cbName] = (data)=>{
-      if(settled) return;
-      settled = true;
-      resolve(data);
-      delete window[cbName];
-      script.remove();
-    };
-    script.src = url + (url.indexOf('?')>-1?'&':'?') + 'callback=' + cbName;
-    script.onerror = ()=>{
-      if(settled) return;
-      settled = true;
-      reject(new Error('jsonp-failed'));
-      delete window[cbName];
-      script.remove();
-    };
-    document.body.appendChild(script);
-    setTimeout(()=>{
-      if(settled) return;
-      settled = true;
-      reject(new Error('jsonp-timeout'));
-      delete window[cbName];
-      script.remove();
-    }, 12000);
+async function api(action, params){
+  const u = currentUser();
+  const body = Object.assign({action, code: u ? u.code : ''}, params||{});
+  const r = await fetch(API_URL, {
+    method:'POST', redirect:'follow',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify(body)
   });
+  if(!r.ok) throw new Error('http '+r.status);
+  const data = await r.json();
+  if(data && data.error==='bad_code' && action!=='login'){ logout(); throw new Error('bad_code'); }
+  return data;
 }
-function formPostFireAndForget(url, dataObj){
-  // Submits via hidden iframe form POST. Does NOT wait for a response —
-  // Apps Script wraps its reply in a nested sandboxed iframe, so postMessage
-  // back to the page is unreliable. We just need the browser to deliver the
-  // POST, which a plain form submission always does regardless of CORS.
-  return new Promise((resolve)=>{
-    try{
-      const iframeName = 'academyFrame_'+Date.now()+'_'+Math.floor(Math.random()*100000);
-      const iframe = document.createElement('iframe');
-      iframe.name = iframeName;
-      iframe.style.display = 'none';
-      document.body.appendChild(iframe);
 
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = url;
-      form.target = iframeName;
-      form.style.display = 'none';
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = 'payload';
-      input.value = JSON.stringify(dataObj);
-      form.appendChild(input);
-      document.body.appendChild(form);
-      form.submit();
-
-      setTimeout(()=>{ form.remove(); iframe.remove(); }, 4000);
-      setTimeout(()=>resolve(true), 700);
-    }catch(e){
-      resolve(false);
-    }
+// все синхронизируемые правки этого браузера: {"карта|id": JSON-строка}
+function localItems(){
+  const out = {};
+  Object.keys(SYNC_MAPS).forEach(name=>{
+    const m = readMap(SYNC_MAPS[name]);
+    Object.keys(m).forEach(k=>{ out[name+'|'+k] = JSON.stringify(m[k]); });
   });
+  return out;
 }
-async function pollForUpload(requestId, tries){
-  tries = tries || 20;
-  for(let i=0;i<tries;i++){
-    await new Promise(r=>setTimeout(r, 1500));
-    try{
-      const data = await jsonp(SYNC_URL + '?action=getUpload&requestId=' + encodeURIComponent(requestId));
-      if(data && data.ok) return data;
-    }catch(e){ console.warn('pollForUpload: попытка', i+1, 'из', tries, 'не удалась', e); }
-  }
-  return null;
+function applyItemLocally(key, v){
+  const i = key.indexOf('|');
+  const ls = SYNC_MAPS[key.slice(0,i)];
+  if(!ls) return;
+  const id = key.slice(i+1);
+  const m = readMap(ls);
+  if(v===null) delete m[id];
+  else { try{ m[id] = JSON.parse(v); }catch(e){ return; } }
+  localStorage.setItem(ls, JSON.stringify(m));
+}
+function clearSyncedMaps(){
+  Object.values(SYNC_MAPS).forEach(ls=>localStorage.removeItem(ls));
+  localStorage.removeItem('academyDone');
+  localStorage.removeItem('academySyncSnap');
 }
 
 function scheduleSync(){
+  if(!canEdit()) return;
   clearTimeout(syncTimer);
   syncTimer = setTimeout(pushCloudState, 900);
 }
 async function pushCloudState(){
+  if(!canEdit()) return;
   if(syncInFlight){ syncPending = true; return; }
   syncInFlight = true;
   syncOpStart();
   let ok = false;
   try{
-    await mergeRemoteBeforePush();
-    const sent = await formPostFireAndForget(SYNC_URL, {action:'save', data: collectCloudState()});
-    ok = !!sent;
-    if(!ok) console.error('cloud sync push: form post did not confirm delivery');
+    const snap = getSnap();
+    const local = localItems();
+    const ops = [];
+    Object.keys(local).forEach(k=>{
+      const s = snap.items[k];
+      if(!s || s.v!==local[k]) ops.push({k, v:local[k], base: s ? s.ver : 0});
+    });
+    Object.keys(snap.items).forEach(k=>{
+      if(!(k in local) && snap.items[k].v!==null) ops.push({k, v:null, base:snap.items[k].ver});
+    });
+    if(ops.length){
+      const res = await api('batch', {ops});
+      if(!res.ok) throw new Error(res.error||'save-failed');
+      const s2 = getSnap();
+      let needRender = false;
+      for(const r of res.results){
+        const op = ops.find(o=>o.k===r.k);
+        if(r.ok){ s2.items[r.k] = {v:op.v, ver:r.ver}; continue; }
+        if(r.conflict){
+          const keepMine = confirm('Этот фрагмент только что изменил(а) '+r.by+'.\n\nОК — оставить вашу версию.\nОтмена — взять версию, которую сохранил(а) '+r.by+'.');
+          if(keepMine){
+            const f = await api('batch', {ops:[{k:r.k, v:op.v, force:true}]});
+            const fr = f.results && f.results[0];
+            if(fr && fr.ok) s2.items[r.k] = {v:op.v, ver:fr.ver};
+          } else {
+            applyItemLocally(r.k, r.v);
+            s2.items[r.k] = {v:r.v, ver:r.ver};
+            needRender = true;
+          }
+        } else if(r.error==='too_big'){
+          toast('Фрагмент слишком большой и не сохранён');
+        }
+      }
+      setSnap(s2);
+      if(needRender) rerenderKeepingScroll();
+    }
+    ok = true;
   }catch(e){
     console.error('cloud sync push failed', e);
   }
   syncOpEnd(ok);
   syncInFlight = false;
+  if(!ok){ clearTimeout(syncTimer); syncTimer = setTimeout(pushCloudState, 10000); }
   if(syncPending){ syncPending = false; pushCloudState(); }
 }
 async function pullCloudState(){
+  if(!currentUser()) return {ok:false};
   syncOpStart();
   try{
-    const state = await jsonp(SYNC_URL);
-    applyCloudState(state);
+    const snap = getSnap();
+    const res = await api('state', {since:snap.version, withProgress:true});
+    if(!res.ok) throw new Error(res.error||'state-failed');
+    const local = localItems();
+    let changed = false;
+    for(const it of res.items){
+      const v = it.del ? null : it.v;
+      const mine = local[it.k]===undefined ? null : local[it.k];
+      const s = snap.items[it.k];
+      const known = s ? s.v : null;
+      // в этом браузере есть несохранённая правка этого ключа — не затираем, разберётся отправка
+      if(mine!==known && mine!==v) continue;
+      if(mine!==v){ applyItemLocally(it.k, v); changed = true; }
+      snap.items[it.k] = {v, ver:it.ver};
+    }
+    snap.version = res.version;
+    setSnap(snap);
+    if(res.done){
+      const after = JSON.stringify(res.done);
+      if(localStorage.getItem('academyDone')!==after){ localStorage.setItem('academyDone', after); changed = true; }
+    }
+    if(res.me){
+      const u = currentUser();
+      if(u && (u.role!==res.me.role || u.canEdit!==res.me.canEdit || u.name!==res.me.name)){
+        Object.assign(u, res.me);
+        localStorage.setItem('academyUser', JSON.stringify(u));
+        applyRole();
+        changed = true;
+      }
+    }
     syncOpEnd(true);
-    return true;
+    return {ok:true, changed};
   }catch(e){
     console.error('cloud sync pull failed', e);
     syncOpEnd(false);
-    return false;
+    return {ok:false};
   }
 }
+
+/* ---- автообновление: чужие правки появляются сами ---- */
+function isEditingNow(){
+  const a = document.activeElement;
+  return !!(a && (a.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)));
+}
+function rerenderKeepingScroll(){
+  const y = window.scrollY;
+  buildNav(); router();
+  window.scrollTo(0, y);
+  if(typeof updateNotesCounter==='function') updateNotesCounter();
+}
+let rerenderWaiting = false;
+async function pollOnce(){
+  if(!currentUser() || document.hidden || syncInFlight) return;
+  const r = await pullCloudState();
+  if(r.ok && r.changed){
+    if(isEditingNow()) rerenderWaiting = true;
+    else rerenderKeepingScroll();
+  }
+}
+setInterval(pollOnce, POLL_MS);
+document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) pollOnce(); });
+document.addEventListener('focusout', ()=>{
+  setTimeout(()=>{
+    if(rerenderWaiting && !isEditingNow() && !syncInFlight){ rerenderWaiting = false; rerenderKeepingScroll(); }
+  }, 2500);
+});
+
+/* ---- вход по личному коду, роли ---- */
+function escHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function applyRole(){
+  const u = currentUser();
+  document.body.classList.toggle('readonly', !canEdit());
+  if(!canEdit()) lockEditing(document.body);
+  const el = document.getElementById('whoami');
+  if(el){
+    el.innerHTML = u
+      ? `<span>${escHtml(u.name)} · ${escHtml(u.role)}</span>${['руководитель','админ'].includes(u.role) ? '<a href="dashboard.html" class="dashlink">Панель</a>' : ''}<button type="button" id="logoutBtn">Выйти</button>`
+      : '';
+    const b = document.getElementById('logoutBtn');
+    if(b) b.addEventListener('click', ()=>{ if(confirm('Выйти из Академии на этом устройстве?')) logout(); });
+  }
+}
+function lockEditing(root){
+  root.querySelectorAll('[contenteditable="true"]').forEach(el=>el.setAttribute('contenteditable','false'));
+}
+new MutationObserver(muts=>{
+  if(canEdit()) return;
+  muts.forEach(m=>m.addedNodes.forEach(n=>{ if(n.nodeType===1) lockEditing(n.parentNode||n); }));
+}).observe(document.documentElement, {childList:true, subtree:true});
+
+function showLogin(msg){
+  const ov = document.getElementById('loginOverlay');
+  ov.style.display = 'flex';
+  document.getElementById('loginErr').textContent = msg||'';
+  setTimeout(()=>document.getElementById('loginCode').focus(), 50);
+}
+function logout(){
+  localStorage.removeItem('academyUser');
+  clearSyncedMaps();
+  location.reload();
+}
+async function afterLogin(){
+  applyRole();
+  const ok = await pullCloudStateWithRetries(3);
+  if(ok){ buildNav(); router(); if(typeof updateNotesCounter==='function') updateNotesCounter(); logView(); }
+  else console.error('Не удалось получить данные из облака за 3 попытки. Нажмите «Обновить с сервера».');
+}
+document.getElementById('loginForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const code = document.getElementById('loginCode').value.trim();
+  if(!code) return;
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = 'Проверяю…';
+  try{
+    localStorage.setItem('academyUser', JSON.stringify({code}));
+    const r = await api('login', {});
+    if(!r.ok){ localStorage.removeItem('academyUser'); showLogin('Код не подошёл. Проверьте и попробуйте ещё раз.'); }
+    else{
+      clearSyncedMaps(); // источник правды — облако: начинаем с чистого листа
+      localStorage.setItem('academyUser', JSON.stringify({code, name:r.name, role:r.role, canEdit:r.canEdit}));
+      document.getElementById('loginOverlay').style.display = 'none';
+      await afterLogin();
+    }
+  }catch(err){
+    localStorage.removeItem('academyUser');
+    showLogin('Нет связи с сервером. Проверьте интернет и попробуйте ещё раз.');
+  }
+  btn.disabled = false; btn.textContent = 'Войти';
+});
+
+/* ---- что открывал сотрудник (для руководителя) ---- */
+function logView(){
+  const sec = (location.hash.replace('#','').split('/')[0]) || 'cover';
+  const u = currentUser();
+  if(!u) return;
+  const k = 'academyViewed:'+new Date().toISOString().slice(0,10)+':'+sec;
+  try{ if(sessionStorage.getItem(k)) return; sessionStorage.setItem(k,'1'); }catch(e){}
+  api('progress', {item:'раздел:'+sec, event:'открыл'}).catch(()=>{});
+}
+window.addEventListener('hashchange', logView);
+
 /* ---- Sync indicator: tracks ALL in-flight cloud operations (text sync + file uploads)
    so a fast text save can't mask a slow/failing file upload happening at the same time. ---- */
 let syncActiveOps = 0;
@@ -802,30 +1054,26 @@ function fileToBase64(file){
   });
 }
 async function uploadFileToCloud(key, file){
+  if(!canEdit()) return null;
+  if(file && file.size > MAX_UPLOAD_BYTES){
+    toast('Файл больше 25 МБ. Видео загружайте в VK и вставляйте ссылкой.');
+    return null;
+  }
   syncOpStart();
-  console.log('uploadFileToCloud: старт загрузки', key, file && file.name, file && file.size, 'байт');
   try{
     let uploadBlob = file;
     let mime = file.type || 'application/octet-stream';
-    // Большие фото с телефона (часто 5-15 МБ) увеличивают риск таймаута при кодировании/отправке/опросе —
-    // сжимаем перед загрузкой в облако, если это изображение и оно тяжелее ~1.5 МБ.
+    // большие фото с телефона сжимаем перед отправкой
     if(file.type && file.type.startsWith('image/') && file.size > 1.5*1024*1024){
       try{
         const dataURL = await compressImageToDataURL(file, 1600, 0.82);
         uploadBlob = dataURLtoBlob(dataURL, file.name);
         mime = 'image/jpeg';
-        console.log('uploadFileToCloud: изображение сжато с', file.size, 'до', uploadBlob.size, 'байт');
-      }catch(e){
-        console.warn('uploadFileToCloud: не удалось сжать изображение, отправляю оригинал', e);
-      }
+      }catch(e){ console.warn('uploadFileToCloud: не удалось сжать изображение, отправляю оригинал', e); }
     }
     const base64 = await fileToBase64(uploadBlob);
-    const requestId = 'req_'+Date.now()+'_'+Math.floor(Math.random()*100000);
-    console.log('uploadFileToCloud: отправляю на сервер, requestId=', requestId, 'размер base64=', base64.length);
-    await formPostFireAndForget(SYNC_URL, {action:'uploadFile', filename:file.name||'файл', mime, base64, requestId});
-    const data = await pollForUpload(requestId);
+    const data = await api('upload', {filename:file.name||'файл', mime, base64});
     if(data && data.ok){
-      console.log('uploadFileToCloud: подтверждено сервером', data.url);
       const map = getFileUrlMap();
       map[key] = {url:data.url, id:data.id, name:file.name||'файл', type:file.type||''};
       setFileUrlMap(map);
@@ -833,10 +1081,10 @@ async function uploadFileToCloud(key, file){
       syncOpEnd(true);
       return data.url;
     }
-    console.error('uploadFileToCloud: сервер не подтвердил загрузку за отведённое время (requestId='+requestId+')');
-    syncOpEnd(false);
+    throw new Error((data && data.error) || 'upload-failed');
   }catch(e){
     console.error('uploadFileToCloud: ошибка', e);
+    toast('Файл не загрузился в облако — попробуйте ещё раз');
     syncOpEnd(false);
   }
   return null;
@@ -848,9 +1096,7 @@ async function deleteFileFromCloud(key){
     delete map[key];
     setFileUrlMap(map);
     scheduleSync();
-    if(entry.id){
-      try{ await formPostFireAndForget(SYNC_URL, {action:'deleteFile', id:entry.id}); }catch(e){}
-    }
+    if(entry.id){ try{ await api('deleteFile', {id:entry.id}); }catch(e){} }
   }
 }
 
@@ -888,7 +1134,12 @@ function setLink(id,url){ const l=getLinks(); l[id]=url; localStorage.setItem('a
 function removeLink(id){ const l=getLinks(); delete l[id]; localStorage.setItem('academyLinks', JSON.stringify(l)); scheduleSync(); }
 
 function getDone(){ try{ return JSON.parse(localStorage.getItem('academyDone')||'{}'); }catch(e){ return {}; } }
-function setDone(id,val){ const d=getDone(); if(val) d[id]=true; else delete d[id]; localStorage.setItem('academyDone', JSON.stringify(d)); scheduleSync(); }
+function setDone(id,val){
+  const d=getDone(); if(val) d[id]=true; else delete d[id];
+  localStorage.setItem('academyDone', JSON.stringify(d));
+  if(typeof updateProgress==='function') updateProgress();
+  api('progress', {item:id, event:'отметил', value: val?1:0}).catch(()=>toast('Отметка не сохранилась — проверьте интернет'));
+}
 
 function toast(msg){
   const t=document.getElementById('toast');
@@ -1080,8 +1331,138 @@ const BLOCK_RENDERERS = {
   cards: rCards, steps: rSteps, twocol: rTwocol, checklist: rChecklist,
   glossary: rGlossary, segment: rSegment, people: rPeople,
   photo: rPhoto, photogrid: rPhotogrid, resources: rResources, contact: rContact,
-  note: rNote
+  note: rNote, scheme: rScheme, quiz: rQuiz
 };
+
+/* ---- Тест дня: вопросы с вариантами, проверка, балл, разбор. Сдал ≥ PASS — день засчитан ---- */
+const QUIZ_PASS = 0.8;
+function getQuizResults(){ try{ return JSON.parse(localStorage.getItem('academyQuiz')||'{}'); }catch(e){ return {}; } }
+function setQuizResult(key, r){ const m=getQuizResults(); m[key]=r; try{ localStorage.setItem('academyQuiz', JSON.stringify(m)); }catch(e){} }
+function shuffleIdx(n){ const a=[...Array(n).keys()]; for(let i=n-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function rQuiz(b){
+  const data = (typeof QUIZ!=='undefined') && QUIZ[b.key];
+  if(!data) return '';
+  const n = data.questions.length, need = Math.ceil(n*QUIZ_PASS);
+  const last = getQuizResults()[b.key];
+  return `<div class="quiz" data-quiz="${b.key}">
+    <div class="quiz-head">
+      <div class="quiz-ic">${icon('listchecks',22)}</div>
+      <div class="quiz-hx"><b>${esc(data.title)}</b><span>${n} вопросов · для зачёта нужно ${need} верных (${Math.round(QUIZ_PASS*100)}%)</span></div>
+      ${last?`<div class="quiz-last ${last.pass?'ok':''}">Последний результат: ${last.ok} из ${last.n}${last.pass?' · сдан':''}</div>`:''}
+    </div>
+    <div class="quiz-body"></div>
+    <div class="quiz-foot">
+      <div class="quiz-progress"><span class="quiz-count">Отвечено 0 из ${n}</span><div class="quiz-bar"><i style="width:0%"></i></div></div>
+      <button type="button" class="quiz-btn" data-quiz-check>Проверить ответы</button>
+    </div>
+    <div class="quiz-result" hidden></div>
+  </div>`;
+}
+function mountQuizzes(container){
+  container.querySelectorAll('.quiz').forEach(box=>{
+    const key = box.getAttribute('data-quiz');
+    const data = QUIZ[key]; if(!data) return;
+    const body = box.querySelector('.quiz-body');
+    const btn = box.querySelector('[data-quiz-check]');
+    const res = box.querySelector('.quiz-result');
+    const count = box.querySelector('.quiz-count'), bar = box.querySelector('.quiz-bar i');
+    let answers, orders, checked;
+    function draw(){
+      answers = new Array(data.questions.length).fill(null);
+      orders = data.questions.map(q=>shuffleIdx(q.options.length));
+      checked = false;
+      body.innerHTML = data.questions.map((q,qi)=>`<div class="quiz-q" data-qi="${qi}">
+        <div class="quiz-qt"><span class="quiz-qn">${qi+1}</span><span>${esc(q.q)}</span></div>
+        <div class="quiz-opts">${orders[qi].map(oi=>`<button type="button" class="quiz-opt" data-oi="${oi}"><span class="quiz-mark"></span><span>${esc(q.options[oi])}</span></button>`).join('')}</div>
+        <div class="quiz-exp" hidden></div>
+      </div>`).join('');
+      res.hidden = true; res.innerHTML = '';
+      btn.hidden = false; btn.textContent = 'Проверить ответы';
+      update();
+    }
+    function update(){
+      const a = answers.filter(x=>x!==null).length, n = answers.length;
+      count.textContent = `Отвечено ${a} из ${n}`;
+      bar.style.width = Math.round(a/n*100)+'%';
+    }
+    body.addEventListener('click', e=>{
+      const opt = e.target.closest('.quiz-opt'); if(!opt || checked) return;
+      const qEl = opt.closest('.quiz-q'), qi = +qEl.getAttribute('data-qi');
+      answers[qi] = +opt.getAttribute('data-oi');
+      qEl.querySelectorAll('.quiz-opt').forEach(o=>o.classList.toggle('sel', o===opt));
+      qEl.classList.remove('miss');
+      update();
+    });
+    btn.addEventListener('click', ()=>{
+      if(checked){ draw(); box.scrollIntoView({behavior:'smooth', block:'start'}); return; }
+      const empty = answers.map((a,i)=>a===null?i:-1).filter(i=>i>=0);
+      if(empty.length){
+        empty.forEach(i=>body.querySelector(`.quiz-q[data-qi="${i}"]`).classList.add('miss'));
+        body.querySelector(`.quiz-q[data-qi="${empty[0]}"]`).scrollIntoView({behavior:'smooth', block:'center'});
+        toast('Ответь на все вопросы — осталось '+empty.length);
+        return;
+      }
+      checked = true;
+      let ok = 0;
+      data.questions.forEach((q,qi)=>{
+        const qEl = body.querySelector(`.quiz-q[data-qi="${qi}"]`);
+        const right = answers[qi]===q.answer; if(right) ok++;
+        qEl.classList.add(right?'right':'wrong');
+        qEl.querySelectorAll('.quiz-opt').forEach(o=>{
+          const oi = +o.getAttribute('data-oi');
+          if(oi===q.answer) o.classList.add('correct');
+          else if(oi===answers[qi]) o.classList.add('incorrect');
+          o.disabled = true;
+        });
+        const ex = qEl.querySelector('.quiz-exp');
+        ex.hidden = false;
+        ex.innerHTML = `${right?icon('check',13)+' Верно.':icon('x',13)+' Неверно.'} ${esc(q.explain||'')}${q.source?` <em>Где прочитать: ${esc(q.source)}</em>`:''}`;
+      });
+      const n = data.questions.length, pass = ok/n >= QUIZ_PASS;
+      setQuizResult(key, {ok, n, pass, at: Date.now()});
+      api('progress', {item: data.title, event:'тест', value: ok+'/'+n}).catch(()=>{});
+      if(pass && data.dayIndex!==undefined) setDone('cl-10days_'+data.dayIndex, true);
+      res.hidden = false;
+      res.className = 'quiz-result '+(pass?'ok':'fail');
+      res.innerHTML = `<div class="quiz-score">${ok}<small>из ${n}</small></div>
+        <div><b>${pass?'Тест сдан!':'Пока не сдан'}</b><span>${pass
+          ? (data.dayIndex!==undefined?'День засчитан — он отмечен в твоём прогрессе. ':'')+'Результат увидит руководитель.'
+          : 'Нужно '+Math.ceil(n*QUIZ_PASS)+' верных ответов. Посмотри разбор ниже у каждого вопроса, перечитай нужные страницы и попробуй ещё раз.'}</span></div>`;
+      btn.textContent = 'Пройти заново';
+      res.scrollIntoView({behavior:'smooth', block:'center'});
+    });
+    draw();
+  });
+}
+
+/* ---- Схемы: цепочка шагов, воронка, шкала, полоса оплаты, цифры, метки, путь по дням ---- */
+function rScheme(b){
+  const T = b.title ? `<div class="sch-title">${icon(b.icon||'route',13)} ${esc(b.title)}</div>` : '';
+  const N = b.note ? `<div class="sch-note">${esc(b.note)}</div>` : '';
+  let body = '';
+  if(b.variant==='flow'){
+    body = '<div class="sch-row">'+b.items.map((it,i)=>
+      (i?`<div class="sch-arr">${icon('arrow',16)}</div>`:'')+
+      `<div class="sch-node ${it.hl?'hl':''}">${b.numbered!==false?`<span class="sch-num">${i+1}</span>`:''}<div class="sch-ic">${icon(it.icon||'check',19)}</div><div class="sch-tx"><b>${esc(it.t)}</b>${it.s?`<span>${esc(it.s)}</span>`:''}</div></div>`
+    ).join('')+'</div>';
+  } else if(b.variant==='funnel'){
+    const n=b.items.length, cols=['#C47A45','#B5602A','#9C4F20','#7E3F18','#64310F'];
+    body = '<div class="sch-funnel">'+b.items.map((it,i)=>`<div class="sch-fbar" style="width:${100-i*(56/Math.max(1,n-1))}%;background:${cols[i%cols.length]}"><b>${esc(it.t)}</b><span>${esc(it.s||'')}</span></div>`).join('')+'</div>';
+  } else if(b.variant==='timeline'){
+    body = '<div class="sch-tl">'+b.items.map(it=>`<div class="sch-tl-it ${it.hl?'hl':''} ${it.muted?'muted':''}"><div class="sch-tl-dot">${esc(it.d)}</div><b>${esc(it.t)}</b>${it.s?`<span>${esc(it.s)}</span>`:''}</div>`).join('')+'</div>';
+  } else if(b.variant==='pay'){
+    const segs=[{w:22,v:'10 000 ₽',t:'Предоплата при договоре'},{w:40,v:'до 60%',t:'Доплата при подписании спецификации'},{w:38,v:'40%',t:'Остаток за 2 дня до доставки'}];
+    body = '<div class="sch-pay">'+segs.map((s,i)=>`<div class="sch-pay-seg ${b.hl===i?'hl':''}" style="flex:0 0 ${s.w}%"><b>${s.v}</b><span>${s.t}</span></div>`).join('')+'</div>';
+  } else if(b.variant==='stats'){
+    body = '<div class="sch-stats">'+b.items.map(it=>`<div class="sch-stat"><b>${esc(it.v)}</b><span>${esc(it.t)}</span></div>`).join('')+'</div>';
+  } else if(b.variant==='chips'){
+    body = '<div class="sch-chips">'+b.rows.map(r=>`<div class="sch-chips-row">${r.label?`<em>${esc(r.label)}</em>`:''}${r.items.map(x=>`<span class="sch-chip">${esc(x)}</span>`).join('')}</div>`).join('')+'</div>';
+  } else if(b.variant==='days'){
+    const D=[['handshake','Компания'],['gem','Продукт'],['message','Первая встреча'],['target','Презентация и закрытие'],['database','CRM'],['signature','Договор'],['pencilruler','Замер и спецификация'],['repeat','Вторичная встреча'],['truck','Производство'],['graduation','Экзамен']];
+    body = '<div class="sch-days">'+D.map((d,i)=>`<div class="sch-day ${i+1===b.day?'hl':(i+1<b.day?'past':'')}"><div class="sch-ic">${icon(d[0],17)}</div><b>День ${i+1}</b><span>${d[1]}</span></div>`).join('')+'</div>';
+  }
+  return `<div class="sch v-${b.variant}">${T}${body}${N}</div>`;
+}
 
 const EDITABLE_TYPES = ['lead','p','quote','list','callout','steps','twocol','glossary','contact','segment'];
 
@@ -1332,6 +1713,27 @@ async function mountResourceSlots(container){
     });
   });
 }
+// Кнопка вместо голой ссылки: значок + «Смотреть видео» / «Открыть документ» + где лежит
+function linkSourceName(url){
+  const u = String(url||'').toLowerCase();
+  if(/youtube\.com|youtu\.be/.test(u)) return 'YouTube';
+  if(/rutube\.ru/.test(u)) return 'Rutube';
+  if(/vk\.com|vkvideo\.ru/.test(u)) return 'VK Видео';
+  if(/drive\.google\.com|docs\.google\.com|googleusercontent\.com/.test(u)) return 'Google Диск';
+  if(/disk\.yandex|yadi\.sk/.test(u)) return 'Яндекс Диск';
+  if(/cloud\.mail\.ru/.test(u)) return 'Облако Mail';
+  if(/^blob:|^data:/.test(u)) return '';
+  try{ return new URL(url).hostname.replace(/^www\./,''); }catch(e){ return ''; }
+}
+function openButtonHTML(id, url, fileName){
+  const isVideo = id.indexOf('video:')===0;
+  const label = isVideo ? 'Смотреть видео' : 'Открыть документ';
+  const src = fileName ? 'файл' : linkSourceName(url);
+  return `<a class="res-open ${isVideo?'is-video':'is-doc'}" href="${esc(url)}" target="_blank" rel="noopener" title="${esc(fileName||url)}">
+    <span class="res-open-ic">${icon(isVideo?'play':'filetext',16)}</span>
+    <span class="res-open-tx"><b>${label}</b>${src?`<small>${esc(src)}</small>`:''}</span>
+  </a>`;
+}
 async function renderResourceActions(id, el){
   const links = getLinks();
   const link = links[id];
@@ -1339,13 +1741,13 @@ async function renderResourceActions(id, el){
   try{ file = await idbGet('res:'+id); }catch(e){}
 
   if(link){
-    el.innerHTML = `<div class="res-filled"><a href="${esc(link)}" target="_blank" rel="noopener">${icon('link',13)} ${esc(link)}</a><button data-act="rmlink">${icon('x',14)}</button></div>`;
+    el.innerHTML = `<div class="res-filled">${openButtonHTML(id, link)}<button data-act="rmlink" title="Убрать ссылку">${icon('x',14)}</button></div>`;
     el.querySelector('[data-act="rmlink"]').addEventListener('click', ()=>{ removeLink(id); renderResourceActions(id, el); });
     return;
   }
   if(file){
     const url = mediaUrlOf(file);
-    el.innerHTML = `<div class="res-filled"><a href="${url}" target="_blank" rel="noopener">${icon('check',13)} ${esc(file.name)}</a><button data-act="rmfile">${icon('x',14)}</button></div>`;
+    el.innerHTML = `<div class="res-filled">${openButtonHTML(id, url, file.name)}<button data-act="rmfile" title="Убрать файл">${icon('x',14)}</button></div>`;
     el.querySelector('[data-act="rmfile"]').addEventListener('click', async ()=>{ await idbDelete('res:'+id); renderResourceActions(id, el); });
     return;
   }
@@ -1589,22 +1991,6 @@ DATA.sections.push({
         "Живое общение с РОПом и командой — в чате всегда помогут и подскажут."
       ]},
       {type:"photo", id:"p-intro-process", caption:"Менеджер-дизайнер консультирует клиента за столом с образцами фасадов и столешниц, рядом открытый ноутбук с 3D-проектом кухни. Оба вовлечены в разговор, естественные жесты. Светлый шоурум на фоне, тёплый естественный свет."}
-    ]},
-    { id:"intro-5", menuTitle:"Чек-лист на 10 дней", kicker:"Маршрут стажёра", title:"Чек-лист на 10 дней", blocks:[
-      {type:"lead", text:"Отмечай прогресс — тесты подтверждаются сообщением в «Чате для стажёров»."},
-      {type:"checklist", id:"cl-10days", items:[
-        "День 1. компания, правила, регламенты, отчётность · тест",
-        "День 2. продукт, преимущества, условия, материалы · тест",
-        "День 3. первая встреча, скрипт, 8 этапов, КЭВ · тест",
-        "День 4. презентация, закрытие, возражения, точки касания · тест",
-        "День 5. работа в CRM (Bitrix24) · тест",
-        "День 6. договор, PRO100, расчёт, оформление сделки · тест",
-        "День 7. замер, спецификация, Splan · тест",
-        "День 8. вторичная встреча, подписание спецификации · тест",
-        "День 9. производство, доставка, монтаж, акт · тест",
-        "День 10. рекламации, ОКК, справочник · итоговый экзамен"
-      ]},
-      {type:"photo", id:"p-intro-checklist", caption:"Крупный план рук сотрудника, который отмечает пункты в бумажном чек-листе или блокноте на фоне рабочего стола с ноутбуком и чашкой кофе. Атмосфера организованности, тёплый дневной свет, деловой натюрморт."}
     ]},
     { id:"intro-6", menuTitle:"Важное", kicker:"Живые данные", title:"Важное", blocks:[
       {type:"lead", text:"Важные правила Академии"},
@@ -2329,6 +2715,7 @@ DATA.sections.push({
         "Проект передаётся только после контрольного замера.",
         "Используй утверждённые шаблоны документов."
       ]},
+      {type:"resources", kind:"video", items:[{id:"res-splan-video", title:"Как проставить размеры на эскизе", text:"9 мин · размеры на эскизе проекта, сохранённом из PRO100."}]},
       {type:"photo", id:"p-d7-splan", caption:"Менеджер и технолог обсуждают проект за столом с чертежами или экраном программы проектирования, возможно с распечатанным эскизом кухни в руках. Рабочая сосредоточенная атмосфера современного офиса."}
     ]},
     { id:"d7-test", menuTitle:"Тест дня", kicker:"Проверка знаний", title:"Тест: День 7", blocks:[
@@ -2536,6 +2923,163 @@ DATA.sections.push({
 });
 </script>
 <script>
+/* ---- Видеоуроки курса Гребенюка: каждый урок стоит на странице дня с той же темой ----
+   Блоки добавляются В КОНЕЦ страницы, чтобы номера уже существующих блоков (и сохранённые правки) не сдвигались. */
+(function(){
+  const GR = {"intro":{"mins":33,"items":[{"id":"res-gr-1","title":"Урок 1 · Введение","text":"1,6 мин"},{"id":"res-gr-3","title":"Урок 3 · Что такое продажи","text":"5,2 мин · задание PDF 3"},{"id":"res-gr-6","title":"Урок 6 · Что отличает крутых менеджеров от посредственных","text":"5,6 мин · задание PDF 6"},{"id":"res-gr-9","title":"Урок 9 · Самая главная продажа в жизни","text":"5,4 мин · задание PDF 9"},{"id":"res-gr-10","title":"Урок 10 · Продай себе себя","text":"1,2 мин"},{"id":"res-gr-12","title":"Урок 12 · 7 правил отличного настроя","text":"13,8 мин"}]},"day1":{"mins":22,"items":[{"id":"res-gr-4","title":"Урок 4 · Работа за комиссионные","text":"5,6 мин"},{"id":"res-gr-5","title":"Урок 5 · Увеличение объема работы, рост комиссионных","text":"4,5 мин"},{"id":"res-gr-8","title":"Урок 8 · Личный план по доходу","text":"7,2 мин · задание PDF 7"},{"id":"res-gr-11","title":"Урок 11 · Как одеваться","text":"2,8 мин"},{"id":"res-gr-13","title":"Урок 13 · Приходите раньше, уходите позже","text":"2,1 мин · задание PDF 13"}]},"day2":{"mins":18,"items":[{"id":"res-gr-15","title":"Урок 15 · Offer","text":"3,9 мин · задание PDF 15"},{"id":"res-gr-31","title":"Урок 31 · Цена и ценность","text":"3,5 мин · задание PDF 31"},{"id":"res-gr-33","title":"Урок 33 · Свойства и выгоды","text":"3,4 мин · задание PDF 33"},{"id":"res-gr-34","title":"Урок 34 · Чем свойства отличаются от выгод","text":"1,7 мин"},{"id":"res-gr-35","title":"Урок 35 · Акцент","text":"5,2 мин"}]},"day3":{"mins":35,"items":[{"id":"res-gr-14","title":"Урок 14 · Воронка продаж и КЭВ","text":"9,3 мин"},{"id":"res-gr-17","title":"Урок 17 · Какие бывают этапы продаж","text":"6,6 мин"},{"id":"res-gr-19","title":"Урок 19 · Приветствие","text":"2,9 мин"},{"id":"res-gr-21","title":"Урок 21 · Возражения на этапе приветствия","text":"8,4 мин · задание PDF 21"},{"id":"res-gr-24","title":"Урок 24 · Как правильно проводить квалификацию","text":"4,9 мин"},{"id":"res-gr-26","title":"Урок 26 · Потребность","text":"3,1 мин"}]},"day4":{"mins":43,"items":[{"id":"res-gr-27","title":"Урок 27 · Боль и проблема","text":"9,2 мин · задание PDF 27"},{"id":"res-gr-28","title":"Урок 28 · Усиление боли","text":"7 мин"},{"id":"res-gr-29","title":"Урок 29 · Дополнительные боли","text":"1,4 мин"},{"id":"res-gr-16","title":"Урок 16 · Что такое программирование","text":"3,5 мин · задание PDF 16"},{"id":"res-gr-22","title":"Урок 22 · Техника программирования","text":"3,3 мин"},{"id":"res-gr-30","title":"Урок 30 · Программирование к покупке","text":"4,3 мин · задание PDF 30"},{"id":"res-gr-32","title":"Урок 32 · Циферблат","text":"5,1 мин"},{"id":"res-gr-37","title":"Урок 37 · Завершение презентации","text":"2 мин · задание PDF 37"},{"id":"res-gr-38","title":"Урок 38 · Что такое предзакрытие","text":"4,6 мин"},{"id":"res-gr-40","title":"Урок 40 · Предзакрытие после презентации","text":"2,2 мин · задание PDF 40"}]},"day5":{"mins":17,"items":[{"id":"res-gr-25","title":"Урок 25 · Распределение клиентов","text":"1,9 мин · задание PDF 25"},{"id":"res-gr-53","title":"Урок 53 · Зачем нужны точки касания","text":"5,1 мин"},{"id":"res-gr-55","title":"Урок 55 · 0 день КЭВ","text":"1,3 мин"},{"id":"res-gr-56","title":"Урок 56 · 1-й день","text":"2,1 мин"},{"id":"res-gr-57","title":"Урок 57 · 2-й день","text":"1,2 мин"},{"id":"res-gr-58","title":"Урок 58 · 3-й день","text":"1 мин"},{"id":"res-gr-59","title":"Урок 59 · 4-й день","text":"0,8 мин"},{"id":"res-gr-60","title":"Урок 60 · 5-й день","text":"1,3 мин"},{"id":"res-gr-61","title":"Урок 61 · 10-й день","text":"1,2 мин"},{"id":"res-gr-62","title":"Урок 62 · 14-й день","text":"0,8 мин · задание PDF 62"},{"id":"res-gr-63","title":"Урок 63 · 21 день","text":"0,6 мин"}]},"day6":{"mins":25,"items":[{"id":"res-gr-39","title":"Урок 39 · Как называть цену. Техники","text":"4,4 мин"},{"id":"res-gr-41","title":"Урок 41 · Почему у вас не получается закрывать","text":"8 мин"},{"id":"res-gr-42","title":"Урок 42 · Вопросы закрытия","text":"1,7 мин"},{"id":"res-gr-44","title":"Урок 44 · Возражения — это великолепно","text":"1 мин"},{"id":"res-gr-45","title":"Урок 45 · Всегда соглашайтесь с клиентом","text":"3,4 мин"},{"id":"res-gr-46","title":"Урок 46 · 24 часа согласия","text":"1,8 мин"},{"id":"res-gr-48","title":"Урок 48 · Истинные и ложные возражения","text":"1,3 мин"},{"id":"res-gr-52","title":"Урок 52 · Правила отработки возражений","text":"3,1 мин · задание PDF 52"}]},"day7":{"mins":14,"items":[{"id":"res-gr-23","title":"Урок 23 · Техника квалификации","text":"11,6 мин"},{"id":"res-gr-36","title":"Урок 36 · Всегда записывайте","text":"2,3 мин"}]},"day8":{"mins":31,"items":[{"id":"res-gr-49","title":"Урок 49 · Отработка истинных возражений","text":"7,6 мин · задание PDF 49"},{"id":"res-gr-50","title":"Урок 50 · Локализация возражений","text":"4,2 мин"},{"id":"res-gr-51","title":"Урок 51 · Техника «искренность»","text":"3 мин"},{"id":"res-gr-43","title":"Урок 43 · Жесткие продажи","text":"6,7 мин · задание PDF 43"},{"id":"res-gr-18","title":"Урок 18 · Что такое конфронтирование","text":"5,9 мин · задание PDF 18"},{"id":"res-gr-20","title":"Урок 20 · Сложные переговоры","text":"3,8 мин"}]},"day9":{"mins":15,"items":[{"id":"res-gr-54","title":"Урок 54 · Сервис — это важно","text":"1,5 мин"},{"id":"res-gr-80","title":"Урок 80 · Как удержать клиентов","text":"2,7 мин · задание PDF 80"},{"id":"res-gr-64","title":"Урок 64 · 40-й день","text":"1,2 мин"},{"id":"res-gr-65","title":"Урок 65 · 50-й день","text":"0,8 мин"},{"id":"res-gr-66","title":"Урок 66 · 60 день","text":"0,5 мин"},{"id":"res-gr-67","title":"Урок 67 · 75-й день","text":"0,5 мин"},{"id":"res-gr-68","title":"Урок 68 · 90-й день","text":"0,8 мин"},{"id":"res-gr-69","title":"Урок 69 · 100-й день","text":"0,5 мин"},{"id":"res-gr-70","title":"Урок 70 · 120-й день","text":"0,5 мин"},{"id":"res-gr-71","title":"Урок 71 · 150-й день","text":"0,5 мин"},{"id":"res-gr-72","title":"Урок 72 · 180-й день","text":"0,8 мин"},{"id":"res-gr-73","title":"Урок 73 · 210-й день","text":"0,6 мин"},{"id":"res-gr-74","title":"Урок 74 · 240-й день","text":"1,1 мин"},{"id":"res-gr-75","title":"Урок 75 · 270-й день","text":"0,6 мин"},{"id":"res-gr-76","title":"Урок 76 · 300-й день","text":"0,6 мин"},{"id":"res-gr-77","title":"Урок 77 · 330-й день","text":"1,1 мин"},{"id":"res-gr-78","title":"Урок 78 · 365-й день","text":"1,2 мин"}]},"day10":{"mins":6,"items":[{"id":"res-gr-47","title":"Урок 47 · Жалобы клиента","text":"3,1 мин"},{"id":"res-gr-99","title":"Урок 99 · Как вырасти в руководителя отдела продаж","text":"2,7 мин · задание PDF «Финальный экзамен»"},{"id":"res-gr-2","title":"Урок 2 · Словарь","text":"только документ · задание PDF «Словарь»"}]}};
+  const AFTER = {"mins":37,"items":[{"id":"res-gr-81","title":"Урок 81 · Актерское мастерство. Введение","text":"1,8 мин"},{"id":"res-gr-82","title":"Урок 82 · Скорость речи","text":"6,2 мин"},{"id":"res-gr-83","title":"Урок 83 · Роли","text":"1,2 мин"},{"id":"res-gr-84","title":"Урок 84 · Роль друга","text":"1,4 мин"},{"id":"res-gr-85","title":"Урок 85 · Роль воина","text":"2,5 мин"},{"id":"res-gr-86","title":"Урок 86 · Роль мага","text":"2 мин"},{"id":"res-gr-87","title":"Урок 87 · Роль мудреца","text":"1,9 мин"},{"id":"res-gr-88","title":"Урок 88 · Продаем в разных ролях","text":"1,6 мин"},{"id":"res-gr-89","title":"Урок 89 · Дикция","text":"3,6 мин"},{"id":"res-gr-79","title":"Урок 79 · Фокусировка","text":"1,8 мин"},{"id":"res-gr-90","title":"Урок 90 · Личная эффективность","text":"0,7 мин"},{"id":"res-gr-91","title":"Урок 91 · Правила эффективного отдыха","text":"3 мин"},{"id":"res-gr-92","title":"Урок 92 · Тренировки","text":"2,4 мин"},{"id":"res-gr-93","title":"Урок 93 · Расписание тренировок","text":"0,9 мин"},{"id":"res-gr-94","title":"Урок 94 · Понедельник","text":"0,8 мин"},{"id":"res-gr-95","title":"Урок 95 · Вторник","text":"1 мин"},{"id":"res-gr-96","title":"Урок 96 · Среда","text":"0,6 мин"},{"id":"res-gr-97","title":"Урок 97 · Четверг","text":"1,7 мин"},{"id":"res-gr-98","title":"Урок 98 · Пятница","text":"2 мин"}]};
+  const PLACE = {"intro-1":{"why":"Знакомство с автором курса","lessons":[1]},"intro-2":{"why":"Кто такой продавец и почему это круто","lessons":[3,6,9,10]},"intro-6":{"why":"Настрой перед стартом","lessons":[12]},"d1-8":{"why":"Дисциплина рабочего дня","lessons":[13]},"d1-13":{"why":"Внешний вид менеджера","lessons":[11]},"d1-15":{"why":"Как вести себя с недовольным клиентом","lessons":[47]},"d1-16":{"why":"Как распределять клиентов по приоритету","lessons":[25]},"d1-20":{"why":"Личный план от дохода","lessons":[8]},"d1-25":{"why":"Как устроен доход с процента","lessons":[4,5]},"d2-1":{"why":"Как находить и усиливать боль клиента","lessons":[27,28,29]},"d2-2":{"why":"Как превращать свойства в выгоды","lessons":[15,33,34,35]},"d2-3":{"why":"Цена и ценность","lessons":[31]},"d3-1":{"why":"Этапы продаж по Гребенюку","lessons":[17]},"d3-2":{"why":"Квалификация и потребность","lessons":[24,26]},"d3-3":{"why":"Воронка и КЭВ","lessons":[14]},"d3-5":{"why":"Приветствие и первые возражения","lessons":[19,21]},"d4-1":{"why":"Программирование и предзакрытие","lessons":[16,22,30,32,37,38,40]},"d4-2":{"why":"Основы работы с возражениями","lessons":[44,45,48,52]},"d4-3":{"why":"Зачем нужны точки касания","lessons":[53]},"d5-2":{"why":"Касания по дням — задачи в CRM","lessons":[55,56,57,58,59,60,61,62,63]},"d6-6":{"why":"Как называть цену и закрывать","lessons":[39,41]},"d7-1":{"why":"Квалификация на замере и записи","lessons":[23,36]},"d8-1":{"why":"Истинные возражения и сложные переговоры","lessons":[49,50,51,43,18,20]},"d8-2":{"why":"Вопросы закрытия, 24 часа согласия","lessons":[42,46]},"d9-1":{"why":"Сервис и касания после сделки","lessons":[54,80,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78]},"d10-10":{"why":"Голос и роли перед экзаменом","lessons":[81,82,89,83,84,85,86,87,88]},"d10-final":{"why":"Куда расти дальше","lessons":[99]},"gr-after":{"why":"Личная эффективность и тренировки","lessons":[79,90,91,92,93,94,95,96,97,98]},"d10-3":{"why":"Словарь терминов курса","lessons":[2]}};
+  const ALL = {};
+  Object.keys(GR).forEach(k=>GR[k].items.forEach(it=>{ ALL[Number(it.id.replace('res-gr-',''))]=it; }));
+  AFTER.items.forEach(it=>{ ALL[Number(it.id.replace('res-gr-',''))]=it; });
+  const mins = it => { const m = String(it.text).match(/^([\d,]+) мин/); return m ? parseFloat(m[1].replace(',','.')) : 0; };
+  const findPage = pid => { for(const s of DATA.sections){ const p = s.pages.find(x=>x.id===pid); if(p) return {s,p}; } return null; };
+  Object.keys(PLACE).forEach(pid=>{
+    const items = PLACE[pid].lessons.map(n=>ALL[n]).filter(Boolean);
+    if(!items.length) return;
+    const total = Math.round(items.reduce((t,it)=>t+mins(it),0));
+    const block = [
+      {type:'callout', icon:'play', text:'Видео курса Михаила Гребенюка по этой теме: '+items.length+' '+(items.length===1?'урок':(items.length<5?'урока':'уроков'))+(total?', около '+total+' мин':'')+'. '+PLACE[pid].why+'.'},
+      {type:'resources', kind:'video', items}
+    ];
+    if(pid==='gr-after'){
+      const d10 = DATA.sections.find(s=>s.id==='day10');
+      if(d10) d10.pages.push({ id:'day10-gr-after', menuTitle:'После стажировки: прокачка', kicker:'Курс Гребенюка', title:'После стажировки: прокачка · '+total+' мин',
+        blocks:[{type:'lead', text:'Уроки для первого месяца работы: фокусировка, личная эффективность, отдых и неделя тренировок.'}, block[1]] });
+      return;
+    }
+    const f = findPage(pid);
+    if(f) f.p.blocks = f.p.blocks.concat(block);
+  });
+  const d4 = DATA.sections.find(s=>s.id==='day4');
+  if(d4) d4.subtitle = 'Презентация и предзакрытие';
+  const d3 = DATA.sections.find(s=>s.id==='day3');
+  const old = d3 && d3.pages.find(p=>p.id==='d3-4');
+  if(old) old.blocks = old.blocks
+    .filter(b=>b.type!=='resources' && b.type!=='note')
+    .map(b=> b.type==='lead' ? Object.assign({}, b, {text:'Курс Михаила Гребенюка разбит по темам: уроки стоят прямо на страницах дней, рядом с текстом на ту же тему. Всего 97 уроков, около 5 часов.'}) : b);
+})();
+
+/* ---- Схемы на страницах: делают дни наглядными. at: 'top' — в начало (после пометок), иначе — после первого содержательного блока ---- */
+(function(){
+  const S = {
+    'd1-0':  {at:'top', variant:'days', day:1, title:'Твой путь по Академии', icon:'route'},
+    'd2-0':  {at:'top', variant:'days', day:2, title:'Твой путь по Академии', icon:'route'},
+    'd3-0':  {at:'top', variant:'days', day:3, title:'Твой путь по Академии', icon:'route'},
+    'd4-0':  {at:'top', variant:'days', day:4, title:'Твой путь по Академии', icon:'route'},
+    'd5-0':  {at:'top', variant:'days', day:5, title:'Твой путь по Академии', icon:'route'},
+    'd6-0':  {at:'top', variant:'days', day:6, title:'Твой путь по Академии', icon:'route'},
+    'd7-0':  {at:'top', variant:'days', day:7, title:'Твой путь по Академии', icon:'route'},
+    'd8-0':  {at:'top', variant:'days', day:8, title:'Твой путь по Академии', icon:'route'},
+    'd9-0':  {at:'top', variant:'days', day:9, title:'Твой путь по Академии', icon:'route'},
+    'd10-0': {at:'top', variant:'days', day:10, title:'Твой путь по Академии', icon:'route'},
+    'd1-3':  {variant:'stats', title:'Команда сегодня', icon:'user', items:[
+      {v:'9',t:'дизайнеров'},{v:'4–6',t:'технологов'},{v:'8',t:'монтажников'},{v:'5',t:'человек в маркетинге'},{v:'4',t:'оператора колл-центра'},{v:'2018',t:'год, когда всё началось'}]},
+    'd1-4':  {variant:'chips', title:'С чем мы работаем', icon:'gem', rows:[
+      {label:'Материалы', items:['Lamarty','Egger']},
+      {label:'Фурнитура', items:['Boyard','Samet','Blum','Hettich','Grass','Hafele']},
+      {label:'Планы', items:['2 салона в Красноярске сейчас','ещё 3 салона в городе','выход за пределы города','30 менеджеров в команде']}]},
+    'd2-5':  {variant:'flow', title:'Когда отправлять каталог', icon:'send', items:[
+      {icon:'handshake',t:'Закрыл на КЭВ',s:'или взял контакт'},{icon:'book',t:'Отправь каталог',s:'папка в Bitrix24'},{icon:'play',t:'Отправь видео',s:'«Знакомство с компанией»',hl:true}]},
+    'd3-2':  {variant:'chips', title:'Из чего состоит скрипт', icon:'message', rows:[
+      {items:['Реплики','Вопросы','Аргументы','Интонации','Речевые обороты','Комментарии']}],
+      note:'Скрипт — подсказка, а не бумажка для чтения: держит разговор в нужном русле и не даёт забыть про допродажи.'},
+    'd3-3':  {variant:'funnel', title:'Воронка: почему всё решает КЭВ', icon:'target', items:[
+      {t:'Заявка',s:'клиент обратился'},{t:'КЭВ',s:'замер или встреча в офисе'},{t:'Доверие',s:'клиент поверил тебе'},{t:'Сделка',s:'договор и предоплата'}],
+      note:'Больше КЭВов → больше доверия → больше сделок. При удалённом расчёте не презентуй товар, пока клиент не приехал в офис.'},
+    'd3-4':  {variant:'stats', title:'Курс в цифрах', icon:'play', items:[
+      {v:'97',t:'уроков курса'},{v:'≈5 ч',t:'видео всего'},{v:'29',t:'страниц обучения с уроками'},{v:'1–17',t:'уроков на странице'}]},
+    'd4-1':  {variant:'flow', title:'Как довести до решения', icon:'target', items:[
+      {icon:'monitor',t:'Презентация',s:'проект и выгоды'},{icon:'eye',t:'Предзакрытие',s:'«Ну как вам?» — проверь настрой'},{icon:'message',t:'Сомнения',s:'выслушай и отработай'},{icon:'signature',t:'Закрытие',s:'«Подписываем договор?»',hl:true},{icon:'calendar',t:'Следующий шаг',s:'замер, договор, оплата'}]},
+    'd4-2':  {variant:'flow', title:'Алгоритм работы с возражением', icon:'shield', items:[
+      {icon:'eye',t:'Выслушай',s:'не перебивай'},{icon:'handshake',t:'Согласись',s:'«Понимаю вас…»'},{icon:'target',t:'Уточни',s:'это истинная причина?'},{icon:'gem',t:'Аргумент',s:'выгода, пример, сравнение'},{icon:'check',t:'Вопрос-закрытие',s:'веди к следующему шагу',hl:true}],
+      note:'Частые возражения ниже — у каждого свой видеоразбор. Подробно техники — в уроках Гребенюка ниже на этой странице.'},
+    'd4-3':  {variant:'timeline', title:'Точки касания: когда напоминать о себе', icon:'calendar', items:[
+      {d:'0',t:'КЭВ',s:'день встречи',hl:true},{d:'1',t:'1-й день'},{d:'2',t:'2-й день'},{d:'3',t:'3-й день'},{d:'4',t:'4-й день'},{d:'5',t:'5-й день'},{d:'10',t:'10-й день'},{d:'14',t:'14-й день'},{d:'21',t:'21-й день'},{d:'40+',t:'после сделки',s:'до 365-го дня',muted:true}],
+      note:'Клиент ушёл без решения — это не конец. Каждое касание по графику ставь задачей в Bitrix24 (День 5).'},
+    'd5-2':  {variant:'flow', title:'Сделка в Bitrix24 — по шагам', icon:'database', items:[
+      {icon:'user',t:'Контакт',s:'создай клиента'},{icon:'filetext',t:'Карточка сделки',s:'заполни обязательные поля'},{icon:'route',t:'Стадии',s:'двигай по воронке'},{icon:'calendar',t:'Задача',s:'на каждый следующий шаг',hl:true},{icon:'shield',t:'Чистота CRM',s:'ОКК проверяет каждую неделю'}],
+      note:'Главное правило: у живой сделки всегда есть задача. Карточка без задачи — первое, что найдёт ОКК.'},
+    'd6-2':  {variant:'chips', title:'Что разобрать перед проектированием', icon:'pencilruler', rows:[
+      {items:['Угловая кухня','Гардеробная','Шкафы','Металлоконструкции','Раздвижные системы','Особенности установки','Электрика']}]},
+    'd6-3':  {variant:'stats', title:'Розетки на кухне: шпаргалка', icon:'zap', items:[
+      {v:'3–5',t:'розеток в рабочей зоне (фартук)'},{v:'4',t:'отдельные линии: духовка, варочная, посудомоечная, стиральная'},{v:'+запас',t:'по числу приборов и на будущее'},{v:'0',t:'открытой проводки: скрытая, с заземлением'}]},
+    'd6-4':  {variant:'flow', title:'Где PRO100 во встрече', icon:'pencilruler', items:[
+      {icon:'message',t:'Встреча по скрипту',s:'выясни потребности'},{icon:'pencilruler',t:'Проект в PRO100',s:'3D-модель при клиенте',hl:true},{icon:'gem',t:'Материалы',s:'покажи образцы'},{icon:'wallet',t:'Расчёт',s:'по прайсу в Festt'},{icon:'signature',t:'Договор',s:'и предоплата'}]},
+    'd6-5':  {variant:'flow', title:'Путь цены', icon:'wallet', items:[
+      {icon:'filetext',t:'Спецификация',s:'что входит в проект'},{icon:'database',t:'Расчёт в Festt',s:'калькуляция по прайсу',hl:true},{icon:'tag',t:'Итоговая цена',s:'сверь с проектом'},{icon:'message',t:'Презентация цены',s:'через ценность'}]},
+    'd6-6':  {variant:'pay', hl:0, title:'Как платит клиент', icon:'creditcard', note:'Сегодня твоя часть — договор и предоплата 10 000 ₽. Чек прикрепи к договору, наличные — в конверт с пометкой и в сейф.'},
+    'd7-1':  {variant:'flow', title:'От замера до встречи на подписание', icon:'pencilruler', items:[
+      {icon:'mappin',t:'Замер',s:'данные в карточку Bitrix24'},{icon:'route',t:'Статус «Спецификация»',s:'переведи сделку'},{icon:'filetext',t:'Спецификация в Splan',s:'по шаблону, с фурнитурой',hl:true},{icon:'send',t:'Клиенту на просмотр',s:'внеси правки'},{icon:'calendar',t:'Встреча',s:'на подписание'}]},
+    'd8-2':  {variant:'pay', hl:1, title:'Как платит клиент', icon:'creditcard', note:'На подписании спецификации клиент доплачивает до 60% суммы. Если цена изменилась — подпиши допсоглашение.'},
+    'd9-1':  {variant:'flow', title:'После передачи технологу', icon:'truck', items:[
+      {icon:'pencilruler',t:'Технолог',s:'отрисовывает проект'},{icon:'check',t:'Сверка',s:'ты сверяешь со спецификацией',hl:true},{icon:'layers',t:'Производство',s:'заказ в работе'},{icon:'truck',t:'Доставка и монтаж',s:'остаток 40% за 2 дня'},{icon:'signature',t:'Акт',s:'приёма-передачи'},{icon:'smile',t:'ОКК',s:'обратная связь'}]},
+    'd10-9': {variant:'flow', title:'Учебная сделка от А до Я', icon:'route', items:[
+      {icon:'message',t:'Встреча',s:'по скрипту, PRO100'},{icon:'wallet',t:'Расчёт',s:'и презентация цены'},{icon:'signature',t:'Договор',s:'предоплата 10 000 ₽'},{icon:'database',t:'Bitrix24',s:'карточка и таблица'},{icon:'mappin',t:'Замер',s:'статус и сообщение клиенту'},{icon:'filetext',t:'Спецификация',s:'по вводным замера'},{icon:'check',t:'Технологу',s:'«Передан технологу»',hl:true}]},
+    'd1-12': {variant:'chips', title:'Что регулируют правила', icon:'shield', rows:[
+      {label:'Внешний вид', items:['Опрятность','Дресс-код']},
+      {label:'Общение', items:['Корпоративные чаты','Вежливость с коллегами']},
+      {label:'Деньги', items:['Касса','Сейф','Рассрочка']},
+      {label:'Офис', items:['Документы','Принтер','Таблица «Заявки Админ»']}]},
+    'd1-25': {variant:'flow', title:'Как ты зарабатываешь', icon:'wallet', items:[
+      {icon:'handshake',t:'КЭВы и встречи',s:'чем больше, тем лучше'},{icon:'signature',t:'Сделки',s:'договор и оплата'},{icon:'wallet',t:'Процент с продаж',s:'основа дохода',hl:true},{icon:'gift',t:'Мотивационные игры',s:'бонусы сверху'}],
+      note:'Точные ставки и проценты — в документе «Система оплаты» ниже, раздел обновляется.'},
+    'd2-8':  {variant:'chips', title:'Из чего состоит наша мебель', icon:'layers', rows:[
+      {label:'Корпус', items:['ЛДСП','ДВП','МДФ','Кромка']},
+      {label:'Детали', items:['Соединения','Фасады','Фурнитура','Столешницы']},
+      {label:'Для встречи', items:['Скрипты','Чек-листы']}]},
+    'd2-10': {variant:'chips', title:'Гайды по бытовой технике', icon:'zap', rows:[
+      {label:'Готовка', items:['Варочная панель','Духовой шкаф','СВЧ','Вытяжка']},
+      {label:'Ещё', items:['Посудомоечная машина','Холодильник','Стиральная машина']},
+      {label:'Продажа', items:['Скрипт: как предлагать технику']}],
+      note:'Техника в проекте — это и комфорт клиента, и твоя прибыль (страница «Бытовая техника» выше в этом дне).'},
+    'd5-3':  {variant:'flow', numbered:false, title:'Каналы связи с клиентом', icon:'phone', items:[
+      {icon:'phone',t:'Телефония',s:'звонки клиентам — инструкция ниже'},{icon:'message',t:'Wazzup',s:'продажи в переписке WhatsApp',hl:true}]},
+    'd10-4': {variant:'chips', title:'Самые частые сокращения', icon:'book', rows:[
+      {items:['КЭВ','ПВ','ВВ','ТК','КП','ОКК','РОП','CRM','ПММ']}],
+      note:'Расшифровка всех терминов — в таблице ниже.'},
+    'd10-8': {variant:'flow', title:'Итоговый тест', icon:'graduation', items:[
+      {icon:'repeat',t:'Повтори',s:'все 10 дней'},{icon:'listchecks',t:'Итоговый тест',s:'30 вопросов по всем дням',hl:true},{icon:'check',t:'80% и выше',s:'тест сдан, дальше — кейс'}]},
+    'd10-final': {variant:'flow', title:'Нашёл ошибку или что-то не открывается', icon:'message', items:[
+      {icon:'eye',t:'Заметил',s:'ошибку или пустой документ'},{icon:'send',t:'Напиши',s:'@Dsr676 или «Чат для стажёров»',hl:true},{icon:'check',t:'Исправим',s:'быстро'}]},
+    'day10-gr-after': {variant:'timeline', title:'Неделя тренировок', icon:'calendar', items:[
+      {d:'Пн',t:'Понедельник',s:'урок 94'},{d:'Вт',t:'Вторник',s:'урок 95'},{d:'Ср',t:'Среда',s:'урок 96'},{d:'Чт',t:'Четверг',s:'урок 97'},{d:'Пт',t:'Пятница',s:'урок 98',hl:true}],
+      note:'Сначала фокусировка, личная эффективность и отдых (уроки 79, 90–93), затем неделя тренировок.'}
+  };
+  const TOPIC = {1:'компания, правила, регламенты, отчётность',2:'продукт, преимущества, оплата, материалы',3:'первая встреча, скрипт, 8 этапов, КЭВ',4:'презентация, закрытие, возражения, точки касания',5:'работа в Bitrix24',6:'договор, PRO100, расчёт, оформление сделки',7:'замер, спецификация, Splan',8:'вторичная встреча, подписание спецификации',9:'производство, доставка, акт'};
+  for(let d=1; d<=9; d++) S['d'+d+'-test'] = {variant:'flow', title:'Как сдать тест '+d+'-го дня', icon:'listchecks', items:[
+    {icon:'book',t:'Изучи страницы дня',s:TOPIC[d]},{icon:'play',t:'Посмотри видео',s:'на страницах дня'},{icon:'listchecks',t:'Пройди тест',s:'ниже на этой странице',hl:true},{icon:'check',t:'80% и выше',s:'день засчитан в прогрессе'}]};
+  for(const sec of DATA.sections){
+    for(const p of sec.pages){
+      const s = S[p.id]; if(!s) continue;
+      const block = Object.assign({type:'scheme'}, s); delete block.at;
+      let i = 0;
+      while(i < p.blocks.length && p.blocks[i].type==='note') i++;
+      if(s.at!=='top' && i < p.blocks.length) i++;
+      p.blocks.splice(i, 0, block);
+    }
+  }
+})();
+
+/* ---- Тесты: данные (собираются из quiz/*.json) ---- */
+/* QUIZ-DATA-START */ const QUIZ = {"day1":{"title":"Тест: День 1","questions":[{"q":"Во сколько ты отправляешь в ОП «План работы на день»?","options":["С 10:00 до 10:10, в самом начале дня","С 10:10 до 10:30, после разбора задач","В 13:00, на координации отдела продаж","С 18:30 до 20:00, вместе с итогами дня"],"answer":0,"explain":"План работы на день отправляется в ОП в первые 10 минут: 10:00–10:10, вместе с открытием кассы и проверкой выставки.","source":"Структура рабочего дня: начало"},{"q":"Когда проходит координация отдела продаж и где уточнять её точное время?","options":["В 10:00, время пишет РОП в личные сообщения","С 13:00 до 14:00, точное время — в чате «Отдел продаж»","В 18:30, точное время — в Google-таблице «Заявки Админ»","С 10:10 до 10:30, точное время — в Битрикс24"],"answer":1,"explain":"По структуре дня координация ОП — с 13:00 до 14:00, точное время уточняется в чате «Отдел продаж».","source":"Структура рабочего дня: разгар и окончание"},{"q":"Тебе нужен выходной вне графика. Как ты поступаешь?","options":["Предупреждаешь за 3 дня в чате отдела продаж","Предупреждаешь за 7 дней лично руководителя","Подаёшь заявку администратору за 30 дней","Предупреждаешь за 14 дней, а для срочного — находишь замену"],"answer":3,"explain":"О выходных предупреждают за 14 дней, при срочном выходном нужно самому найти замену — офис не должен оставаться пустым.","source":"График работы"},{"q":"Клиент делает ремонт в квартире, деньги на кухню есть, но покупка не срочная. Какая это категория?","options":["Категория A","Категория C","Категория B","Категория D"],"answer":2,"explain":"Категория B — мебель нужна, деньги есть, но покупка не срочная, часто на этапе ремонта или стройки.","source":"Сегментация клиентов: категория B"},{"q":"На какой срок ты можешь предложить клиенту категории B зафиксировать цену, чтобы он не затягивал решение?","options":["На 1 месяц","На 6 месяцев","На 3 месяца","На 12 месяцев"],"answer":1,"explain":"Клиенту B рассказывают о возможности фиксации цены на 6 месяцев — это мотивирует не затягивать решение.","source":"Сегментация клиентов: категория B"},{"q":"У клиента категории C пока нет денег и сроков. Какую задачу ты ставишь в CRM?","options":["Ежедневный звонок до принятия решения","Контакт раз в 1–2 недели с вопросом о ремонте","Напоминание через 6 месяцев","Напоминание через 1–2–3 месяца"],"answer":3,"explain":"Для категории C ставится задача в CRM с напоминанием через 1–2–3 месяца, без активной ежедневной работы.","source":"Сегментация клиентов: категория C"},{"q":"Что ОКК проверяет в еженедельном отчёте о чистоте твоей работы в CRM?","options":["Не созданные карточки после КЭВ, ошибки, просрочки и карточки без задач","Количество звонков и результативных звонков за неделю","Конверсию в договор и средний чек по твоим сделкам","Отзывы клиентов о твоей консультации и замере"],"answer":0,"explain":"Отчёт о чистоте CRM включает не созданные карточки после КЭВ, ошибки в новых карточках, просроченные задачи и карточки без задач; он уходит РОПу и руководителю.","source":"ОКК: независимость и чистота CRM"},{"q":"Клиент спрашивает, какая гарантия на мебель компании. Что ты отвечаешь?","options":["6 месяцев","24 месяца","12 месяцев","36 месяцев"],"answer":2,"explain":"Принцип «Гарантии и ответственность»: компания отвечает за качество мебели и работы, гарантия — 12 месяцев.","source":"Принципы, на которых мы стоим"},{"q":"Какое требование к выставочному образцу закреплено в правилах опрятности?","options":["Образцы на ночь накрывают защитной плёнкой","Шкафчики отрегулированы и правильно закрываются","Подсветку включают только при клиенте","Столешницы протирают только раз в неделю"],"answer":1,"explain":"Выставочный образец должен быть чистым, со шкафчиками, которые отрегулированы и правильно закрываются, и с исправной подсветкой.","source":"Опрятность во всём"},{"q":"Что из этого по дресс-коду недопустимо на встрече с клиентом?","options":["Тёмно-синий костюм","Пастельный акцент в одежде","Выглаженная белая рубашка","Рваные джинсы"],"answer":3,"explain":"Рваные джинсы входят в список недопустимого, а серый, белый, тёмно-синий и пастельные акценты разрешены.","source":"Р-01 Дресс-код"},{"q":"В общем чате опубликовали информацию для всех. Что ты делаешь после ознакомления?","options":["Ставишь плюсик как подтверждение","Пишешь «Принято» отдельным сообщением","Отвечаешь автору в личные сообщения","Ничего не делаешь, ответ не требуется"],"answer":0,"explain":"По регламенту чата на информацию для всех после ознакомления ставят плюсик — это подтверждение.","source":"Р-02 Общение в чате"},{"q":"Разъярённый клиент коллеги жалуется на ведение сделки уже после договора. Кому ты передаёшь обращение?","options":["Старшему смены","В отдел контроля качества","Администратору","Специалисту по рекламациям"],"answer":2,"explain":"По Р-04 вопросы ведения сделки после договора передаются администратору сразу после разговора.","source":"Р-04 Разъярённый клиент"},{"q":"Твой клиент пришёл в ярости из-за ошибок монтажа. Что ты делаешь, когда выслушал его?","options":["Даёшь ему номер монтажной бригады для связи","Лично связываешься с администратором при нём и остаёшься его контактом","Передаёшь клиента администратору и выходишь из ситуации","Просишь его написать претензию в отдел контроля качества"],"answer":1,"explain":"По Р-03 менеджер при клиенте передаёт задачу администратору и остаётся единой точкой контакта до решения; клиент не должен сам звонить в монтаж.","source":"Р-03 Визит разъярённого клиента (ваш клиент)"},{"q":"Звонит клиент другого менеджера, но не помнит ни менеджера, ни номер договора. Что ты делаешь?","options":["Просишь его найти договор и перезвонить позже","Передаёшь его РОПу на рабочий мессенджер","Ищешь его договор в базе и сам ведёшь вопрос","Записываешь имя, телефон договора, вопрос и передаёшь администратору"],"answer":3,"explain":"Сценарий Б Р-05: берёшь имя, телефон договора, суть и время для звонка и передаёшь администратору, он находит ответственного.","source":"Р-05 Звонок от чужого клиента"},{"q":"Клиент звонит с рекламацией: мебель повредили при доставке. Что ты делаешь?","options":["Фиксируешь данные и дату доставки и сразу передаёшь администратору","Даёшь клиенту телефон службы доставки, чтобы он позвонил сам","Берёшь вину на себя и обещаешь бесплатную замену","Просишь клиента дождаться звонка его менеджера"],"answer":0,"explain":"Сценарий Б Р-06: при вине смежных служб фиксируешь имя, телефон, договор, суть и дату и немедленно передаёшь администратору.","source":"Р-06 Звонок с рекламацией"},{"q":"Пришёл клиент без записи, а все менеджеры заняты на 30 минут и дольше. Что ты делаешь?","options":["Проводишь короткую консультацию, чтобы он не ушёл","Просишь его подождать, сколько потребуется","Записываешь номер и суть задачи в «Лист ожидания»","Даёшь каталог и просишь зайти в другой день"],"answer":2,"explain":"По Р-07 при занятости 30+ минут быструю консультацию не проводят: берут номер и суть задачи и сразу вносят в «Лист ожидания».","source":"Р-07 Встреча клиента, когда все заняты"},{"q":"Ты трижды подряд ошибся в коде сейфа. Что произойдёт и что ты делаешь?","options":["Сейф запросит резервный код, вводишь его","Сейф сбросит код, придумываешь новый","Сейф откроется через 10 минут, ждёшь","Сейф заблокируется, обращаешься к ответственному лицу"],"answer":3,"explain":"По И-01 три неверных ввода подряд блокируют сейф; для разблокировки обращаются к ответственному лицу или в поддержку.","source":"И-01 Как пользоваться сейфом"},{"q":"Клиент вносит оплату за кухню. Что ты пишешь в поле «Название товара» на кассе?","options":["ФИО клиента и номер договора","Только номер договора, без лишней информации","Название изделия, например «Кухня угловая»","Номер договора и сумму предоплаты"],"answer":1,"explain":"По И-02 в поле «Название товара» вводится только номер договора; наименования пишут лишь для сантехники и бытовой техники.","source":"И-02 Касса, терминал, эквайринг"}],"dayIndex":0},"day2":{"title":"Тест: День 2","questions":[{"q":"Клиент спрашивает, сколько будут делать его кухню (заказ несложный). Какой срок изготовления ты назовёшь?","options":["40 рабочих дней","30 рабочих дней","60 календарных дней","45 рабочих дней"],"answer":0,"explain":"Изготовление мебели — 40 рабочих дней; до 60 рабочих дней срок растёт только при сложных заказах.","source":"Наши преимущества"},{"q":"Клиент купил технику в другом магазине и хочет, чтобы её поставили вместе с кухней. Что ты ему скажешь про монтаж?","options":["Монтаж техники входит в «под ключ» бесплатно","Монтаж такой техники оплачивается отдельно","Мы не устанавливаем чужую технику вообще","Монтаж бесплатный, если техника встраиваемая"],"answer":1,"explain":"В «под ключ» входит монтаж мебели, а монтаж техники, купленной не у нас, оплачивается отдельно.","source":"Наши преимущества"},{"q":"Договор подписан, клиент внёс 10 000 ₽. Когда по графику платежей он вносит 60% стоимости?","options":["Сразу после замера","За 2 дня до доставки мебели","При подписании спецификации","После согласования проекта с технологом"],"answer":2,"explain":"60% вносится при подписании спецификации, оставшиеся 40% — за 2 дня до доставки.","source":"Варианты оплаты"},{"q":"Клиент принёс подарочный сертификат на 50 000 ₽ и заказывает только кухню. Какую часть стоимости кухни можно им оплатить?","options":["До 50% стоимости кухни","Всю сумму сертификата без ограничений","До 25% стоимости кухни","До 10% стоимости кухни"],"answer":3,"explain":"Сертификатом можно оплатить до 10% стоимости кухни (комплекс — до 12–15%).","source":"Сертификат и акции"},{"q":"Клиент заключил договор в офисе. В течение какого срока ему назначат замер после звонка администратора?","options":["В тот же день","В течение 3 рабочих дней","В течение 7 рабочих дней","В течение 10 календарных дней"],"answer":1,"explain":"На следующий день администратор созванивается и договаривается о замере в течение 3 рабочих дней.","source":"Как клиенты видят работу с нами"},{"q":"Спецификация подписана, информация передана технологу. В какой программе технолог отрисовывает проект?","options":["«Базис Мебельщик»","«PRO100»","«К3-Мебель»","«SketchUp»"],"answer":0,"explain":"Технолог отрисовывает проект в «Базис Мебельщик» и отправляет его менеджеру на согласование.","source":"Как клиенты видят работу с нами"},{"q":"Ты продал клиенту технику вместе с кухней. Какой дополнительный доход это тебе даёт?","options":["Фиксированная премия 5 000 ₽ за каждый прибор","10% от стоимости техники","Только рост среднего чека, без отдельного процента","3% от стоимости техники плюс бонусы от партнёров"],"answer":3,"explain":"Менеджер получает 3% от стоимости техники плюс бонусы от партнёров (например, «Тетрасис»).","source":"Бытовая техника в проекте"},{"q":"Ты закрыл звонок на «КЭВ» или «Взял контакт». Что нужно отправить клиенту?","options":["Договор и график платежей","Подарочный сертификат на 50 000 ₽","Каталог и видео «Знакомство с компанией»","Прайс-лист и список акций месяца"],"answer":2,"explain":"При закрытии на «КЭВ» или «Взял контакт» клиенту отправляют каталог и видео «Знакомство с компанией».","source":"Каталог и подборки"},{"q":"Дизайнер-партнёр боится, что за долгий ремонт мебель подорожает и рухнет бюджет клиента. Какое решение предлагает наш сервис?","options":["Скидку 10% при повторном заказе","Рассрочку на 12 месяцев без переплаты","Заморозку цены на весь ремонт за фиксированные 10 000 ₽","Бесплатный перерасчёт проекта через полгода"],"answer":2,"explain":"Сервис фиксирует бюджет: цена замораживается на весь период ремонта за фиксированную плату 10 000 ₽.","source":"В-01 Боли клиента"},{"q":"Клиент сомневается: делать корпус из ЛДСП или из МДФ? Насколько ЛДСП дешевле МДФ по гайду?","options":["На 30–50%","На 5–10%","На 60–70%","Стоят одинаково"],"answer":0,"explain":"Главный козырь ЛДСП — она на 30–50% дешевле МДФ; формула: ЛДСП для корпуса, МДФ для фасадов.","source":"М-01 Материалы"},{"q":"Родители заказывают мебель в детскую и переживают за экологию. Какую кромку гайд советует для детской?","options":["Меламиновую","ABS-кромку","ПВХ 0,4 мм","Без кромки, только покраска"],"answer":1,"explain":"По алгоритму выбора для детской рекомендуют ABS: экологична и не токсична даже при нагреве.","source":"М-02 Конструкции и кромка"},{"q":"Клиент хочет сэкономить на фурнитуре. Какая доля рекламаций, по гайду, связана именно с фурнитурой?","options":["Около 10%","Около 25%","Около 40%","68%"],"answer":3,"explain":"68% рекламаций связаны с фурнитурой, поэтому экономить на ней невыгодно.","source":"М-04 Фурнитура"},{"q":"Клиент хочет тонкую современную столешницу, на которую можно ставить горячее и крепить мойку снизу. Что ты предложишь?","options":["Компакт-плиту «Eterna»","Стандартную 38 мм «Кедр»","Наливной камень","Массив дерева"],"answer":0,"explain":"Компакт-плита «Eterna» — монолит ≈12 мм, влаго- и термостойкая, с подстольным монтажом мойки.","source":"М-05 Столешницы"},{"q":"Клиент планирует газовую плиту. Какое минимальное расстояние от поверхности газовой плиты до вытяжки?","options":["50 см","60 см","70 см","90 см"],"answer":2,"explain":"Для газовой плиты минимум 70 см до вытяжки, для электрической — 65 см.","source":"М-07 Эргономика кухни"},{"q":"Клиент подбирает холодильник и спрашивает, какой объём нужен. Какой ориентир даёт гайд в расчёте на одного человека?","options":["50–70 л на человека","80–100 л на человека","200–250 л на человека","120–150 л на человека"],"answer":3,"explain":"Ориентир — 120–150 л на человека, для семьи из 3–4 человек примерно 300–400 л.","source":"П-06 Холодильник"},{"q":"Клиент выбрал индукционную варочную панель. О чём его важно предупредить насчёт посуды?","options":["Подойдёт только стеклянная посуда","Дно посуды должно магнититься","Нужна только алюминиевая посуда","Посуда любая, ограничений нет"],"answer":1,"explain":"Для индукции дно посуды должно быть ферромагнитным; алюминий и стекло без спецдна не подойдут.","source":"П-01 Варочная панель"},{"q":"У клиента варочная панель шириной 60 см. Какой ширины должна быть вытяжка?","options":["Не меньше 60 см","Ровно 45 см","Можно 50 см, если мощная","Не больше 50 см"],"answer":0,"explain":"Ширина вытяжки должна быть равна или больше ширины плиты: для панели 60 см — минимум 60 см.","source":"П-05 Вытяжка"},{"q":"Семья из 4 человек выбирает посудомойку. Какой формат гайд называет стандартом и сколько комплектов он вмещает?","options":["Узкая 45 см, 9–10 комплектов","Компактная настольная, 4–6 комплектов","Полноразмерная 60 см, 12–14 комплектов","Узкая 45 см, 12–14 комплектов"],"answer":2,"explain":"Полноразмерная 60 см — стандарт для семьи из 3–4 человек, вмещает 12–14 комплектов.","source":"П-04 Посудомоечная машина"}],"dayIndex":1},"day3":{"title":"Тест: День 3","questions":[{"q":"Ты провёл презентацию решения. Какой этап из 8 этапов продаж идёт следующим?","options":["Предзакрытие","Презентация цены","Отработка возражений","Выявление потребностей"],"answer":1,"explain":"В списке 8 этапов после презентации решения идёт презентация цены.","source":"День 3 · 8 этапов продаж"},{"q":"Что в нашей компании считается КЭВ?","options":["Первый звонок клиенту после заявки","Отправка КП с тремя вариантами цены","Подписание договора и внесение предоплаты","Закрытие клиента на замер или на встречу в офисе"],"answer":3,"explain":"В компании КЭВ — это закрытие клиента на замер или на встречу в офисе.","source":"День 3 · Почему КЭВ — главное"},{"q":"Какая главная цель КЭВ?","options":["Создать доверие клиента","Сразу назвать итоговую цену","Получить предоплату 10 000 ₽","Собрать размеры помещения"],"answer":0,"explain":"Главная цель КЭВ — создать доверие клиента, оно основа любой продажи.","source":"День 3 · Почему КЭВ — главное"},{"q":"Клиент просит посчитать кухню удалённо. Что ты делаешь с презентацией товара?","options":["Сразу отправляешь полную презентацию в мессенджер","Проводишь презентацию по видеосвязи в тот же день","Стараешься не проводить её, пока клиент не приехал в офис","Отправляешь презентацию вместе с прайсом"],"answer":2,"explain":"При удалённом расчёте стоит не проводить презентацию, пока клиент не приехал в офис.","source":"День 3 · Почему КЭВ — главное"},{"q":"Как работает правило трёх «да» на финальном этапе?","options":["Три раза подряд спрашиваешь, готов ли клиент купить","Два вопроса, на которые клиент скажет «да», затем продающий вопрос","Клиент трижды подтверждает цену перед договором","Три согласия клиента записываешь в карточку CRM"],"answer":1,"explain":"Задаёшь два вопроса с ответом «да», а затем переходишь к продающему вопросу.","source":"День 3 · Психологические приёмы"},{"q":"Что означает приём «Копирование» при установлении контакта?","options":["Повторять за клиентом его слова дословно","Показывать клиенту проекты других заказчиков","Пересказывать клиенту его пожелания в конце встречи","Мягко отражать позу, темп речи и интонацию клиента"],"answer":3,"explain":"Естественное отражение позы, темпа и интонации создаёт ощущение «одной волны».","source":"День 3 · Психологические приёмы"},{"q":"Как ты показываешь клиенту «Партнёрство» на встрече?","options":["Используешь «мы-высказывания» и общаешься на равных","Сразу предлагаешь партнёрскую скидку","Знакомишь клиента с технологом и дизайнером","Рассказываешь о партнёрах-поставщиках фурнитуры"],"answer":0,"explain":"Партнёрство — показать, что вы вместе ищете решение: «мы-высказывания», общение на равных.","source":"День 3 · Психологические приёмы"},{"q":"Какая цель этапа «Программирование встречи» по скрипту?","options":["Узнать бюджет клиента до начала проектирования","Показать все образцы фасадов и столешниц","Сформировать доверие, взять управление и обозначить итог — конкретное решение","Записать контакты клиента и поставить задачу в CRM"],"answer":2,"explain":"Этап нужен, чтобы сформировать доверие, взять управление встречей и обозначить конкретный результат.","source":"С-01 Скрипт продажи кухни"},{"q":"Какой отступ под карниз, шторы или потолочную шину уточняешь в технических вопросах?","options":["5–10 см","10–12 см","25–30 см","15–20 см"],"answer":3,"explain":"В скрипте указан отступ под карниз, шторы или шину 15–20 см.","source":"С-01 Скрипт продажи кухни"},{"q":"По какой формуле ценности ты презентуешь решение клиенту?","options":["Цена → скидка → срок изготовления","Материал → бренд → гарантия","Характеристика → практическая выгода → связь с запросом клиента","Проблема → решение → итоговая стоимость"],"answer":2,"explain":"Формула ценности: характеристика → практическая выгода → связь с запросом клиента.","source":"С-01 Скрипт продажи кухни"},{"q":"Что должно быть подтверждено клиентом до того, как ты покажешь цену?","options":["Материалы, фасады, столешница, фурнитура и цвет","Дата замера и дата доставки","Сумма предоплаты и способ оплаты","Модели техники и схема розеток"],"answer":0,"explain":"Комплект — материалы, фасады, столешница, фурнитура и цвет — фиксируется до цены.","source":"С-01 Скрипт продажи кухни"},{"q":"Ты спокойно показал итоговую стоимость. Что делаешь дальше?","options":["Сразу предлагаешь скидку, чтобы снять напряжение","Делаешь паузу и спрашиваешь, насколько сумма совпала с бюджетом","Продолжаешь рассказывать о преимуществах фурнитуры","Просишь клиента подумать и перезвонить завтра"],"answer":1,"explain":"После цены — пауза и вопрос, насколько сумма совпала с планируемым бюджетом.","source":"С-01 Скрипт продажи кухни"},{"q":"Клиент говорит, что бюджет подходит. Как ты действуешь по скрипту?","options":["Показываешь ещё два варианта подороже","Продолжаешь презентацию, чтобы закрепить решение","Предлагаешь подумать до следующей встречи","Кратко подтверждаешь состав и сразу переходишь к документам"],"answer":3,"explain":"После согласия не продолжаешь презентацию, а подтверждаешь состав и переходишь к оформлению.","source":"С-01 Скрипт продажи кухни"},{"q":"Клиент уже был у конкурентов. Какая твоя задача по скрипту?","options":["Показать, что у конкурентов хуже материалы","Не критиковать конкурентов, а найти критерий победы","Сразу дать цену ниже, чем у конкурентов","Попросить показать их расчёт и разобрать ошибки"],"answer":1,"explain":"Задача — не критиковать конкурентов, а найти критерий, по которому клиент будет сравнивать.","source":"С-01 Скрипт продажи кухни"},{"q":"Ты звонишь клиенту после встречи. Какую фразу нельзя говорить в начале звонка?","options":["«Мы с вами встречались во вторник»","«Я пообещал подготовить уточнения»","«Вам удобно сейчас говорить?»","«Это Алексей из компании»"],"answer":2,"explain":"Вопрос «Вам удобно сейчас говорить?» в скрипте звонка запрещён — ответ будет «нет».","source":"С-02 Звонок"},{"q":"Клиент спрашивает то, чего ты не знаешь. Что ты скажешь вместо «Я не знаю»?","options":["«Я уточню»","«Это не ко мне»","«Наверное, так и есть»","«В принципе, это неважно»"],"answer":0,"explain":"«Я не знаю» убивает доверие, вместо этого говори «Я уточню».","source":"С-02 Звонок"}],"dayIndex":2},"day4":{"title":"Тест: День 4","questions":[{"q":"Ты хочешь понять настрой клиента и мягко подвести его к следующему шагу. Какая фраза — предзакрытие?","options":["«Подписываем договор?»","«Готовлю счёт и жду оплату?»","«Что нравится больше всего?»","«Ну что, работаем?»"],"answer":2,"explain":"«Что нравится больше всего?» — из списка фраз предзакрытия, остальные относятся к закрытию.","source":"День 4 · Предзакрытие и закрытие"},{"q":"Клиент уже готов к следующему шагу. Какую прямую фразу закрытия ты скажешь?","options":["«Записываю? Бронирую?»","«Ну как вам?»","«Есть причины сомневаться?»","«Побольше или поменьше?»"],"answer":0,"explain":"«Записываю? Бронирую?» — прямая формулировка закрытия, остальные — предзакрытие.","source":"День 4 · Предзакрытие и закрытие"},{"q":"Что такое возражение по материалам Дня 4?","options":["Отказ клиента подписывать договор","Жалоба клиента на работу менеджера","Вопрос клиента о сроках изготовления","Причина, мешающая покупке"],"answer":3,"explain":"Возражение — причина, мешающая покупке.","source":"День 4 · Отработка возражений"},{"q":"Ты отработал все возражения, но клиент ушёл без решения. Что начинается дальше?","options":["Передача клиента в ОКК","Прогревающие сообщения — точки касания","Повторная встреча в тот же день","Перевод сделки в статус «Отказ»"],"answer":1,"explain":"Когда клиент ушёл без решения, начинается этап прогревающих сообщений — точек касания.","source":"День 4 · Точки касания"},{"q":"У клиента ремонт ещё 2–3 месяца, он не торопится. Какую модель касаний выбираешь?","options":["Утепляющую","Дожимную","Долгосрочный прогрев","Эскалацию"],"answer":0,"explain":"Утепляющая модель — для клиента, у которого ремонт идёт 2–3 месяца и он не торопится.","source":"В-02 Клиенты, ушедшие подумать"},{"q":"Как строится цикл звонков в утепляющей модели?","options":["Каждый звонок с попыткой закрытия","Один утепляющий и сразу продающий","2 утепляющих звонка, а 3-й — продающий","3 утепляющих звонка, затем пауза на месяц"],"answer":2,"explain":"В утепляющей модели делают 2 утепляющих звонка и 3-й продающий с закрытием.","source":"В-02 Клиенты, ушедшие подумать"},{"q":"Какая доля клиентов после встречи относится к дожимной модели?","options":["30%","80%","50%","70–75%"],"answer":1,"explain":"80% клиентов после встречи — дожимная модель: они готовы, но боятся ошибиться.","source":"В-02 Клиенты, ушедшие подумать"},{"q":"Ты делаешь утепляющий звонок. Что спросишь вместо «Ну что, решили?»","options":["«Когда вам перезвонить?»","«Вы уже подумали?»","«Готовы подписать договор?»","«Помочь с информацией?»"],"answer":3,"explain":"Утепляющий звонок — не продажа, поэтому спрашиваешь «Помочь с информацией?».","source":"В-02 Клиенты, ушедшие подумать"},{"q":"Какое золотое правило чередования каналов связи с клиентом?","options":["1 звонок → 1 текст → 1 кружок","2 текста → 1 голосовое → 1 звонок","Только звонки, без переписки","1 текст → 2 голосовых → 1 кружок → 1 звонок"],"answer":3,"explain":"Золотое правило: на 1 текст — 2 голосовых, 1 кружок и 1 звонок.","source":"В-02 Клиенты, ушедшие подумать"},{"q":"Какой длины должно быть голосовое сообщение клиенту?","options":["5–10 секунд","20–40 секунд","1–2 минуты","Не меньше 3 минут"],"answer":1,"explain":"Голосовое — 20–40 секунд, тёплым голосом, без подготовки.","source":"В-02 Клиенты, ушедшие подумать"},{"q":"Через какой канал проходит закрытие сделки с ушедшим подумать клиентом?","options":["Звонок","Видео-кружок","Голосовое сообщение","Текст в мессенджере"],"answer":0,"explain":"Звонок — самый продающий канал, только в нём происходит закрытие сделки.","source":"В-02 Клиенты, ушедшие подумать"},{"q":"В первый день касаний ты отправляешь КП. Сколько в нём вариантов по цене?","options":["Один итоговый вариант","Два: эконом и премиум","3: база, оптимум, премиум","5 вариантов с разной фурнитурой"],"answer":2,"explain":"Сообщение 3 первого дня — КП с 3 вариантами: база, оптимум, премиум.","source":"В-02 Клиенты, ушедшие подумать"},{"q":"Клиент не отвечает после 3 попыток. Что ты делаешь?","options":["Удаляешь сделку из CRM","Переводишь в «Долгосрочный прогрев» и касаешься раз в 2 недели","Пишешь клиенту каждый день до ответа","Передаёшь клиента другому менеджеру насовсем"],"answer":1,"explain":"Клиента не удаляют, а переводят в «Долгосрочный прогрев» с касаниями раз в 2 недели.","source":"В-02 Клиенты, ушедшие подумать"},{"q":"После 12 дней от клиента тишина. Кого ты подключаешь?","options":["Технолога, чтобы пересчитать проект","Замерщика для повторного выезда","Руководителя компании для звонка","«Второго менеджера» из отдела заботы"],"answer":3,"explain":"При тишине после 12 дней подключают «второго менеджера» из отдела заботы.","source":"В-02 Клиенты, ушедшие подумать"},{"q":"Клиент на встрече говорит «Надо подумать». Что ты ответишь по скрипту?","options":["«Хорошо, подумайте и позвоните мне»","«Почему вы не можете решить сейчас?»","«Конечно. Подскажите, над чем именно: цена, материалы, проект или компания?»","«Если решите сегодня, дам последнюю скидку»"],"answer":2,"explain":"По скрипту уточняешь, над чем именно клиент хочет подумать.","source":"С-01 Скрипт продажи кухни"},{"q":"Клиент говорит «Посоветуюсь». Как ты отвечаешь по скрипту встречи?","options":["Спрашиваешь, кто ещё участвует в решении, и предлагаешь подключить его к созвону","Предлагаешь подумать вместе до конца недели","Говоришь, что цена действует только сегодня","Отправляешь договор на почту без комментариев"],"answer":0,"explain":"Уточняешь, кто ещё участвует в решении, и предлагаешь понятное предложение или короткий созвон.","source":"С-01 Скрипт продажи кухни"}],"dayIndex":3},"day5":{"title":"Тест: День 5","questions":[{"q":"Ты провёл встречу, звонок или переписку с клиентом. Что обязательно делаешь в Bitrix24 после контакта?","options":["Переводишь сделку на стадию назад","Создаёшь новую сделку на клиента","Удаляешь старые задачи по сделке","Обновляешь комментарий в карточке"],"answer":3,"explain":"После каждого контакта в CRM должен обновляться комментарий, иначе через 2–3 недели забудешь клиента.","source":"День 5 · Главные правила CRM"},{"q":"Как сделка должна двигаться по воронке в Bitrix24?","options":["В любом направлении по ситуации","Слева направо, двигать обратно запрещено","Справа налево, от договора к заявке","Только руководитель двигает сделки"],"answer":1,"explain":"Сделка движется по воронке слева направо, обратное движение запрещено.","source":"День 5 · Главные правила CRM"},{"q":"Что должно быть запланировано у каждой сделки в Bitrix24?","options":["Дело на следующий шаг","Дата доставки кухни","Встреча с руководителем","Повторный замер"],"answer":0,"explain":"У каждой сделки должно быть запланировано дело на следующий шаг.","source":"День 5 · Главные правила CRM"},{"q":"Клиент просит написать ему с твоего личного номера. Как поступаешь по правилам CRM?","options":["Пишешь с личного, потом копируешь в CRM","Пишешь с личного, если клиент так просит","Ведёшь переписку и звонки только через CRM","Передаёшь клиента администратору"],"answer":2,"explain":"Вся переписка и звонки — только в CRM, никаких коммуникаций с личного телефона.","source":"День 5 · Главные правила CRM"},{"q":"Какое приложение используешь для продаж в переписке с клиентом?","options":["Splan","PRO100","Wazzup","Festt"],"answer":2,"explain":"Для продаж в переписке есть инструкция по Wazzup в разделе приложений для общения.","source":"День 5 · Приложения для общения"},{"q":"Что из этого попадёт в еженедельный отчёт ОКК о чистоте твоей CRM?","options":["Количество фото клиентов в группе «Общение»","Число отправленных голосовых сообщений","Количество проданных столешниц","Карточки без задач и просроченные задачи"],"answer":3,"explain":"Отчёт о чистоте CRM включает несозданные карточки, ошибки, просроченные задачи и карточки без задач.","source":"День 1 · ОКК и чистота CRM"},{"q":"Кому передаётся еженедельный отчёт ОКК о твоей работе в CRM?","options":["Технологу и администратору","РОПу и руководителю компании","Только тебе лично","Бухгалтерии для расчёта зарплаты"],"answer":1,"explain":"Отчёт о чистоте CRM передаётся РОПу и руководителю компании.","source":"День 1 · ОКК и чистота CRM"},{"q":"Клиент категории B: деньги есть, но идёт ремонт. Какую задачу ставишь в CRM?","options":["Регулярный контакт раз в 1–2 недели","Напоминание через полгода","Замер на сегодня или завтра","Задачу не ставишь, ждёшь его звонка"],"answer":0,"explain":"Для клиента B ставится задача на регулярный контакт раз в 1–2 недели.","source":"День 1 · Сегментация клиентов"},{"q":"Клиент категории C: нет денег и сроки не определены. Какую задачу ставишь в CRM?","options":["С напоминанием через 1–2–3 месяца","Ежедневный звонок до решения","Замер в ближайшие два дня","Контакт раз в 1–2 недели"],"answer":0,"explain":"Для клиента C в CRM ставят задачу с напоминанием через 1–2–3 месяца.","source":"День 1 · Сегментация клиентов"},{"q":"Договор подписан, клиент готов принять замерщика. В какой статус переводишь сделку?","options":["«Спецификация»","«Передан технологу»","«Замер»","«Договор подписан»"],"answer":2,"explain":"Если клиент готов принять замерщика, сделку переводят в статус «Замер».","source":"День 6 · Оформление сделки на встрече"},{"q":"Договор подписан, но у клиента ещё идёт ремонт. Какой статус сделки оставляешь?","options":["«Замер»","«Спецификация»","«Долгосрочный прогрев»","«Договор подписан»"],"answer":3,"explain":"Если клиент не готов к замеру, статус «Договор подписан» остаётся до момента готовности.","source":"День 6 · Оформление сделки на встрече"},{"q":"Клиент внёс предоплату по договору. Куда в Bitrix24 пишешь об этом?","options":["В личные сообщения РОПу","В группу «Сделка» по шаблону","В группу «Общение» с фото","В комментарий к задаче технолога"],"answer":1,"explain":"О предоплате пишут в Bitrix24-группу «Сделка» по шаблону.","source":"День 6 · Оформление сделки на встрече"},{"q":"Что заполняешь в карточке клиента в Bitrix24 после подписания договора?","options":["Только телефон клиента","Обязательные поля","Данные замера","Спецификацию из Splan"],"answer":1,"explain":"После договора в карточке клиента в Bitrix24 заполняют обязательные поля.","source":"День 6 · Оформление сделки на встрече"},{"q":"Администратор загрузил данные замера в карточку клиента. В какой статус переводится сделка?","options":["«Спецификация»","«Замер»","«Передан технологу»","«Договор подписан»"],"answer":0,"explain":"После замера сделка переводится в статус «Спецификация».","source":"День 7 · Замер и спецификация"},{"q":"Спецификация подписана, остаток предоплаты внесён. Что делаешь в Bitrix24?","options":["Возвращаешь сделку в статус «Замер»","Оставляешь статус «Спецификация» до доставки","Создаёшь новую сделку для производства","Загружаешь спецификацию и ставишь статус «Передан технологу»"],"answer":3,"explain":"Спецификацию загружают в Bitrix24 и переводят сделку в статус «Передан технологу».","source":"День 8 · Подписание спецификации"},{"q":"Клиент ушёл подумать. На какие дни в CRM забиваешь напоминания о звонке?","options":["Дни 1, 2, 3","Дни 7, 14, 21","Дни 3, 6, 10","Дни 5, 10, 15"],"answer":2,"explain":"Перед стартом касаний в CRM должны быть забиты напоминания на дни 3, 6, 10.","source":"В-02 Клиенты, ушедшие подумать"}],"dayIndex":4},"day6":{"title":"Тест: День 6","questions":[{"q":"Какую предоплату ты оформляешь вместе с договором на первой встрече?","options":["10 000 ₽","5 000 ₽","15 000 ₽","20 000 ₽"],"answer":0,"explain":"По порядку оформления сделки договор оформляется с предоплатой 10 000 ₽.","source":"День 6 · Оформление сделки на встрече"},{"q":"Как поступить с пустыми строками в договоре (сроки, суммы)?","options":["Оставить пустыми, заполнить после замера","Никогда не оставлять незаполненными","Поставить прочерк и подписать","Заполнить карандашом до согласования"],"answer":1,"explain":"Незаполненные строки — простор для злоупотреблений, их оставлять нельзя.","source":"День 6 · Договор"},{"q":"В какой программе выполняется итоговая калькуляция проекта?","options":["PRO100","Splan","Festt","Bitrix24"],"answer":2,"explain":"Итоговая калькуляция проекта выполняется в программе Festt.","source":"День 6 · Расчёт стоимости в прайсе"},{"q":"Клиент внёс предоплату наличными. Что ты делаешь с деньгами?","options":["Передаёшь администратору без конверта","Оставляешь в кассе терминала до вечера","Кладёшь в общий конверт за день","Упаковываешь в конверт с пометкой и убираешь в сейф"],"answer":3,"explain":"Наличные упаковываются в конверт с № договора и суммой и убираются в сейф.","source":"День 6 · Оформление сделки на встрече"},{"q":"Клиент оплатил предоплату безналично. Что делать дальше?","options":["Убрать копию чека в сейф","Передать администратору для подготовки документов","Сразу написать клиенту в Telegram","Отметить оплату только в PRO100"],"answer":1,"explain":"Безналичную оплату передают администратору для подготовки документов для компаний.","source":"День 6 · Оформление сделки на встрече"},{"q":"Куда отправляешь фото клиента с папкой на фоне кухни?","options":["В группу «Общение»","В Bitrix24-группу «Сделка»","В Google-таблицу «Заявки Админ»","В карточку клиента в Bitrix24"],"answer":0,"explain":"Фото клиента с папкой отправляется в группу «Общение».","source":"День 6 · Оформление сделки на встрече"},{"q":"В какой Google-таблице отмечаешь новый заказ после подписания договора?","options":["«Сделка»","«План продаж»","«Замеры»","«Заявки Админ»"],"answer":3,"explain":"Заказ отмечается в Google-таблице «Заявки Админ».","source":"День 6 · Оформление сделки на встрече"},{"q":"Договор подписан, но у клиента идёт ремонт и он не готов к замеру. Какой статус сделки?","options":["«Замер»","«Спецификация»","«Договор подписан»","«Передан технологу»"],"answer":2,"explain":"Если клиент не готов принять замерщика, статус «Договор подписан» остаётся до готовности.","source":"День 6 · Организация замера"},{"q":"Кто созванивается с клиентом и договаривается о дате замера?","options":["Администратор","Менеджер, оформивший договор","Специалист по замеру","Технолог"],"answer":0,"explain":"О дате замера с клиентом договаривается администратор.","source":"День 6 · Организация замера"},{"q":"Что пишешь в поле «НАЗВАНИЕ ТОВАРА» при пробитии предоплаты за кухню?","options":["ФИО клиента и телефон","Слово «Кухня» и сумму","Номер договора","Адрес объекта"],"answer":2,"explain":"В названии товара вводится номер договора, без лишней информации.","source":"И-02 Касса, терминал, эквайринг"},{"q":"Клиент оплатил картой, терминал выбил 3 чека. Какой чек отдаёшь клиенту?","options":["Первый по порядку","Чек с QR-кодом","Все три чека","Последний без QR-кода"],"answer":1,"explain":"Два чека остаются у тебя, клиенту отдаётся чек с QR-кодом.","source":"И-02 Касса, терминал, эквайринг"},{"q":"Клиент сделал перевод с карты на карту. Какой вид оплаты выбираешь на кассе?","options":["Карта","QR-код","Безналичные","Наличные"],"answer":3,"explain":"Вид «Наличные» — это живые деньги или перевод с карты на карту.","source":"И-02 Касса, терминал, эквайринг"},{"q":"При каком заряде терминал перестаёт работать?","options":["Менее 11%","Менее 5%","Менее 20%","Менее 15%"],"answer":0,"explain":"Если заряд менее 11%, терминал не работает.","source":"И-02 Касса, терминал, эквайринг"},{"q":"Что произойдёт, если трижды подряд неверно ввести код сейфа?","options":["Сейф подаст звуковой сигнал","Код сбросится на заводской","Сейф откроется после паузы","Сейф автоматически заблокируется"],"answer":3,"explain":"Три неверных ввода подряд — сейф автоматически блокируется.","source":"И-01 Как пользоваться сейфом"},{"q":"Сколько розеток рекомендуется в рабочей зоне (на фартуке)?","options":["1–2 розетки","3–5 розеток","6–8 розеток","Ровно 2 розетки"],"answer":1,"explain":"В рабочей зоне (фартук) рекомендуется 3–5 розеток.","source":"День 6 · План по розеткам"}],"dayIndex":5},"day7":{"title":"Тест: День 7","questions":[{"q":"Кто загружает данные замера в карточку клиента в Bitrix24?","options":["Менеджер","Специалист по замеру","Администратор","Технолог"],"answer":2,"explain":"После замера данные в карточку клиента загружает администратор.","source":"День 7 · После замера"},{"q":"В какой статус переводится сделка после замера?","options":["«Спецификация»","«Замер»","«Договор подписан»","«Передан технологу»"],"answer":0,"explain":"После замера сделка переводится в статус «Спецификация».","source":"День 7 · После замера"},{"q":"В какой программе ты готовишь спецификацию?","options":["PRO100","Festt","Bitrix24","Splan"],"answer":3,"explain":"Спецификация готовится в программе Splan.","source":"День 7 · После замера"},{"q":"Когда можно готовить спецификацию?","options":["Сразу после подписания договора","Только после контрольного замера","После внесения 60% оплаты","После звонка администратора"],"answer":1,"explain":"Спецификация готовится только после контрольного замера.","source":"День 7 · Splan: правила подготовки проекта"},{"q":"Что нужно чётко указать на эскизе по правилам Splan?","options":["Контакты клиента","Сроки доставки","Параметры фурнитуры","Стоимость каждого модуля"],"answer":2,"explain":"Правило Splan — чётко указывать параметры фурнитуры на эскизе.","source":"День 7 · Splan: правила подготовки проекта"},{"q":"Какие шаблоны документов используешь при подготовке спецификации?","options":["Только утверждённые шаблоны","Свои шаблоны из прошлых проектов","Шаблоны от поставщиков фурнитуры","Любые, если клиент согласен"],"answer":0,"explain":"По правилам используются только утверждённые шаблоны документов.","source":"День 7 · Splan: правила подготовки проекта"},{"q":"Что проверяешь при проверке комплектности спецификации?","options":["Дату доставки и монтажа","Чек и копию договора","Статус сделки и задачи","Материалы, фурнитуру, технику клиента"],"answer":3,"explain":"Комплектность — это материалы, фурнитура и техника клиента.","source":"День 7 · После замера"},{"q":"С чем сверяешь спецификацию перед отправкой клиенту?","options":["С отчётом ОКК","С проектом в PRO100 и расчётом стоимости","С таблицей «Заявки Админ»","С актом приёма-передачи"],"answer":1,"explain":"Спецификацию сверяют с проектом в PRO100 и расчётом стоимости.","source":"День 7 · После замера"},{"q":"Спецификация готова. Каким шагом начинается согласование с клиентом?","options":["Отправить спецификацию для предварительного ознакомления","Сразу пригласить на подписание","Передать проект технологу","Попросить внести доплату"],"answer":0,"explain":"Сначала клиенту отправляют спецификацию для предварительного ознакомления.","source":"День 7 · Согласование с клиентом"},{"q":"Когда ты доделываешь спецификацию окончательно?","options":["До контрольного замера","После передачи технологу","После удалённого согласования проекта и размеров","После монтажа кухни"],"answer":2,"explain":"Спецификацию доделывают после удалённого согласования проекта и размеров.","source":"День 7 · Согласование с клиентом"},{"q":"Каким шагом завершается предварительное согласование с клиентом?","options":["Переводом в «Передан технологу»","Отправкой в производство","Звонком ОКК","Приглашением клиента на встречу для подписания"],"answer":3,"explain":"Итог согласования — пригласить клиента на встречу для подписания.","source":"День 7 · Согласование с клиентом"},{"q":"На эскизе, сохранённом из какой программы, проставляются размеры по обучающему видео?","options":["Festt","PRO100","Bitrix24","Splan"],"answer":1,"explain":"Видео показывает размеры на эскизе проекта, сохранённом из PRO100.","source":"День 7 · Splan: правила подготовки проекта"},{"q":"Когда сделку переводят в статус «Замер»?","options":["Когда клиент готов принять замерщика","Сразу после первой встречи без договора","Когда технолог отрисовал проект","Когда клиент внёс 60%"],"answer":0,"explain":"Статус «Замер» ставят, если клиент готов принять замерщика.","source":"День 6 · Организация замера"},{"q":"Клиент будет ставить свою технику, не нашу. Что ты делаешь при организации замера?","options":["Ждёшь замерщика, он всё измерит","Предлагаешь поменять технику на нашу","Сразу запрашиваешь её размеры","Ставишь стандартные размеры в проект"],"answer":2,"explain":"Если техника не наша, её размеры запрашивают сразу.","source":"День 6 · Организация замера"},{"q":"Какая оптимальная глубина базовых шкафов кухни?","options":["45–50 см","30–34 см","70–75 см","60–65 см"],"answer":3,"explain":"Оптимальная глубина базовых шкафов — 60–65 см.","source":"М-07 Эргономика кухни"}],"dayIndex":6},"day8":{"title":"Тест: День 8","questions":[{"q":"Когда нужна вторичная встреча (ВВ)?","options":["Всегда перед замером","Когда клиент не закрылся на договор сразу после замера","Только при рекламации","После монтажа кухни"],"answer":1,"explain":"ВВ нужна, когда клиент не закрылся на договор сразу после замера.","source":"День 8 · Вторичная встреча"},{"q":"Что ты готовишь перед вторичной встречей?","options":["Акт приёма-передачи и чек","Только новый договор","Отчёт ОКК по клиенту","Обновлённый проект, расчёт, сравнение, акции месяца"],"answer":3,"explain":"Перед ВВ готовят обновлённый проект, расчёт, сравнение с конкурентами и акции месяца.","source":"День 8 · Вторичная встреча"},{"q":"Как и кому сдаётся скрипт ВВ?","options":["Устно РОПу","Письменно администратору","Тестом в Bitrix24","Устно технологу"],"answer":0,"explain":"Скрипт ВВ сдаётся устно РОПу, так же как скрипт КЭВ.","source":"День 8 · Вторичная встреча"},{"q":"Какие техники отработки возражений используешь на ВВ?","options":["Только скидки и подарки","Совсем новые, не как на КЭВ","Те же, что на КЭВ, но прицельно под сомнения","Без отработки, сразу договор"],"answer":2,"explain":"На ВВ используются техники КЭВ, но прицельно под сомнения клиента.","source":"День 8 · Вторичная встреча"},{"q":"Возражения сняты. Что делаешь дальше на ВВ?","options":["Даёшь клиенту время подумать","Переходишь к прямым закрывающим формулировкам и договору","Повторяешь всю презентацию","Отправляешь на повторный замер"],"answer":1,"explain":"После снятия возражений — прямые закрывающие формулировки и оформление договора.","source":"День 8 · Вторичная встреча"},{"q":"С чего начинаешь встречу по подписанию спецификации?","options":["Ещё раз знакомишь клиента с выбранным материалом","Сразу берёшь доплату","Переводишь сделку к технологу","Подписываешь акт приёма-передачи"],"answer":0,"explain":"Первый шаг — ещё раз ознакомить клиента с выбранным материалом.","source":"День 8 · Подписание спецификации"},{"q":"При подписании спецификации стоимость изменилась. Что подписываешь дополнительно?","options":["Новый договор","Акт приёма-передачи","Расписку клиента","Дополнительное соглашение"],"answer":3,"explain":"Если стоимость изменилась, подписывается дополнительное соглашение.","source":"День 8 · Подписание спецификации"},{"q":"До какой доли от суммы клиент вносит остаток предоплаты после подписания спецификации?","options":["До 40%","До 50%","До 60%","До 100%"],"answer":2,"explain":"Клиент вносит остаток предоплаты до 60% от суммы.","source":"День 8 · Оплата и передача в производство"},{"q":"Клиент внёс доплату до 60%. Что делаешь с чеком?","options":["Прикрепляешь к договору","Отдаёшь технологу","Выбрасываешь после смены","Отправляешь в группу «Общение»"],"answer":0,"explain":"Чек за доплату прикрепляется к договору.","source":"День 8 · Оплата и передача в производство"},{"q":"Куда сообщаешь о внесении предоплаты?","options":["В группу «Общение»","В Bitrix24-группу «Сделка» по шаблону","Лично РОПу в мессенджер","В таблицу ОКК"],"answer":1,"explain":"О внесении предоплаты сообщают в Bitrix24-группу «Сделка» по шаблону.","source":"День 8 · Оплата и передача в производство"},{"q":"Какой документ загружаешь в Bitrix24 после подписания?","options":["Акт приёма-передачи","Фото клиента","Отчёт по розеткам","Спецификацию"],"answer":3,"explain":"После подписания спецификацию загружают в Bitrix24.","source":"День 8 · Оплата и передача в производство"},{"q":"В какой статус переводишь сделку после подписания спецификации и доплаты?","options":["«Спецификация»","«Замер»","«Передан технологу»","«Договор подписан»"],"answer":2,"explain":"Сделку переводят в статус «Передан технологу».","source":"День 8 · Оплата и передача в производство"},{"q":"С какого момента запускается срок изготовления кухни?","options":["С подписания спецификации","С подписания договора","С выезда на замер","С оплаты 40%"],"answer":0,"explain":"В порядке работы указано: с подписания спецификации запускается срок изготовления.","source":"С-01 Скрипт продажи кухни"},{"q":"Клиент сегодня не оформляет договор. Как правильно завершить встречу?","options":["Сказать «ну, подумайте» и попрощаться","Предложить скидку без объяснений","Пообещать, что цена скоро вырастет","Назначить точную дату и время следующего контакта"],"answer":3,"explain":"Нужно назначить точную дату и время следующего контакта, без «ну, подумайте».","source":"С-01 Скрипт продажи кухни"},{"q":"Какую предоплату клиент вносил при оформлении договора, до доплаты до 60%?","options":["5 000 ₽","10 000 ₽","20 000 ₽","Не вносил ничего"],"answer":1,"explain":"При оформлении договора вносится предоплата 10 000 ₽.","source":"День 6 · Оформление сделки на встрече"}],"dayIndex":7},"day9":{"title":"Тест: День 9","questions":[{"q":"Кто берёт заказ в работу после передачи из отдела продаж?","options":["Администратор","Монтажник","Менеджер ОКК","Технолог"],"answer":3,"explain":"Заказ в работу берёт технолог.","source":"День 9 · Производство"},{"q":"Технолог прислал отрисованный проект. Что ты делаешь?","options":["Сверяешь со спецификацией по шаблону","Сразу отправляешь в производство","Пересылаешь клиенту без проверки","Переводишь сделку в «Замер»"],"answer":0,"explain":"Менеджер сверяет проект технолога со спецификацией по шаблону.","source":"День 9 · Производство"},{"q":"Когда заказ отправляется в производство?","options":["Сразу после замера","После оплаты 40%","После проверки проекта менеджером","После подписания акта"],"answer":2,"explain":"После проверки менеджером заказ отправляется в производство.","source":"День 9 · Производство"},{"q":"Кто договаривается с клиентом о дате доставки и монтажа?","options":["Технолог","Администратор","Менеджер ОКК","Бригада монтажников"],"answer":1,"explain":"Когда заказ готов, о дате доставки и монтажа договаривается администратор.","source":"День 9 · Доставка и завершение сделки"},{"q":"Когда клиент оплачивает оставшиеся 40%?","options":["За 2 дня до доставки","В день монтажа","После подписания акта","За неделю до доставки"],"answer":0,"explain":"Оставшиеся 40% клиент оплачивает за 2 дня до доставки.","source":"День 9 · Доставка и завершение сделки"},{"q":"Клиент оплатил оставшиеся 40%. Что делаешь?","options":["Передаёшь деньги монтажникам","Сообщаешь только технологу","Ждёшь акта и потом пробиваешь чек","Пробиваешь чек и пишешь в группу «Сделка»"],"answer":3,"explain":"После оплаты 40% нужно пробить чек и написать в группу «Сделка».","source":"День 9 · Доставка и завершение сделки"},{"q":"Какой документ клиент подписывает после монтажа?","options":["Дополнительное соглашение","Спецификацию","Акт приёма-передачи","Новый договор"],"answer":2,"explain":"После монтажа клиент подписывает акт приёма-передачи.","source":"День 9 · Доставка и завершение сделки"},{"q":"После монтажа есть рекламация. Кто решает все вопросы по ней?","options":["Технолог","Администратор","Менеджер ОКК","Монтажник"],"answer":1,"explain":"По рекламации все вопросы решает администратор.","source":"День 9 · Доставка и завершение сделки"},{"q":"Кто связывается с клиентом после завершения сделки и собирает обратную связь?","options":["Технолог","Менеджер, продавший кухню","Бригада монтажа","ОКК"],"answer":3,"explain":"После завершения с клиентом связывается ОКК и собирает обратную связь.","source":"День 9 · Доставка и завершение сделки"},{"q":"Какой вопрос задаёшь при рекламации, чтобы определить зону ответственности?","options":["Касается ли проблема проекта и расчётов или доставки и сборки?","Кто из менеджеров вас вёл?","Когда вы оплатили заказ?","Готовы ли вы подождать неделю?"],"answer":0,"explain":"Зону ответственности определяют вопросом: проект и расчёты или доставка и сборка.","source":"Р-06 Звонок с рекламацией"},{"q":"Клиент звонит: мебель повредили при доставке. Что делаешь?","options":["Говоришь звонить в доставку самому","Обещаешь сам всё переделать","Фиксируешь данные и сразу передаёшь администратору","Переводишь звонок на технолога"],"answer":2,"explain":"Проблемы смежных служб (сценарий Б) фиксируют и немедленно передают администратору.","source":"Р-06 Звонок с рекламацией"},{"q":"Какие данные фиксируешь при рекламации по доставке или монтажу?","options":["Только имя и жалобу","Имя, телефон, № договора, что случилось, дату","Адрес и сумму заказа","Фамилию монтажника и время звонка"],"answer":1,"explain":"Фиксируются имя, телефон, номер договора, что произошло и дата доставки или монтажа.","source":"Р-06 Звонок с рекламацией"},{"q":"Рекламация — ошибка в твоём проекте. Как действуешь?","options":["Передаёшь вопрос в ОКК","Объясняешь, что виноват технолог","Предлагаешь клиенту перезвонить позже","Признаёшь, предлагаешь решение, фиксируешь письменно"],"answer":3,"explain":"При ошибке менеджера нужно признать её, предложить решение и зафиксировать договорённости.","source":"Р-06 Звонок с рекламацией"},{"q":"Какая фраза при звонке с рекламацией категорически запрещена?","options":["«Это не ко мне»","«Я вас услышал»","«Давайте разберёмся»","«Администратор свяжется с вами сегодня»"],"answer":0,"explain":"Фраза «Это не ко мне» входит в список категорически запрещённых.","source":"Р-06 Звонок с рекламацией"},{"q":"Кому подчиняется отдел контроля качества (ОКК)?","options":["Руководителю отдела продаж","Администратору салона","Напрямую руководству компании","Старшему технологу"],"answer":2,"explain":"ОКК — независимая структура, подчиняется напрямую руководству компании.","source":"День 1 · ОКК"}],"dayIndex":8},"day10":{"title":"Тест: День 10","questions":[{"q":"Что означает сокращение ПВ в нашей воронке?","options":["Повторный выезд к клиенту","Первичная встреча в салоне","Предварительный визит замерщика","Подтверждение встречи по телефону"],"answer":1,"explain":"В глоссарии ПВ — первичная встреча в салоне.","source":"День 10 · Глоссарий"},{"q":"Как расшифровывается ВВ?","options":["Вторичная встреча","Выездная встреча на дому","Встреча с РОПом по итогам дня","Встреча по выдаче заказа"],"answer":0,"explain":"В глоссарии ВВ — вторичная встреча.","source":"День 10 · Глоссарий"},{"q":"Что в компании означает КЭВ согласно глоссарию?","options":["Контроль этапов выполнения заказа","Консультация эксперта по выбору техники","Закрытие клиента на замер или встречу в офисе","Коммерческая экспертиза вторичной встречи"],"answer":2,"explain":"Глоссарий: КЭВ — закрытие клиента на замер или встречу в офисе.","source":"День 10 · Глоссарий"},{"q":"Что такое ТК в работе с клиентом?","options":["Технологическая карта заказа","Торговая комиссия менеджера","Текущий контроль сделки","Точки касания с клиентом"],"answer":3,"explain":"В глоссарии ТК — точки касания с клиентом.","source":"День 10 · Глоссарий"},{"q":"Как расшифровывается ОКК?","options":["Отдел контроля качества","Отдел клиентских коммуникаций","Отдел кассового контроля","Отдел корпоративных клиентов"],"answer":0,"explain":"ОКК — отдел контроля качества.","source":"День 10 · Глоссарий"},{"q":"ERP в компании — это что и в какой программе?","options":["Система работы с клиентами (Bitrix24)","Проектирование мебели (PRO100)","Коммуникатор для WhatsApp (Wazzup)","Планирование ресурсов предприятия (Festt)"],"answer":3,"explain":"Глоссарий: ERP — планирование ресурсов предприятия (Festt).","source":"День 10 · Глоссарий"},{"q":"Клиент просит встроить ПММ. Что он хочет?","options":["Подъёмный механизм для модуля","Пристенный мебельный модуль","Посудомоечную машину","Подсветку модулей мебели"],"answer":2,"explain":"В глоссарии ПММ — посудомоечная машина.","source":"День 10 · Глоссарий"},{"q":"Что обозначают буквы А·В·С·D в глоссарии?","options":["Этапы воронки продаж от заявки до договора","Категории клиентов по бюджету и срочности","Классы материалов по цене и качеству","Уровни менеджеров по стажу и продажам"],"answer":1,"explain":"А·В·С·D — категории клиентов по бюджету и срочности.","source":"День 10 · Глоссарий"},{"q":"Что означает RFM?","options":["Анализ по давности, частоте и сумме покупок","Анализ по региону, филиалу и менеджеру","Рейтинг фабрик и материалов","Расчёт фурнитуры и монтажа"],"answer":0,"explain":"Глоссарий: RFM — анализ по давности, частоте и сумме покупок.","source":"День 10 · Глоссарий"},{"q":"Какие скрипты сдаются устно РОПу?","options":["Только ПВ","КЭВ и ВВ","ПВ и КЭВ","Все три — письменно наставнику"],"answer":1,"explain":"В справочнике: КЭВ и ВВ сдаются устно РОПу.","source":"День 10 · Скрипты"},{"q":"Кто анализирует скрипт ПВ и по какому инструменту?","options":["ОКК по чек-листу","РОП на устной сдаче","Наставник по видеозаписи","Администратор по таблице «Заявки Админ»"],"answer":0,"explain":"Скрипт ПВ анализируется ОКК по чек-листу.","source":"День 10 · Скрипты"},{"q":"Какой порядок этапов в скрипте КЭВ верный?","options":["Приветствие → квалификация → присоединение → закрытие → апсейл → предзакрытие","Присоединение → приветствие → апсейл → квалификация → закрытие → предзакрытие","Приветствие → присоединение → квалификация → апсейл → предзакрытие → закрытие","Приветствие → апсейл → квалификация → присоединение → предзакрытие → закрытие"],"answer":2,"explain":"Так порядок КЭВ записан в справочнике скриптов.","source":"День 10 · Скрипты"},{"q":"Какая ставка расчёта доставки указана в живых данных?","options":["50 ₽/км","80 ₽/км","100 ₽/км","120 ₽/км"],"answer":1,"explain":"В живых данных: ставка 80 ₽/км, сверять регулярно.","source":"День 10 · Живые данные"},{"q":"Из каких частей состоит итоговый экзамен?","options":["Тест, письменное эссе, собеседование с РОПом","Кейс сделки, проверка CRM, отчёт за день","Тест, кейс сделки от А до Я, скрипты вживую","Тест, проект в PRO100, замер у клиента"],"answer":2,"explain":"Экзамен комбинированный: тест, практический кейс и ролевая игра по скриптам.","source":"День 10 · Итоговый экзамен"},{"q":"В кейсе «Сделка от А до Я» до какого статуса нужно довести сделку?","options":["«Замер»","«Договор подписан»","«Спецификация»","«Передан технологу»"],"answer":3,"explain":"Задание кейса — довести сделку до статуса «Передан технологу».","source":"День 10 · Кейс сделки"}],"dayIndex":9},"final":{"title":"Итоговый экзамен","questions":[{"q":"Тебе нужен выходной. За сколько дней нужно предупредить?","options":["За 3 дня","За 7 дней","За 14 дней","За 30 дней"],"answer":2,"explain":"Правило графика: о выходных предупреждают за 14 дней.","source":"День 1 · График работы"},{"q":"Клиенту нужна кухня, но денег нет и сроки размыты. Какая это категория?","options":["Категория A","Категория B","Категория D","Категория C"],"answer":3,"explain":"C — нужна мебель, но нет денег и сроки не определены.","source":"День 1 · Сегментация клиентов"},{"q":"Что проверяет еженедельный отчёт ОКК о чистоте CRM?","options":["Количество звонков и результативных звонков","Не созданные карточки, ошибки в них, просрочки и карточки без задач","Выручку менеджера и выполнение плана","Чистоту выставочных образцов в салоне"],"answer":1,"explain":"Отчёт ОКК о чистоте CRM включает именно эти пункты.","source":"День 1 · ОКК"},{"q":"Какую предоплату клиент вносит при заключении договора?","options":["5 000 ₽","10% от суммы","60% от суммы","10 000 ₽"],"answer":3,"explain":"График платежей: предоплата 10 000 ₽ при заключении договора.","source":"День 2 · Варианты оплаты"},{"q":"Какую часть стоимости кухни можно оплатить сертификатом на 50 000 ₽?","options":["До 5% (комплекс — до 7%)","До 10% (комплекс — до 12–15%)","До 20% (комплекс — до 25%)","Всю сумму сертификата без ограничений"],"answer":1,"explain":"Сертификатом оплачивают до 10% стоимости кухни, комплекс — до 12–15%.","source":"День 2 · Сертификат и акции"},{"q":"Какой стандартный срок изготовления мебели?","options":["20 рабочих дней","40 рабочих дней","30 календарных дней","60 календарных дней"],"answer":1,"explain":"Срок — 40 рабочих дней, для сложных заказов до 60.","source":"День 2 · Наши преимущества"},{"q":"Какой этап продаж идёт сразу после презентации цены?","options":["Предзакрытие","Закрытие","Отработка возражений","Выявление потребностей"],"answer":0,"explain":"В списке 8 этапов за презентацией цены следует предзакрытие.","source":"День 3 · 8 этапов продаж"},{"q":"Какая главная цель КЭВ?","options":["Создать доверие клиента","Сразу подписать договор","Назвать окончательную цену","Продать бытовую технику"],"answer":0,"explain":"КЭВ — ключевой этап воронки, его главная цель — создать доверие.","source":"День 3 · Почему КЭВ — главное"},{"q":"Как работает правило трёх «да»?","options":["Три продающих вопроса подряд без пауз","Два вопроса с ответом «да», затем продающий вопрос","Клиент трижды подтверждает цену письменно","Три встречи до подписания договора"],"answer":1,"explain":"После нескольких согласий клиенту проще согласиться и дальше.","source":"День 3 · Психологические приёмы"},{"q":"Какая из фраз относится к предзакрытию, а не к закрытию?","options":["«Ну что, работаем?»","«Подскажите, когда будет удобно принять замерщика»","«Подписываем договор?»","«Готовлю счёт и жду оплату?»"],"answer":1,"explain":"Эта фраза стоит в списке предзакрытия, остальные — прямое закрытие.","source":"День 4 · Предзакрытие и закрытие"},{"q":"Клиент ушёл без решения после отработки возражений. Что дальше?","options":["Прогревающие сообщения — точки касания","Перевести сделку в статус «Отказ»","Сразу предложить скидку по телефону","Передать клиента другому менеджеру"],"answer":0,"explain":"После ухода без решения начинается этап прогревающих сообщений (ТК).","source":"День 4 · Точки касания"},{"q":"Что такое возражение по определению Академии?","options":["Жалоба клиента на качество мебели","Отказ клиента от подписания акта","Вопрос клиента о сроках доставки","Причина, мешающая покупке"],"answer":3,"explain":"Возражение — причина, мешающая покупке.","source":"День 4 · Отработка возражений"},{"q":"Как можно двигать сделку по воронке в Bitrix24?","options":["Только слева направо, обратно запрещено","В любую сторону по ситуации","Только через РОПа","Справа налево при отказе клиента"],"answer":0,"explain":"Правило CRM: двигать слева направо, в обратном порядке запрещено.","source":"День 5 · Работа в CRM"},{"q":"Что обязательно должно быть у каждой сделки в CRM?","options":["Подписанный договор","Фото клиента с папкой","Запланированное дело на следующий шаг","Готовая спецификация"],"answer":2,"explain":"У каждой сделки должно быть запланировано дело на следующий шаг.","source":"День 5 · Работа в CRM"},{"q":"Где можно вести переписку и звонки с клиентом?","options":["С личного телефона, если удобно","В личном Telegram","Только в CRM","Где угодно, лишь бы ответить"],"answer":2,"explain":"Вся переписка и звонки — только в CRM, без личного телефона.","source":"День 5 · Работа в CRM"},{"q":"Договор подписан, но у клиента идёт ремонт. Какой статус сделки?","options":["Перевести в «Замер»","Перевести в «Спецификация»","Вернуть в «Первичная встреча»","Оставить «Договор подписан» до готовности"],"answer":3,"explain":"Если клиент не готов к замеру, остаётся статус «Договор подписан».","source":"День 6 · Оформление сделки"},{"q":"Клиент внёс предоплату наличными. Что с ними сделать?","options":["Сразу отдать технологу","Оставить в кассе до вечера","Передать замерщику на выезде","В конверт с № договора и суммой — и в сейф"],"answer":3,"explain":"Наличные упаковывают в конверт с пометкой и убирают в сейф.","source":"День 6 · Оформление сделки"},{"q":"В какой программе делается итоговая калькуляция проекта?","options":["PRO100","Festt","Splan","Базис Мебельщик"],"answer":1,"explain":"Итоговая калькуляция проекта выполняется в Festt.","source":"День 6 · Расчёт стоимости"},{"q":"После чего можно готовить спецификацию?","options":["Только после контрольного замера","Сразу после первичной встречи","После оплаты 40%","После отрисовки у технолога"],"answer":0,"explain":"Спецификация готовится только после контрольного замера.","source":"День 7 · Замер и спецификация"},{"q":"В какой программе готовится спецификация?","options":["Splan","PRO100","Festt","Базис Мебельщик"],"answer":0,"explain":"После замера спецификацию готовят в Splan.","source":"День 7 · Замер и спецификация"},{"q":"Данные замера загружены. В какой статус переводится сделка?","options":["«Замер»","«Передан технологу»","«Спецификация»","«Договор подписан»"],"answer":2,"explain":"После замера сделка переводится в статус «Спецификация».","source":"День 7 · Замер и спецификация"},{"q":"Сколько клиент вносит при подписании спецификации?","options":["Остаток до 100% от суммы","Остаток предоплаты до 60% от суммы","Ещё 10 000 ₽","Ровно 40% от суммы"],"answer":1,"explain":"При подписании спецификации вносится остаток предоплаты до 60%.","source":"День 8 · Подписание спецификации"},{"q":"На подписании выяснилось, что стоимость изменилась. Что делаешь?","options":["Переписываешь договор заново","Меняешь цену в чеке без документов","Откладываешь подписание спецификации","Подписываешь дополнительное соглашение"],"answer":3,"explain":"Если стоимость изменилась — подписать дополнительное соглашение.","source":"День 8 · Подписание спецификации"},{"q":"Спецификация подписана и оплачена. Какой следующий статус сделки?","options":["«Передан технологу»","«Замер»","«Спецификация»","«Доставка»"],"answer":0,"explain":"После оплаты и загрузки спецификации сделку переводят в «Передан технологу».","source":"День 8 · Подписание спецификации"},{"q":"Когда клиент оплачивает оставшиеся 40%?","options":["При подписании спецификации","После подписания акта","За 2 дня до доставки","В день монтажа"],"answer":2,"explain":"Оставшиеся 40% вносятся за 2 дня до доставки.","source":"День 9 · Производство и доставка"},{"q":"Что клиент подписывает после монтажа?","options":["Дополнительное соглашение","Акт приёма-передачи","Спецификацию","Договор рассрочки"],"answer":1,"explain":"После монтажа клиент подписывает акт приёма-передачи.","source":"День 9 · Производство и доставка"},{"q":"У клиента рекламация после монтажа. Кто решает все вопросы?","options":["Технолог","Монтажник","Администратор","Менеджер-дизайнер"],"answer":2,"explain":"По рекламациям все вопросы решает администратор.","source":"День 9 · Производство и доставка"},{"q":"Что означает ПВ?","options":["Первичная встреча в салоне","Повторный выезд к клиенту","Предварительный визит замерщика","Подтверждение встречи по телефону"],"answer":0,"explain":"В глоссарии ПВ — первичная встреча в салоне.","source":"День 10 · Глоссарий"},{"q":"Клиент просит встроить ПММ. Что он хочет?","options":["Подъёмный механизм для модуля","Пристенный мебельный модуль","Посудомоечную машину","Подсветку модулей мебели"],"answer":2,"explain":"В глоссарии ПММ — посудомоечная машина.","source":"День 10 · Глоссарий"},{"q":"Что означает РОП?","options":["Региональный отдел проектов","Работа с обращениями покупателей","Расчёт объёма производства","Руководитель отдела продаж"],"answer":3,"explain":"В глоссарии РОП — руководитель отдела продаж.","source":"День 10 · Глоссарий"}]}}; /* QUIZ-DATA-END */
+(function(){
+  const find = id => { for(const s of DATA.sections){ const i=s.pages.findIndex(p=>p.id===id); if(i>=0) return {s, i, p:s.pages[i]}; } return null; };
+  const swapQuiz = (pageId, key) => {
+    const f = find(pageId); if(!f || !QUIZ[key]) return;
+    const i = f.p.blocks.findIndex(b=>b.type==='resources' && b.items.some(it=>/опросник/i.test(it.title||'')));
+    const q = {type:'quiz', key};
+    if(i>=0) f.p.blocks[i] = q; else f.p.blocks.push(q);
+  };
+  for(let d=1; d<=9; d++) swapQuiz('d'+d+'-test', 'day'+d);
+  swapQuiz('d10-8', 'final');
+  const e = find('d10-7');
+  if(e && QUIZ.day10) e.s.pages.splice(e.i, 0, {id:'d10-test', menuTitle:'Тест дня', kicker:'Проверка знаний', title:'Тест: День 10', blocks:[
+    {type:'lead', text:'Короткий тест по материалам дня: справочник, скрипты, термины и живые данные. Потом — итоговый экзамен.'},
+    {type:'quiz', key:'day10'}
+  ]});
+})();
+
 /* ============ NAV BUILD ============ */
 const sidebarNav = document.getElementById('navList');
 const DAY_TO_CHECKLIST_INDEX = {day1:0,day2:1,day3:2,day4:3,day5:4,day6:5,day7:6,day8:7,day9:8,day10:9};
@@ -2654,7 +3198,9 @@ function renderSection(sec){
     html += `<div id="${pageDomId}" style="scroll-margin-top:90px;">`;
     html += `<div class="page-kicker">${editableFieldHTML('pagekicker_'+pageDomId, p.kicker||'', 'Надзаголовок (необязательно)', 'span')}</div>`;
     html += `<div class="page-title">${editableFieldHTML('pagetitle_'+pageDomId, p.title||'', 'Название страницы', 'span')}</div>`;
-    p.blocks.forEach((b,bi)=>{ html += renderBlock(b, pageDomId+'_'+bi); });
+    // схемы не участвуют в нумерации блоков — сохранённые правки и карточки привязаны к номеру блока
+    let bi = 0;
+    p.blocks.forEach(b=>{ html += b.type==='scheme' ? renderBlock(b, null) : renderBlock(b, pageDomId+'_'+(bi++)); });
     html += `<div class="page-attach-wrap" data-attach-page="${pageDomId}"></div>`;
     html += `<div class="page-tools">
       <button type="button" class="page-tool-btn" data-addnote-page="${pageDomId}">${icon('message',13)} Добавить свою заметку</button>
@@ -2668,6 +3214,7 @@ function renderSection(sec){
   mountPhotoSlots(contentEl);
   mountResourceSlots(contentEl);
   mountChecklist(contentEl);
+  mountQuizzes(contentEl);
   mountNotes(contentEl);
   mountEditableBlocks(contentEl);
   wireAttachInputs(contentEl);
@@ -2711,22 +3258,14 @@ router();
 async function pullCloudStateWithRetries(maxTries){
   maxTries = maxTries || 3;
   for(let i=0;i<maxTries;i++){
-    const ok = await pullCloudState();
-    if(ok) return true;
+    const r = await pullCloudState();
+    if(r.ok) return true;
     if(i < maxTries-1) await new Promise(r=>setTimeout(r, 1500));
   }
   return false;
 }
 
-(async ()=>{
-  const ok = await pullCloudStateWithRetries(3);
-  if(ok){
-    buildNav();
-    router();
-  } else {
-    console.error('Не удалось получить общие данные из облака за 3 попытки — показаны только локальные данные этого устройства. Нажмите «Обновить с сервера» в сайдбаре.');
-  }
-})();
+if(currentUser()) afterLogin(); else showLogin();
 
 const forceRefreshBtn = document.getElementById('forceRefreshBtn');
 if(forceRefreshBtn){
